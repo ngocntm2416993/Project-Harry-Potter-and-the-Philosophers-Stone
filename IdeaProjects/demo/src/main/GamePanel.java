@@ -3,7 +3,7 @@ package main;
 import java.awt.*;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
-
+import entity.Player;
 import javax.swing.JPanel;
 
 public class GamePanel extends JPanel implements Runnable {
@@ -75,7 +75,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent ( Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        player.draw(g2, tileSize);
+        player.draw(g2);
         g2.dispose(); // giai phong
     }
 }

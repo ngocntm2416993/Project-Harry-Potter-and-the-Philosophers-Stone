@@ -2,13 +2,11 @@ package entity;
 
 import main.GamePanel;
 import main.KeyHandler;
-import org.ietf.jgss.GSSManager;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.Objects;
 
 public class Player extends Entity{
     GamePanel gp;
@@ -27,26 +25,27 @@ public class Player extends Entity{
     }
     public void getPlayerImage(){
         try{
-            up1= ImageIO.read(getClass().getResourceAsStream("up1.png"));
-            up2= ImageIO.read(getClass().getResourceAsStream("up2.png"));
-            down1= ImageIO.read(getClass().getResourceAsStream("down1.png"));
-            down2= ImageIO.read(getClass().getResourceAsStream("down2.png"));
-            left1= ImageIO.read(getClass().getResourceAsStream("left1.png"));
-            left2= ImageIO.read(getClass().getResourceAsStream("left2.png"));
-            right1= ImageIO.read(getClass().getResourceAsStream("right1.png"));
-            right2= ImageIO.read(getClass().getResourceAsStream("right2.png"));
+            up1= ImageIO.read(getClass().getResourceAsStream("/player/up1.png"));
+            up2= ImageIO.read(getClass().getResourceAsStream("/player/up2.png"));
+            down1= ImageIO.read(getClass().getResourceAsStream("/player/down1.png"));
+            down2= ImageIO.read(getClass().getResourceAsStream("/player/down2.png"));
+            left1= ImageIO.read(getClass().getResourceAsStream("/player/left1.png"));
+            left2= ImageIO.read(getClass().getResourceAsStream("/player/left2.png"));
+            right1= ImageIO.read(getClass().getResourceAsStream("/player/right1.png"));
+            right2= ImageIO.read(getClass().getResourceAsStream("/player/right2.png"));
         }catch(IOException e){
             e.printStackTrace();
         }
     }
-
+    int spriteCounter = 0;
+    int spriteNum = 1;
     public void update(){
         if (keyH.upPressed == true ){
             direction = "up";
             y -= speed;
         }
-        else if(keyH.downPressed == true ){
-            direction = "dow";
+        else if(keyH.downPressed == true){
+            direction = "down";
             y += speed;
         }
         else if (keyH.leftPressed == true ){
@@ -57,25 +56,23 @@ public class Player extends Entity{
             direction = "right";
             x +=speed;
         }
+        spriteCounter++;
+        if (spriteCounter > 12) {
+            spriteNum = (spriteNum == 1) ? 2 : 1;
+            spriteCounter = 0;
+        }
     }
 
     public void draw(Graphics2D g2){
         //g2.setColor(Color.white);
         //g2.fillRect(x, y, gp.tileSize, gp.tileSize); // kich thuoc nhan vat
-        BufferedImage image = null;
+        BufferedImage image;
+        image = null;
         switch (direction) {
-            case "up":
-                image = up1;
-                break;
-            case "down":
-                image = down1;
-                break;
-            case "left":
-                image = left1;
-                break;
-            case "right":
-                image = right1;
-                break;
+            case "up":    image = (spriteNum == 1) ? up1 : up2;    break;
+            case "down":  image = (spriteNum == 1) ? down1 : down2; break;
+            case "left":  image = (spriteNum == 1) ? left1 : left2; break;
+            case "right": image = (spriteNum == 1) ? right1 : right2; break;
         }
         g2.drawImage(image,x,y,gp.tileSize,gp.tileSize,null);
     }
