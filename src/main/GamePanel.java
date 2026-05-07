@@ -1,12 +1,11 @@
 package main;
 
+import entity.Player;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
-
-import entity.Player;
 import object.SuperObject;
 import tile.TileManager;
 
@@ -38,6 +37,8 @@ public class GamePanel extends JPanel implements Runnable {
     public Player player = new Player(this, keyH);
     public SuperObject obj[] = new SuperObject[10];
     public AssetSetter aSetter = new AssetSetter(this);
+    
+    public int currentMap = 0; // 0 là map 1
 
 
     public GamePanel() {
@@ -48,9 +49,9 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyH);
         this.setFocusable(true);
     }
-
+    // mặc định là map 1
     public void setUpGame() {
-        aSetter.setObject();
+        aSetter.setMap1();
     }
     public void startGameThread() {
         gameThread = new Thread(this);
@@ -98,5 +99,20 @@ public class GamePanel extends JPanel implements Runnable {
         player.draw(g2);
 
         g2.dispose();
+    }
+    public void switchMap(int mapIndex) {
+        currentMap = mapIndex;
+        if (currentMap == 0) {
+        tileM.loadMap("/maps/map_01.txt");
+        aSetter.setMap1();
+        player.worldX = 20 * tileSize;
+        player.worldY = 21 * tileSize;
+    } 
+    else if (currentMap == 1) {
+        tileM.loadMap("/maps/map_02.txt");
+        aSetter.setMap2();
+        player.worldX = 5 * tileSize;
+        player.worldY = 10 * tileSize;
+    }
     }
 }
