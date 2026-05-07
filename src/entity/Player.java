@@ -1,15 +1,12 @@
 package entity;
 
-import main.KeyHandler;
-
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
-
 import main.GamePanel;
+import main.KeyHandler;
 
 public class Player extends Entity {
     GamePanel gp;
@@ -123,8 +120,12 @@ public class Player extends Entity {
                     speed -= 4;
                     break;
                 case "Door":
-                    break;
-
+                    if (gp.currentMap == 0) {
+                        gp.switchMap(1); 
+                    } else {
+                        gp.switchMap(0); 
+                    }
+                break;
             }
             gp.obj[i]= null;
         }
