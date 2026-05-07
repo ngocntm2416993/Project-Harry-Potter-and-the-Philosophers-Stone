@@ -10,34 +10,7 @@ public class AssetSetter {
     public AssetSetter(GamePanel gp) {
         this.gp = gp;
     }
-    public void clearObject(){
-        for (int i = 0; i < gp.obj.length; i++){
-            gp.obj[i] = null;
-        }
-    }
-    public void setMap1(){
-        clearObject();
-        gp.obj[0] = new OBJ_Speed();
-        gp.obj[0].worldX = 7 * gp.tileSize;
-        gp.obj[0].worldY = 23 * gp.tileSize;
 
-        gp.obj[1] = new OBJ_Door();
-        gp.obj[1].worldX = 26 * gp.tileSize;
-        gp.obj[1].worldY = 21 * gp.tileSize;
-
-        gp.obj[2] = new OBJ_HP();
-        gp.obj[2].worldX = 24 * gp.tileSize;
-        gp.obj[2].worldY = 18 * gp.tileSize;
-    }
-    public void setMap2(){
-        clearObject();
-        gp.obj[0] = new OBJ_Door();
-        gp.obj[0].worldX = 10 * gp.tileSize;
-        gp.obj[0].worldY = 10 * gp.tileSize;
-        gp.obj[1] = new OBJ_HP();
-        gp.obj[1].worldX = 15 * gp.tileSize;
-        gp.obj[1].worldY = 15 * gp.tileSize;
-    }
     public void setObject() {
         gp.obj[0] = new OBJ_Speed();
         gp.obj[0].worldX = 7 * gp.tileSize;
@@ -50,5 +23,9 @@ public class AssetSetter {
         gp.obj[2] = new OBJ_HP();
         gp.obj[2].worldX = 24 * gp.tileSize;
         gp.obj[2].worldY = 18 * gp.tileSize;
+
+        gp.obj[3]= new OBJ_HP();
+        gp.obj[3].worldX = 45 * gp.tileSize;
+        gp.obj[3].worldY = 10 * gp.tileSize;
     }
 }

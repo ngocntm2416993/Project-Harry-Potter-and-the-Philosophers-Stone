@@ -1,12 +1,15 @@
 package entity;
 
+import main.KeyHandler;
+
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
+
 import main.GamePanel;
-import main.KeyHandler;
 
 public class Player extends Entity {
     GamePanel gp;
@@ -14,6 +17,10 @@ public class Player extends Entity {
 
     public final int screenX;
     public final int screenY;
+
+    public int HP;
+    public int normalSpeed;
+    public long speedBoostEndTime = 0;
 
     public Player (GamePanel gp, KeyHandler keyH){
         this.gp = gp;
@@ -35,8 +42,10 @@ public class Player extends Entity {
     public void setDefaultValues() {
         worldX = 23 * gp.tileSize;
         worldY = 21 * gp.tileSize;
-        speed = 4;
+        normalSpeed = 4;
+        speed = normalSpeed;
         direction = "down";
+        HP = 200;
     }
 
     public void getPlayerImage() {
@@ -106,6 +115,10 @@ public class Player extends Entity {
                 spriteCounter = 0;
             }
         }
+        if (speedBoostEndTime > 0 && System.currentTimeMillis() > speedBoostEndTime) {
+            speed = normalSpeed;
+            speedBoostEndTime = 0;
+        }
     }
 
     public void pickUpObject(int i) {
@@ -114,18 +127,18 @@ public class Player extends Entity {
 
             switch (objectName){
                 case "HP":
-                    speed +=2;
+                    HP += 50;
+                    gp.playSE(1);
                     break;
                 case "Speed":
-                    speed -= 4;
+                    gp.playSE(1);
+                    speed = normalSpeed + 10;
+                    speedBoostEndTime = System.currentTimeMillis() + 5000;
                     break;
                 case "Door":
-                    if (gp.currentMap == 0) {
-                        gp.switchMap(1); 
-                    } else {
-                        gp.switchMap(0); 
-                    }
-                break;
+                    gp.playSE(2);
+                    break;
+
             }
             gp.obj[i]= null;
         }

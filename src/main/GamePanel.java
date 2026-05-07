@@ -1,11 +1,12 @@
 package main;
 
-import entity.Player;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
+
+import entity.Player;
 import object.SuperObject;
 import tile.TileManager;
 
@@ -21,24 +22,29 @@ public class GamePanel extends JPanel implements Runnable {
     public final int screenWidth = tileSize * maxScreenCol;
     public final int screenHeight = tileSize * maxScreenRow;
 
-    //WORLD SETTING
+    // WORLD SETTING
     public final int maxWorldCol = 50;
     public final int maxWorldRow = 50;
     public final int worldWidth = tileSize * maxWorldCol;
     public final int worldHeight = tileSize * maxWorldRow; 
+    public int currentMap = 1;
 
-    //FPS
+    // FPS
     int FPS = 60;
 
+    // SYSTEM
     TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler();
+    Sound music = new Sound();
+    Sound se = new Sound();
     Thread gameThread;
     public CollisionChecker cChecker = new CollisionChecker(this);
+    public AssetSetter aSetter = new AssetSetter(this);
+    public UI ui = new UI(this);
+
+    // ENTITY AND OBJECT
     public Player player = new Player(this, keyH);
     public SuperObject obj[] = new SuperObject[10];
-    public AssetSetter aSetter = new AssetSetter(this);
-    
-    public int currentMap = 0; // 0 là map 1
 
 
     public GamePanel() {
@@ -49,9 +55,11 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyH);
         this.setFocusable(true);
     }
-    // mặc định là map 1
+
     public void setUpGame() {
-        aSetter.setMap1();
+        aSetter.setObject();
+
+        playMusic(0);
     }
     public void startGameThread() {
         gameThread = new Thread(this);
@@ -60,7 +68,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
-        double drawInterval = 1000000000/FPS;
+        double drawInterval = 1000000000.0/FPS;
         double delta  = 0;
         long lastTime = System.nanoTime();
         long currentTime;
@@ -98,21 +106,25 @@ public class GamePanel extends JPanel implements Runnable {
         // PLAYER
         player.draw(g2);
 
+        // UI
+        ui.draw(g2);
+
         g2.dispose();
     }
-    public void switchMap(int mapIndex) {
-        currentMap = mapIndex;
-        if (currentMap == 0) {
-        tileM.loadMap("/maps/map_01.txt");
-        aSetter.setMap1();
-        player.worldX = 20 * tileSize;
-        player.worldY = 21 * tileSize;
-    } 
-    else if (currentMap == 1) {
-        tileM.loadMap("/maps/map_02.txt");
-        aSetter.setMap2();
-        player.worldX = 5 * tileSize;
-        player.worldY = 10 * tileSize;
+
+    public void playMusic (int i) {
+        
+        music.setFile(i);
+        music.play();
+        music.loop();
     }
+
+    public void stopMusic() {
+        music.stop();
+    }
+
+    public void playSE(int i) {
+        se.setFile(i);
+        se.play();
     }
 }
