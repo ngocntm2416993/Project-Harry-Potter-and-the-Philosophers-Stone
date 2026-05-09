@@ -40,27 +40,30 @@ public class Player extends Entity{
     int spriteCounter = 0;
     int spriteNum = 1;
     public void update(){
-        if (keyH.upPressed == true ){
-            direction = "up";
-            y -= speed;
+        if(keyH.upPressed||keyH.downPressed||keyH.leftPressed||keyH.rightPressed){
+            if (keyH.upPressed == true ){
+                direction = "up";
+                y -= speed;
+            }
+            else if(keyH.downPressed == true){
+                direction = "down";
+                y += speed;
+            }
+            else if (keyH.leftPressed == true ){
+                direction = "left";
+                x -= speed;
+            }
+            else if (keyH.rightPressed == true ){
+                direction = "right";
+                x +=speed;
+            }
+            spriteCounter++;
+            if (spriteCounter > 12) { // thoi gianchuyeenen 2 chan khi dung yen
+                spriteNum = (spriteNum == 1) ? 2 : 1;
+                spriteCounter = 0;
+            }
         }
-        else if(keyH.downPressed == true){
-            direction = "down";
-            y += speed;
-        }
-        else if (keyH.leftPressed == true ){
-            direction = "left";
-            x -= speed;
-        }
-        else if (keyH.rightPressed == true ){
-            direction = "right";
-            x +=speed;
-        }
-        spriteCounter++;
-        if (spriteCounter > 12) {
-            spriteNum = (spriteNum == 1) ? 2 : 1;
-            spriteCounter = 0;
-        }
+
     }
 
     public void draw(Graphics2D g2){
