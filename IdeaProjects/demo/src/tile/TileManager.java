@@ -22,7 +22,7 @@ public class TileManager {
         mapTileNum = new int [gp.maxScreenCol][gp.maxScreenRow];
         mapObjectNum = new int[gp.maxScreenCol][gp.maxScreenRow];
         getTileImage();
-        loadMap("/maps/map4.txt");
+        loadMap("/maps/map2.txt");
     }
 
     public void getTileImage() {
@@ -45,9 +45,9 @@ public class TileManager {
             tile[7]=new Tile();
             tile[7].image= ImageIO.read(getClass().getResourceAsStream("/background/bancotrang.png"));
             tile[8]=new Tile();
-            tile[8].image= ImageIO.read(getClass().getResourceAsStream("/door/cuabth2.png"));
+            tile[8].image= ImageIO.read(getClass().getResourceAsStream("/door/trapdoor2.png"));
             tile[9]=new Tile();
-            tile[9].image= ImageIO.read(getClass().getResourceAsStream("/door/cuabth1.png"));
+            tile[9].image= ImageIO.read(getClass().getResourceAsStream("/door/trapdoor.png"));
 
             // đồ deco
             tile[11]=new Tile();
@@ -57,9 +57,9 @@ public class TileManager {
             tile[13]=new Tile();
             tile[13].image= ImageIO.read(getClass().getResourceAsStream("/deco/chest4.png"));
             tile[14]=new Tile();
-            tile[14].image= ImageIO.read(getClass().getResourceAsStream("/door/congto.png"));
+            tile[14].image= ImageIO.read(getClass().getResourceAsStream("/door/congto1.png"));
             tile[15]=new Tile();
-            tile[15].image= ImageIO.read(getClass().getResourceAsStream("/deco/cotda2.png"));
+            tile[15].image= ImageIO.read(getClass().getResourceAsStream("/background/cot.png"));
             tile[16]=new Tile();
             tile[16].image= ImageIO.read(getClass().getResourceAsStream("/deco/ribbon.png"));
             tile[17]=new Tile();
@@ -73,6 +73,12 @@ public class TileManager {
             tile[21] = new Tile();
             tile[21].image= ImageIO.read(getClass().getResourceAsStream("/deco/guongthan.png"));
 
+            tile[22] = new Tile();
+            tile[22].image= ImageIO.read(getClass().getResourceAsStream("/background/tuong1.png"));
+            tile[23] = new Tile();
+            tile[23].image= ImageIO.read(getClass().getResourceAsStream("/background/tuong2.png"));
+            tile[24] = new Tile();
+            tile[24].image= ImageIO.read(getClass().getResourceAsStream("/background/tuong3.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
