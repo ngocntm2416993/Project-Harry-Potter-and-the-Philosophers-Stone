@@ -1,5 +1,6 @@
 package main;
 
+import entity.NPC_OldMan;
 import object.OBJ_Door;
 import object.OBJ_HP;
 import object.OBJ_Speed;
@@ -23,9 +24,15 @@ public class AssetSetter {
         gp.obj[2] = new OBJ_HP();
         gp.obj[2].worldX = 24 * gp.tileSize;
         gp.obj[2].worldY = 18 * gp.tileSize;
+    }
 
-        gp.obj[3]= new OBJ_HP();
-        gp.obj[3].worldX = 45 * gp.tileSize;
-        gp.obj[3].worldY = 10 * gp.tileSize;
+    public void setNPC() {
+        gp.npc[0] = new NPC_OldMan(gp, 5,  5);
+        gp.npc[1] = new NPC_OldMan(gp, 10, 5);
+        gp.npc[2] = new NPC_OldMan(gp, 15, 5);
+        gp.npc[3] = new NPC_OldMan(gp, 20, 10);
+        gp.npc[4] = new NPC_OldMan(gp, 8,  20);
+        gp.npc[5] = new NPC_OldMan(gp, 18, 22);
+        gp.npc[6] = new NPC_OldMan(gp, 25, 15);
     }
 }

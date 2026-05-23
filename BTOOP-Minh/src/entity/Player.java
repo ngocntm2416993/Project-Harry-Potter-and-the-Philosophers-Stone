@@ -12,18 +12,20 @@ import javax.imageio.ImageIO;
 import main.GamePanel;
 
 public class Player extends Entity {
-    GamePanel gp;
     KeyHandler keyH;
 
     public final int screenX;
     public final int screenY;
 
-    public int HP;
+    public int HP = 4;
+    public int maxHP = 4;
     public int normalSpeed;
     public long speedBoostEndTime = 0;
+    public boolean invincible = false;    // trạng thái bất tử tạm thời
+    public int invincibleCounter = 0;     // đếm thời gian bất tử
 
     public Player (GamePanel gp, KeyHandler keyH){
-        this.gp = gp;
+        super(gp);
         this.keyH = keyH;
 
         screenX = gp.screenWidth / 2 - (gp.tileSize / 2);
@@ -45,7 +47,8 @@ public class Player extends Entity {
         normalSpeed = 4;
         speed = normalSpeed;
         direction = "down";
-        HP = 200;
+        HP = 4;
+        maxHP = 4;
     }
 
     public void getPlayerImage() {
@@ -87,6 +90,11 @@ public class Player extends Entity {
             //CHECK OBJECT COLLISION
             int objIndex = gp.cChecker.checkObject(this, true);
             pickUpObject(objIndex);
+
+            //CHECK NPC COLLISION
+            int npcIndex = gp.cChecker.checkEntity(this,gp.npc);
+            interactNPC(npcIndex);
+
             // IF COLLISION IF FALSE, PLAYER CAN MOVE
             if (collisionOn == false) {
                 switch (direction) {
@@ -119,6 +127,33 @@ public class Player extends Entity {
             speed = normalSpeed;
             speedBoostEndTime = 0;
         }
+        if (invincible) {
+            invincibleCounter++;
+            if (invincibleCounter >= 60) { // 60 frame = 1 giây
+                invincible = false;
+                invincibleCounter = 0;
+            }
+        }
+
+        if (speedBoostEndTime > 0 && System.currentTimeMillis() > speedBoostEndTime) {
+            speed = normalSpeed;
+            speedBoostEndTime = 0;
+        }
+    }
+
+    private void interactNPC(int i) {
+        if (i != 999) {
+            if (!invincible) {                  // chỉ trừ HP khi không bất tử
+                HP -= 1;
+                invincible = true;              // bật bất tử tạm thời
+                invincibleCounter = 0;
+                //gp.playSE(2);                   // phát âm thanh bị đánh
+                System.out.println("HP: " + HP);
+                if (HP <= 0) {
+                    gp.gameState = gp.gameOverState; // ✅ chuyển sang game over
+                }
+            }
+        }
     }
 
     public void pickUpObject(int i) {
@@ -127,7 +162,8 @@ public class Player extends Entity {
 
             switch (objectName){
                 case "HP":
-                    HP += 50;
+                    HP += 1;
+                    if (HP > maxHP) HP = maxHP; // ✅ không vượt quá maxHP
                     gp.playSE(1);
                     break;
                 case "Speed":
