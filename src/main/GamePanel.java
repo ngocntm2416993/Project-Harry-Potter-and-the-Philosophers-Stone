@@ -17,14 +17,14 @@ public class GamePanel extends JPanel implements Runnable {
     final int scale = 3;
 
     public final int tileSize = originalTileSize * scale;  // 48 x 48 tile
-    public final int maxScreenCol = 24;
-    public final int maxScreenRow = 16;
+    public final int maxScreenCol = 16;
+    public final int maxScreenRow = 12;
     public final int screenWidth = tileSize * maxScreenCol;
     public final int screenHeight = tileSize * maxScreenRow;
 
     // WORLD SETTING
-    public final int maxWorldCol = 50;
-    public final int maxWorldRow = 50;
+    public final int maxWorldCol = 30;
+    public final int maxWorldRow = 30;
     public final int worldWidth = tileSize * maxWorldCol;
     public final int worldHeight = tileSize * maxWorldRow; 
     public int currentMap = 1;
@@ -34,7 +34,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     // SYSTEM
     TileManager tileM = new TileManager(this);
-    KeyHandler keyH = new KeyHandler();
+    KeyHandler keyH = new KeyHandler(this);
     Sound music = new Sound();
     Sound se = new Sound();
     Thread gameThread;
@@ -45,6 +45,11 @@ public class GamePanel extends JPanel implements Runnable {
     // ENTITY AND OBJECT
     public Player player = new Player(this, keyH);
     public SuperObject obj[] = new SuperObject[10];
+
+    //GAME STATE
+    public int gameState;
+    public final int playState = 1;
+    public final int pauseState = 2;
 
 
     public GamePanel() {
@@ -60,6 +65,8 @@ public class GamePanel extends JPanel implements Runnable {
         aSetter.setObject();
 
         playMusic(0);
+        stopMusic();
+        gameState = playState;
     }
     public void startGameThread() {
         gameThread = new Thread(this);
@@ -87,7 +94,12 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
     public void update() {
-        player.update();
+        if (gameState == playState){
+            player.update();
+        }
+        if (gameState == pauseState){
+
+        }
     }
     public void paintComponent(Graphics g) {
 

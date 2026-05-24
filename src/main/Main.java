@@ -1,5 +1,4 @@
 package main;
-
 import javax.swing.JFrame;
 
 public class Main {
@@ -9,15 +8,17 @@ public class Main {
         window.setResizable(false);
         window.setTitle("2D Adventure");
 
-        GamePanel gamePanel = new GamePanel();
+        main.GamePanel gamePanel = new main.GamePanel();
         window.add(gamePanel);
 
         window.pack();
 
         window.setLocationRelativeTo(null);
-        window.setVisible(true);
+        
 
         gamePanel.setUpGame();
         gamePanel.startGameThread();
+
+        window.setVisible(true);
     }
 }

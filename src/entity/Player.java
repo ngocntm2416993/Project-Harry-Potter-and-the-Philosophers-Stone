@@ -1,6 +1,7 @@
 package entity;
 
 import main.KeyHandler;
+import main.UtilityTool;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -40,8 +41,8 @@ public class Player extends Entity {
 
     // Vi tri bat dau cua nhan vat
     public void setDefaultValues() {
-        worldX = 23 * gp.tileSize;
-        worldY = 21 * gp.tileSize;
+        worldX = 15 * gp.tileSize; 
+        worldY = 15 * gp.tileSize;
         normalSpeed = 4;
         speed = normalSpeed;
         direction = "down";
@@ -49,21 +50,28 @@ public class Player extends Entity {
     }
 
     public void getPlayerImage() {
-        try {
-            up1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up_1.png"));
-            up2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up_2.png"));
-            down1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_down_1.png"));
-            down2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_down_2.png"));
-            left1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_left_1.png"));
-            left2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_left_2.png"));
-            right1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_right_1.png"));
-            right2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_right_2.png"));
-
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
+        up1 = setup("/player/boy_up_1.png");
+        up2 = setup("/player/boy_up_2.png");
+        down1 = setup("/player/boy_down_1.png");
+        down2 = setup("/player/boy_down_2.png");
+        left1 = setup("/player/boy_left_1.png");
+        left2 = setup("/player/boy_left_2.png");
+        right1 = setup("/player/boy_right_1.png");
+        right2 = setup("/player/boy_right_2.png");
     }
 
+    public BufferedImage setup (String imagePath) {
+        UtilityTool uTool = new UtilityTool();
+        BufferedImage image = null;
+        try {
+            image = ImageIO.read(getClass().getResourceAsStream(imagePath));
+            image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
+
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        return image;
+    }
     public void update() {
         if (keyH.upPressed == true) {
             direction = "up";
@@ -122,7 +130,7 @@ public class Player extends Entity {
     }
 
     public void pickUpObject(int i) {
-        if ( i != -1) {
+        /* if ( i != -1) {
             String objectName = gp.obj[i].name;
 
             switch (objectName){
@@ -140,12 +148,12 @@ public class Player extends Entity {
                     break;
 
             }
-            gp.obj[i]= null;
-        }
+            gp.obj[i]= null; 
+        }*/
     }
 
+    
     public void draw(Graphics2D g2) {
-
         BufferedImage image = null;
         switch (direction) {
             case "up":
@@ -166,6 +174,7 @@ public class Player extends Entity {
                 break;
         }
 
-        g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize,  null);
+        // ĐỔI DÒNG NÀY THÀNH screenX, screenY (Không dùng worldX, worldY ở đây)
+        g2.drawImage(image, screenX, screenY,  null);
     }
 }

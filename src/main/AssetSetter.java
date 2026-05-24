@@ -5,13 +5,14 @@ import object.OBJ_HP;
 import object.OBJ_Speed;
 
 public class AssetSetter {
-    GamePanel gp;
+    main.GamePanel gp;
 
-    public AssetSetter(GamePanel gp) {
+    public AssetSetter(main.GamePanel gp) {
         this.gp = gp;
     }
 
     public void setObject() {
+        /* 
         gp.obj[0] = new OBJ_Speed();
         gp.obj[0].worldX = 7 * gp.tileSize;
         gp.obj[0].worldY = 23 * gp.tileSize;
@@ -26,6 +27,6 @@ public class AssetSetter {
 
         gp.obj[3]= new OBJ_HP();
         gp.obj[3].worldX = 45 * gp.tileSize;
-        gp.obj[3].worldY = 10 * gp.tileSize;
+        gp.obj[3].worldY = 10 * gp.tileSize;*/
     }
 }
