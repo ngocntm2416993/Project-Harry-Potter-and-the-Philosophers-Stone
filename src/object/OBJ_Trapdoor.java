@@ -1,18 +1,21 @@
 package object;
 
+import entity.Player;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import main.GamePanel;
 
-public class OBJ_Door extends SuperObject {
+public class OBJ_Trapdoor extends SuperObject {
     public int targetMap;
     public int spawnTileX, spawnTileY;
 
-    public OBJ_Door(String imagePath, int targetMap, int spawnTileX, int spawnTileY, int tileSize) {
-        this.name       = "Cửa";
+    public OBJ_Trapdoor(int targetMap, int spawnTileX, int spawnTileY, int tileSize) {
+        this.name       = "Cửa Sập";
+        this.hintText   = "[F] Đi đến màn " + targetMap;
+        this.dialogText = "Một cửa sập dẫn xuống tầng dưới...";
         this.targetMap  = targetMap;
         this.spawnTileX = spawnTileX;
         this.spawnTileY = spawnTileY;
-        this.hintText   = "[F] Đi đến màn " + targetMap;
         this.collision  = false;
         this.drawSizeW  = 3;
         this.drawSizeH  = 3;
@@ -25,12 +28,12 @@ public class OBJ_Door extends SuperObject {
         solidAreaDefaultY = solidArea.y;
         proximityRange   = tileSize * 2;
         try {
-            image = ImageIO.read(getClass().getResourceAsStream(imagePath));
+            image = ImageIO.read(getClass().getResourceAsStream("/door/trapdoor.png"));
         } catch (IOException e) { e.printStackTrace(); }
     }
 
     @Override
-    public void onInteract(main.GamePanel gp, entity.Player player) {
+    public void onInteract(GamePanel gp, Player player) {
         gp.changeMap(targetMap);
     }
 }

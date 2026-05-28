@@ -7,6 +7,7 @@ public class KeyHandler implements KeyListener{
     
     GamePanel gp;
     public boolean upPressed, downPressed, leftPressed, rightPressed;
+    public boolean interactPressed;
 
     public KeyHandler(GamePanel gp){
         this.gp = gp;
@@ -31,6 +32,9 @@ public class KeyHandler implements KeyListener{
         if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) {
             rightPressed = true;
         }
+         if (code == KeyEvent.VK_F || code == KeyEvent.VK_ENTER) {
+            interactPressed = true;
+         }
         if (code == KeyEvent.VK_P) {
             if (gp.gameState == gp.playState) {
                 gp.gameState = gp.pauseState;
@@ -58,6 +62,9 @@ public class KeyHandler implements KeyListener{
         if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) {
             rightPressed = false;
         }
+         if (code == KeyEvent.VK_F || code == KeyEvent.VK_ENTER) {
+            interactPressed = false;
+         }
     }
 
 }

@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.JPanel;
 
+import entity.Entity;
 import entity.Player;
 import object.SuperObject;
 import tile.TileManager;
@@ -41,15 +42,18 @@ public class GamePanel extends JPanel implements Runnable {
     public CollisionChecker cChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
     public UI ui = new UI(this);
+    public MapTransition mapTransition = new MapTransition(this);
 
     // ENTITY AND OBJECT
     public Player player = new Player(this, keyH);
     public SuperObject obj[] = new SuperObject[10];
+    public Entity npc[] = new Entity[50];
 
     //GAME STATE
     public int gameState;
     public final int playState = 1;
     public final int pauseState = 2;
+    public final int dialogState = 3;
 
 
     public GamePanel() {
@@ -63,6 +67,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void setUpGame() {
         aSetter.setObject();
+        aSetter.setNPC();
 
         playMusic(0);
         stopMusic();
@@ -94,8 +99,17 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
     public void update() {
-        if (gameState == playState){
+        if (gameState == playState || gameState == dialogState ){
+            //PLAYER
             player.update();
+
+            //MAPS
+            mapTransition.update();
+
+            // NPC 
+            for (Entity n : npc){
+                if (n != null) n.update();
+            }
         }
         if (gameState == pauseState){
 
@@ -104,15 +118,19 @@ public class GamePanel extends JPanel implements Runnable {
     public void paintComponent(Graphics g) {
 
         super.paintComponent(g);
-
-        Graphics2D g2 = (Graphics2D)g;
+        Graphics2D g2 = (Graphics2D) g;
 
         // TILE
-        tileM.draw (g2);
+        tileM.draw(g2);
 
         // OBJECT
-        for (int i = 0; i < obj.length; i++) {
-            if (obj[i] != null) obj[i].draw(g2, this);
+        for (SuperObject o : obj) {
+            if (o != null) o.draw(g2, this);
+        }
+
+        // NPC
+        for (Entity n : npc) {
+            if (n != null) n.draw(g2);
         }
 
         // PLAYER
@@ -121,7 +139,14 @@ public class GamePanel extends JPanel implements Runnable {
         // UI
         ui.draw(g2);
 
+        // MAP TRANSITION
+        mapTransition.draw(g2);
+
         g2.dispose();
+    }
+
+    public void changeMap(int mapId) {
+        mapTransition.startTransition(mapId);
     }
 
     public void playMusic (int i) {
