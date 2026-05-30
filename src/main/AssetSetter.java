@@ -3,6 +3,7 @@ package main;
 import object.*;
 import java.util.Arrays;
 
+import entity.Mon_Boss_1;
 import entity.Mon_Chess;
 
 public class AssetSetter {
@@ -129,8 +130,13 @@ public class AssetSetter {
             default -> "cua.png";
         };
     }
+
     public void setNPC() {
     Arrays.fill(gp.npc, null); // xóa NPC cũ
+    if (gp.currentMap == 1) {
+        // Boss đứng trước trapdoor tại (28,27) → đặt ở (27, 24) để đứng phía trên
+        gp.npc[0] = new Mon_Boss_1(gp, 12, 14);
+    }
 
     if (gp.currentMap == 2) {
         int L = 3, R = 26;

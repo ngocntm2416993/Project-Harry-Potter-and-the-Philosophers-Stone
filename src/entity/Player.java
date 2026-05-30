@@ -100,11 +100,34 @@ public class Player extends Entity {
         }
 
         if (moving) {
+            // collisionOn = false;
+            // gp.cChecker.checkTile(this);
+            // int objIndex = gp.cChecker.checkObject(this, true);
+            // pickUpObject(objIndex);
+            // //gp.cChecker.checkEntity(this, gp.npc);
+            // if (gp.currentMap == 1) {
+            //     gp.cChecker.checkEntity(this, new entity.Entity[]{gp.npc[0]});
+            // }
+
+            // if (!collisionOn) {
+            //     switch (direction) {
+            //         case "up":    worldY -= speed; break;
+            //         case "down":  worldY += speed; break;
+            //         case "right": worldX += speed; break;
+            //         case "left":  worldX -= speed; break;
+            //     }
+            // }
+
+            // spriteCounter++;
+            // if (spriteCounter > 12) {
+            //     spriteNum = (spriteNum == 1) ? 2 : 1;
+            //     spriteCounter = 0;
+            // }
+
             collisionOn = false;
             gp.cChecker.checkTile(this);
             int objIndex = gp.cChecker.checkObject(this, true);
             pickUpObject(objIndex);
-            gp.cChecker.checkEntity(this, gp.npc);
 
             if (!collisionOn) {
                 switch (direction) {
@@ -121,6 +144,10 @@ public class Player extends Entity {
                 spriteCounter = 0;
             }
         }
+
+        if (gp.currentMap == 1 && gp.npc[0] != null) {
+            pushPlayerFromBoss();
+        }
         checkNPCContact();
 
         if (speedBoostEndTime > 0 && System.currentTimeMillis() > speedBoostEndTime) {
@@ -129,41 +156,46 @@ public class Player extends Entity {
         }
     }
 
+    private void pushPlayerFromBoss() {
+        entity.Entity boss = gp.npc[0];
+        java.awt.Rectangle playerRect = new java.awt.Rectangle(
+            worldX + solidAreaDefaultX,
+            worldY + solidAreaDefaultY,
+            solidArea.width, solidArea.height
+        );
+        java.awt.Rectangle bossRect = new java.awt.Rectangle(
+            boss.worldX + boss.solidAreaDefaultX,
+            boss.worldY + boss.solidAreaDefaultY,
+            boss.solidArea.width, boss.solidArea.height
+        );
+
+        if (!playerRect.intersects(bossRect)) return;
+
+        // Tính overlap theo từng trục, đẩy ra theo trục nhỏ hơn
+        int overlapLeft  = (playerRect.x + playerRect.width)  - bossRect.x;
+        int overlapRight = (bossRect.x  + bossRect.width)     - playerRect.x;
+        int overlapUp    = (playerRect.y + playerRect.height)  - bossRect.y;
+        int overlapDown  = (bossRect.y  + bossRect.height)     - playerRect.y;
+
+        int minX = Math.min(overlapLeft, overlapRight);
+        int minY = Math.min(overlapUp,   overlapDown);
+
+        if (minX < minY) {
+            // Đẩy theo trục X
+            if (overlapLeft < overlapRight) worldX -= overlapLeft;
+            else                            worldX += overlapRight;
+        } else {
+            // Đẩy theo trục Y
+            if (overlapUp < overlapDown) worldY -= overlapUp;
+            else                         worldY += overlapDown;
+        }
+    }
+
     private long lastDamageTime = 0;
     private static final long DAMAGE_COOLDOWN = 1000; // 1 giây
 
     private void checkNPCContact() {
-        // java.awt.Rectangle playerRect = new java.awt.Rectangle(
-        //     worldX + solidAreaDefaultX,
-        //     worldY + solidAreaDefaultY,
-        //     solidArea.width,
-        //     solidArea.height
-        // );
-
-        // for (int i = 0; i < gp.npc.length; i++) {
-        //     if (gp.npc[i] == null) continue;
-        //     java.awt.Rectangle npcRect = new java.awt.Rectangle(
-        //         gp.npc[i].worldX + gp.npc[i].solidAreaDefaultX,
-        //         gp.npc[i].worldY + gp.npc[i].solidAreaDefaultY,
-        //         gp.npc[i].solidArea.width,
-        //         gp.npc[i].solidArea.height
-        //     );
-
-        //     if (playerRect.intersects(npcRect)) {
-        //         long now = System.currentTimeMillis();
-        //         if (now - lastDamageTime > DAMAGE_COOLDOWN) {
-        //             lastDamageTime = now;
-        //             HP -= 10;
-        //             gp.ui.showMessage("Bị quân cờ tấn công! -10 HP");
-        //             gp.playSE(1);
-        //             if (HP <= 0) {
-        //                 HP = 0;
-        //                 gp.gameState = gp.gameOverState;
-        //             }
-        //         }
-        //         break; // 1 lần damage mỗi tick dù chạm nhiều quân
-        //     }
-        // }
+        if (gp.currentMap != 2) return;
         int expand = speed + 4; // mở rộng thêm theo hướng di chuyển
         int px = worldX + solidAreaDefaultX;
         int py = worldY + solidAreaDefaultY;
