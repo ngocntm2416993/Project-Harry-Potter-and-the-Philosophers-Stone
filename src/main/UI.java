@@ -59,6 +59,29 @@ public class UI {
 
         if (gp.gameState == gp.dialogState) drawDialog();
         if (gp.gameState == gp.pauseState)  drawPauseScreen();
+        if (gp.gameState == gp.gameOverState) drawGameOver();
+    }
+
+    private void drawGameOver() {
+    // Nền mờ đỏ
+        g2.setColor(new Color(0f, 0f, 0f, 0.75f));
+        g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+
+        // Chữ GAME OVER
+        g2.setFont(baseFont.deriveFont(Font.BOLD, 80F));
+        g2.setColor(new Color(220, 30, 30));
+        String title = "GAME OVER";
+        FontMetrics fm = g2.getFontMetrics();
+        int tx = gp.screenWidth / 2 - fm.stringWidth(title) / 2;
+        g2.drawString(title, tx, gp.screenHeight / 2 - 20);
+
+        // Gợi ý restart
+        g2.setFont(baseFont.deriveFont(Font.PLAIN, 22F));
+        g2.setColor(Color.WHITE);
+        String sub = "Nhấn R để chơi lại";
+        FontMetrics fm2 = g2.getFontMetrics();
+        int sx = gp.screenWidth / 2 - fm2.stringWidth(sub) / 2;
+        g2.drawString(sub, sx, gp.screenHeight / 2 + 50);
     }
 
     private void drawHUD() {

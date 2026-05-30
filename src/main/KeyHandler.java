@@ -8,6 +8,7 @@ public class KeyHandler implements KeyListener{
     GamePanel gp;
     public boolean upPressed, downPressed, leftPressed, rightPressed;
     public boolean interactPressed;
+    public boolean restartPressed;
 
     public KeyHandler(GamePanel gp){
         this.gp = gp;
@@ -44,6 +45,9 @@ public class KeyHandler implements KeyListener{
             }
         }
 
+        // Trong keyPressed:
+        if (code == KeyEvent.VK_R) restartPressed = true;
+
     }
 
     @Override
@@ -65,5 +69,8 @@ public class KeyHandler implements KeyListener{
         if (code == KeyEvent.VK_F || code == KeyEvent.VK_ENTER) {
             interactPressed = false;
         }
+        
+        // Trong keyReleased:
+        if (code == KeyEvent.VK_R) restartPressed = false;
     }
 }

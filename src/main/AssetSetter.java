@@ -3,6 +3,8 @@ package main;
 import object.*;
 import java.util.Arrays;
 
+import entity.Mon_Chess;
+
 public class AssetSetter {
 
     GamePanel gp;
@@ -127,4 +129,55 @@ public class AssetSetter {
             default -> "cua.png";
         };
     }
+    public void setNPC() {
+    Arrays.fill(gp.npc, null); // xóa NPC cũ
+
+    if (gp.currentMap == 2) {
+        int L = 3, R = 26;
+        int leftX  = L * gp.tileSize;       // spawn bên trái
+        int rightX = (R - 2) * gp.tileSize; // spawn bên phải, lùi 2 tile cho chắc
+
+        gp.npc[1]  = new Mon_Chess(gp, L, 5,  L, R, "/chess/codenthap");
+        gp.npc[1].worldX = leftX;
+        gp.npc[11] = new Mon_Chess(gp, L, 5,  L, R, "/chess/cotrangcao");
+        gp.npc[11].worldX = rightX;
+
+        gp.npc[2]  = new Mon_Chess(gp, L, 7,  L, R, "/chess/conguaden");
+        gp.npc[2].worldX = leftX;
+        gp.npc[12] = new Mon_Chess(gp, L, 7,  L, R, "/chess/codencao");
+        gp.npc[12].worldX = rightX;
+
+        gp.npc[3]  = new Mon_Chess(gp, L, 9,  L, R, "/chess/cotrangcao");
+        gp.npc[3].worldX = leftX;
+        gp.npc[13] = new Mon_Chess(gp, L, 9,  L, R, "/chess/codenthap");
+        gp.npc[13].worldX = rightX;
+
+        gp.npc[4]  = new Mon_Chess(gp, L, 13, L, R, "/chess/cotrangthap");
+        gp.npc[4].worldX = leftX;
+        gp.npc[14] = new Mon_Chess(gp, L, 13, L, R, "/chess/cotrangcao");
+        gp.npc[14].worldX = rightX;
+
+        gp.npc[9]  = new Mon_Chess(gp, L, 11, L, R, "/chess/codencao");
+        gp.npc[9].worldX = leftX;
+        gp.npc[17] = new Mon_Chess(gp, L, 11, L, R, "/chess/cotrangcao");
+        gp.npc[17].worldX = rightX;
+
+        gp.npc[16] = new Mon_Chess(gp, L, 19, L, R, "/chess/cotrangcao");
+        gp.npc[16].worldX = leftX;
+        gp.npc[7]  = new Mon_Chess(gp, L, 19, L, R, "/chess/conguaden");
+        gp.npc[7].worldX = rightX;
+
+        gp.npc[15] = new Mon_Chess(gp, L, 17, L, R, "/chess/codenthap");
+        gp.npc[15].worldX = leftX;
+        gp.npc[6]  = new Mon_Chess(gp, L, 17, L, R, "/chess/codenthap");
+        gp.npc[6].worldX = rightX;
+
+        // hàng 15 chỉ có 1 con
+        gp.npc[5]  = new Mon_Chess(gp, L, 15, L, R, "/chess/codencao");
+        gp.npc[8]  = new Mon_Chess(gp, L, 15, L, R, "/chess/cotrangcao");
+        gp.npc[5].worldX = leftX;
+        gp.npc[8].worldX = rightX;
+    }
+    // map khác: để trống hoặc thêm NPC khác sau
+}
 }

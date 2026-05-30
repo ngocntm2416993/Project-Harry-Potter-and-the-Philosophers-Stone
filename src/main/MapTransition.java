@@ -37,6 +37,7 @@ public class MapTransition {
                 gp.player.worldY = spawnY * gp.tileSize;
                 gp.player.collisionOn = false;
                 gp.aSetter.setObject();
+                gp.aSetter.setNPC();
 
                 fadingOut = false;
             }

@@ -54,6 +54,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int playState = 1;
     public final int pauseState = 2;
     public final int dialogState = 3;
+    public final int gameOverState = 4;
 
     //đối tượng đang tương tác
     public SuperObject currentObject;
@@ -67,12 +68,20 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
     }
 
-    public void setUpGame() {
-        aSetter.setObject();
-        playMusic(0);
-        stopMusic();
-        gameState = playState;
-    }
+    // public void setUpGame() {
+    //     aSetter.setObject();
+    //     playMusic(0);
+    //     stopMusic();
+    //     gameState = playState;
+    // }
+
+        public void setUpGame() {
+            aSetter.setObject();
+            aSetter.setNPC(); // ← thêm dòng này
+            playMusic(0);
+            stopMusic();
+            gameState = playState;
+        }
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
@@ -99,6 +108,19 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
     public void update() {
+        if (gameState == gameOverState) {
+            if (keyH.restartPressed) {
+                int spawnX = AssetSetter.MAP_SPAWN[1][0]; // index 1 = map2
+                int spawnY = AssetSetter.MAP_SPAWN[1][1];
+                player.worldX = spawnX * tileSize;
+                player.worldY = spawnY * tileSize;
+                player.HP = 200;
+                player.speed = player.normalSpeed;
+                aSetter.setNPC();
+                gameState = playState;
+            }
+            return;
+        }
         if (gameState == playState || gameState == dialogState ){
             //PLAYER
             player.update();
@@ -167,4 +189,6 @@ public class GamePanel extends JPanel implements Runnable {
         se.setFile(i);
         se.play();
     }
+
+
 }

@@ -104,6 +104,7 @@ public class Player extends Entity {
             gp.cChecker.checkTile(this);
             int objIndex = gp.cChecker.checkObject(this, true);
             pickUpObject(objIndex);
+            gp.cChecker.checkEntity(this, gp.npc);
 
             if (!collisionOn) {
                 switch (direction) {
@@ -120,10 +121,88 @@ public class Player extends Entity {
                 spriteCounter = 0;
             }
         }
+        checkNPCContact();
 
         if (speedBoostEndTime > 0 && System.currentTimeMillis() > speedBoostEndTime) {
             speed = normalSpeed;
             speedBoostEndTime = 0;
+        }
+    }
+
+    private long lastDamageTime = 0;
+    private static final long DAMAGE_COOLDOWN = 1000; // 1 giây
+
+    private void checkNPCContact() {
+        // java.awt.Rectangle playerRect = new java.awt.Rectangle(
+        //     worldX + solidAreaDefaultX,
+        //     worldY + solidAreaDefaultY,
+        //     solidArea.width,
+        //     solidArea.height
+        // );
+
+        // for (int i = 0; i < gp.npc.length; i++) {
+        //     if (gp.npc[i] == null) continue;
+        //     java.awt.Rectangle npcRect = new java.awt.Rectangle(
+        //         gp.npc[i].worldX + gp.npc[i].solidAreaDefaultX,
+        //         gp.npc[i].worldY + gp.npc[i].solidAreaDefaultY,
+        //         gp.npc[i].solidArea.width,
+        //         gp.npc[i].solidArea.height
+        //     );
+
+        //     if (playerRect.intersects(npcRect)) {
+        //         long now = System.currentTimeMillis();
+        //         if (now - lastDamageTime > DAMAGE_COOLDOWN) {
+        //             lastDamageTime = now;
+        //             HP -= 10;
+        //             gp.ui.showMessage("Bị quân cờ tấn công! -10 HP");
+        //             gp.playSE(1);
+        //             if (HP <= 0) {
+        //                 HP = 0;
+        //                 gp.gameState = gp.gameOverState;
+        //             }
+        //         }
+        //         break; // 1 lần damage mỗi tick dù chạm nhiều quân
+        //     }
+        // }
+        int expand = speed + 4; // mở rộng thêm theo hướng di chuyển
+        int px = worldX + solidAreaDefaultX;
+        int py = worldY + solidAreaDefaultY;
+        int pw = solidArea.width;
+        int ph = solidArea.height;
+
+        // Mở rộng rect về phía đang di chuyển
+        switch (direction) {
+            case "up":    py -= expand; ph += expand; break;
+            case "down":  ph += expand;               break;
+            case "left":  px -= expand; pw += expand; break;
+            case "right": pw += expand;               break;
+        }
+
+        java.awt.Rectangle playerRect = new java.awt.Rectangle(px, py, pw, ph);
+
+        for (int i = 0; i < gp.npc.length; i++) {
+            if (gp.npc[i] == null) continue;
+            java.awt.Rectangle npcRect = new java.awt.Rectangle(
+                gp.npc[i].worldX + gp.npc[i].solidAreaDefaultX,
+                gp.npc[i].worldY + gp.npc[i].solidAreaDefaultY,
+                gp.npc[i].solidArea.width,
+                gp.npc[i].solidArea.height
+            );
+
+            if (playerRect.intersects(npcRect)) {
+                long now = System.currentTimeMillis();
+                if (now - lastDamageTime > DAMAGE_COOLDOWN) {
+                    lastDamageTime = now;
+                    HP -= 10;
+                    gp.ui.showMessage("Bị quân cờ tấn công! -10 HP");
+                    gp.playSE(1);
+                    if (HP <= 0) {
+                        HP = 0;
+                        gp.gameState = gp.gameOverState;
+                    }
+                }
+                break;
+            }
         }
     }
 
