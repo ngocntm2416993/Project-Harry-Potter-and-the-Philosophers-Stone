@@ -58,51 +58,7 @@ public class Mon_Boss_1 extends Entity {
 
     @Override
     public void update() {
-        // int tdCX = (trapdoorCol + 1) * gp.tileSize; // center trapdoor
-        // int tdCY = (trapdoorRow + 1) * gp.tileSize;
 
-        // int dx = gp.player.worldX - tdCX;
-        // int dy = gp.player.worldY - tdCY;
-
-        // if (Math.abs(dx) > Math.abs(dy)) {
-        //     if (dx > 0) {
-        //         direction = "right";
-        //         targetX = (trapdoorCol + 4) * gp.tileSize; // (15, 11)
-        //         targetY = trapdoorRow * gp.tileSize;
-        //     } else {
-        //         direction = "left";
-        //         targetX = (trapdoorCol - 4) * gp.tileSize; // (9, 11)
-        //         targetY = trapdoorRow * gp.tileSize;
-        //     }
-        // } else {
-        //     if (dy > 0) {
-        //         direction = "down";
-        //         targetX = trapdoorCol * gp.tileSize;        // (12, 14)
-        //         targetY = (trapdoorRow + 4) * gp.tileSize;
-        //     } else {
-        //         direction = "up";
-        //         targetX = trapdoorCol * gp.tileSize;        // (12, 8)
-        //         targetY = (trapdoorRow - 4) * gp.tileSize;
-        //     }
-        // }
-
-        // // Di chuyển boss về target
-        // int moveSpeed = 3;
-        // if (Math.abs(worldX - targetX) > moveSpeed)
-        //     worldX += (worldX < targetX) ? moveSpeed : -moveSpeed;
-        // else
-        //     worldX = targetX;
-
-        // if (Math.abs(worldY - targetY) > moveSpeed)
-        //     worldY += (worldY < targetY) ? moveSpeed : -moveSpeed;
-        // else
-        //     worldY = targetY;
-
-        // spriteCounter++;
-        // if (spriteCounter > 12) {
-        //     spriteNum = (spriteNum == 1) ? 2 : 1;
-        //     spriteCounter = 0;
-        // }
         int tdCX = (trapdoorCol + 1) * gp.tileSize;
         int tdCY = (trapdoorRow + 1) * gp.tileSize;
 

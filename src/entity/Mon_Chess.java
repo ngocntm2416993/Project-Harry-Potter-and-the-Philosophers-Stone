@@ -15,9 +15,6 @@ public class Mon_Chess extends Entity{
     int startX, startY; // vị trí ban đầu
     int moveRange = 3;  // di chuyển tối đa 3 tile tính từ vị trí ban đầu
     Random random = new Random();
-    // Giới hạn đi ngang
-//    final int boundLeft  = 3  * 48; // thay 48 bằng gp.tileSize nếu cần
-//    final int boundRight = 27 * 48;
     int boundLeft;
     int boundRight;
     int startDelay;
@@ -53,9 +50,6 @@ public class Mon_Chess extends Entity{
         // solidArea = new java.awt.Rectangle(8, 8, gp.tileSize - 16, gp.tileSize - 16);
         // solidAreaDefaultX = solidArea.x;
         // solidAreaDefaultY = solidArea.y;
-        // solidArea = new java.awt.Rectangle(0, 0, gp.tileSize * 2, gp.tileSize * 2);
-        // solidAreaDefaultX = 0;
-        // solidAreaDefaultY = 0;
         int inset = 8; // thử 8 thay vì 16
         solidArea = new java.awt.Rectangle(inset, inset, gp.tileSize * 2 - inset * 2, gp.tileSize * 2 - inset * 2);
         solidAreaDefaultX = inset;
@@ -116,27 +110,6 @@ public class Mon_Chess extends Entity{
             spriteNum = (spriteNum == 1) ? 2 : 1;
             spriteCounter = 0;
         }
-
-
-
-        // setAction();
-        // collisionOn = false;
-        // gp.cChecker.checkTile(this);
-        // gp.cChecker.checkPlayer(this);
-        // gp.cChecker.checkEntity(this, gp.npc);
-        // if (!collisionOn) {
-        //     switch (direction) {
-        //         case "up":    worldY -= speed; break;
-        //         case "down":  worldY += speed; break;
-        //         case "left":  worldX -= speed; break;
-        //         case "right": worldX += speed; break;
-        //     }
-        // }
-        // spriteCounter++;
-        // if (spriteCounter > 12) {
-        //     spriteNum = (spriteNum == 1) ? 2 : 1;
-        //     spriteCounter = 0;
-        // }
     }
     public BufferedImage setupLarge(String imagePath) {
         UtilityTool uTool = new UtilityTool();
