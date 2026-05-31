@@ -28,7 +28,7 @@ public class TileManager {
         mapObjectNum = new int[gp.maxWorldRow][gp.maxWorldCol];
 
         getTileImage();
-        loadMap("/maps/map4.txt");
+        loadMap("/maps/map1.txt");
     }
 
      public void getTileImage() {
@@ -76,8 +76,6 @@ public class TileManager {
             tile[19].image= ImageIO.read(getClass().getResourceAsStream("/door/cuaden.png"));
             tile[20]=new Tile();
             tile[20].image= ImageIO.read(getClass().getResourceAsStream("/door/cualuahong.png"));
-            tile[21] = new Tile();
-            tile[21].image= ImageIO.read(getClass().getResourceAsStream("/deco/guongthan.png"));
 
             tile[22] = new Tile();
             tile[22].image= ImageIO.read(getClass().getResourceAsStream("/deco/bookshelf.png"));
