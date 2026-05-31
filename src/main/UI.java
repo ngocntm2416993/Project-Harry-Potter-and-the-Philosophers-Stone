@@ -6,6 +6,10 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 public class UI {
 
@@ -23,9 +27,35 @@ public class UI {
     private String proximityObjName = "";
     private String proximityHint    = "";
 
+        // HP bar sprites
+    private BufferedImage imgHpBg;
+    private BufferedImage imgHpGreen;
+    private BufferedImage imgHpYellow;
+    private BufferedImage imgHpRed;
+    private BufferedImage imgHpFrame;
+
+    // Fill area within the 64x16 sprite (measured from spritesheet)
+    // Green fill occupies cols 13-59, rows 7-9  => fillable width = 47px starting at x=13
+    private static final int FILL_START_X = 13;   // pixel offset inside sprite where fill begins
+    private static final int FILL_MAX_W   = 47;   // max fillable pixels
+    private static final int MAX_HP       = 200;
+
     public UI(GamePanel gp) {
         this.gp = gp;
         baseFont = new Font("Arial", Font.PLAIN, 22);
+        loadHpBarImages();
+    }
+
+    private void loadHpBarImages() {
+        try {
+            imgHpBg     = ImageIO.read(getClass().getResourceAsStream("/hp/hp_bar_bg.png"));
+            imgHpGreen  = ImageIO.read(getClass().getResourceAsStream("/hp/hp_fill_green.png"));
+            imgHpYellow = ImageIO.read(getClass().getResourceAsStream("/hp/hp_fill_yellow.png"));
+            imgHpRed    = ImageIO.read(getClass().getResourceAsStream("/hp/hp_bar_red.png"));
+            imgHpFrame  = ImageIO.read(getClass().getResourceAsStream("/hp/hp_bar_frame.png"));
+        } catch (IOException | IllegalArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
     public void showMessage(String text) {
@@ -85,12 +115,66 @@ public class UI {
     }
 
     private void drawHUD() {
-        g2.setFont(baseFont.deriveFont(Font.PLAIN, 20F));
-        g2.setColor(new Color(0, 0, 0, 130));
-        g2.fillRoundRect(10, 8, 140, 58, 10, 10);
-        g2.setColor(Color.WHITE);
-        g2.drawString("HP : " + gp.player.HP, 20, 32);
-        g2.drawString("Map: " + gp.currentMap, 20, 56);
+        // scale thanh HP
+        int scale  = 3;
+        int sprW   = 64 * scale;   // 192
+        int sprH   = 16 * scale;   // 48
+        int margin = 12;
+
+        //Góc trên phải
+        int drawX = gp.screenWidth - sprW - margin;
+        int drawY = margin;
+
+        int hp    = Math.max(0, gp.player.HP);
+        float ratio = (float) hp / MAX_HP;
+
+        // Background của thanh HP
+        if (imgHpBg != null)
+            g2.drawImage(imgHpBg, drawX, drawY, sprW, sprH, null);
+
+        // Phần máu trong thanh HP
+        // Scale phần fill
+        if (ratio > 0f) {
+            int fillStartXScaled = FILL_START_X * scale;
+            int fillMaxWScaled   = FILL_MAX_W   * scale;
+            int fillW            = (int)(fillMaxWScaled * ratio);
+
+            // green > 50%, yellow > 25%, red <= 25%
+            // Nháy khi báo đỏ
+            BufferedImage fillImg;
+            int fillOffsetY;
+            if (ratio > 0.5f) {
+                fillImg = imgHpGreen;
+                fillOffsetY = 6;
+            } else if (ratio > 0.25f) {
+                fillImg = imgHpYellow;
+                fillOffsetY = 6;
+            } else {
+                boolean flash = (System.currentTimeMillis() / 350) % 2 == 0;
+                fillImg = flash ? imgHpRed : null;
+                fillOffsetY = 0;
+            }
+
+            if (fillImg != null && fillW > 0) {
+                // Clip để k bị tràn
+                java.awt.Shape oldClip = g2.getClip();
+                g2.setClip(drawX + fillStartXScaled, drawY, fillW, sprH);
+                g2.drawImage(fillImg, drawX, drawY + fillOffsetY, sprW, sprH, null);
+                g2.setClip(oldClip);
+            }
+        }
+
+        // Khung HP ở trên
+        if (imgHpFrame != null)
+            g2.drawImage(imgHpFrame, drawX, drawY, sprW, sprH, null);
+
+        // Số HP ở dưới khung
+        g2.setFont(baseFont.deriveFont(Font.BOLD, 13F));
+        g2.setColor(new Color(255, 220, 220));
+        String hpText = hp + " / " + MAX_HP;
+        FontMetrics fm = g2.getFontMetrics();
+        int textX = drawX + sprW - fm.stringWidth(hpText);
+        g2.drawString(hpText, textX, drawY + sprH + 14);
     }
 
     private void drawMessage() {
