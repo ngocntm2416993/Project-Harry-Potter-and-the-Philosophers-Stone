@@ -13,12 +13,22 @@ public class Mon_Boss_1 extends Entity {
     private final int trapdoorRow = 11; // anchor góc trên trái của trapdoor 3x3
     private int targetX, targetY;
 
+    private final int[][] waypoints = {
+        {12,  8},  // 0 = BẮC
+        {15, 11},  // 1 = ĐÔNG  
+        {12, 14},  // 2 = NAM
+        { 9, 11},  // 3 = TÂY
+    };
+    private int targetWaypointIdx = 2;
+
     public Mon_Boss_1(GamePanel gp, int col, int row) {
         super(gp);
         this.worldX = col * gp.tileSize;
         this.worldY = row * gp.tileSize;
         this.direction = "down";
-        this.speed = 0; // đứng yên
+        this.speed = 10;
+        this.life = 100; // boss có 100 HP
+        this.invicible=false;
 
         // solidArea khớp 3x3 tile
         solidArea = new Rectangle(0, 0, gp.tileSize * 3, gp.tileSize * 3);
@@ -30,13 +40,13 @@ public class Mon_Boss_1 extends Entity {
 
     public void getImage() {
         left1    = setupBoss("/monster/Boss_1/Left(1)");
-        left2    = setupBoss("/monster/Boss_1/Left(2)");
-        right1  = setupBoss("/monster/Boss_1/Right(1)");
-        right2  = setupBoss("/monster/Boss_1/Right(2)");
+        left2    = setupBoss("/monster/Boss_1/Left(1)");
+        right1  = setupBoss("/monster/Boss_1/Left(1)");
+        right2  = setupBoss("/monster/Boss_1/Left(1)");
         up1    = setupBoss("/monster/Boss_1/Left(1)");
-        up2    = setupBoss("/monster/Boss_1/Left(2)");
-        down1  = setupBoss("/monster/Boss_1/Right(1)");
-        down2  = setupBoss("/monster/Boss_1/Right(2)");
+        up2    = setupBoss("/monster/Boss_1/Left(1)");
+        down1  = setupBoss("/monster/Boss_1/Left(1)");
+        down2  = setupBoss("/monster/Boss_1/Left(1)");
     }
 
     private BufferedImage setupBoss(String path) {
@@ -53,62 +63,56 @@ public class Mon_Boss_1 extends Entity {
 
     @Override
     public void setAction() {
-        // đứng yên, không làm gì
-    }
-
-    @Override
-    public void update() {
-
         int tdCX = (trapdoorCol + 1) * gp.tileSize;
         int tdCY = (trapdoorRow + 1) * gp.tileSize;
-
         int dx = gp.player.worldX - tdCX;
         int dy = gp.player.worldY - tdCY;
 
         if (Math.abs(dx) > Math.abs(dy)) {
-            if (dx > 0) {
-                direction = "right";
-                targetX = (trapdoorCol + 4) * gp.tileSize;
-                targetY = trapdoorRow * gp.tileSize;
-            } else {
-                direction = "left";
-                targetX = (trapdoorCol - 4) * gp.tileSize;
-                targetY = trapdoorRow * gp.tileSize;
-            }
+            targetWaypointIdx = (dx > 0) ? 1 : 3;
         } else {
-            if (dy > 0) {
-                direction = "down";
-                targetX = trapdoorCol * gp.tileSize;
-                targetY = (trapdoorRow + 4) * gp.tileSize;
-            } else {
-                direction = "up";
-                targetX = trapdoorCol * gp.tileSize;
-                targetY = (trapdoorRow - 4) * gp.tileSize;
-            }
+            targetWaypointIdx = (dy > 0) ? 2 : 0;
         }
 
-        speed = 4;
+        int targetX = waypoints[targetWaypointIdx][0] * gp.tileSize;
+        int targetY = waypoints[targetWaypointIdx][1] * gp.tileSize;
 
-        // Di chuyển X
         if (Math.abs(worldX - targetX) > speed) {
             direction = (worldX < targetX) ? "right" : "left";
-            collisionOn = false;
-            gp.cChecker.checkTile(this); // check cả tile lẫn object layer
-            if (!collisionOn)
-                worldX += (worldX < targetX) ? speed : -speed;
         } else {
             worldX = targetX;
+            if (Math.abs(worldY - targetY) > speed) {
+                direction = (worldY < targetY) ? "down" : "up";
+            } else {
+                worldY = targetY;
+                direction = "down";
+            }
+        }
+    }
+
+    @Override
+    public void update() {
+        setAction();
+
+        collisionOn = false;
+        gp.cChecker.checkTile(this);
+
+        if (!collisionOn) {
+            switch (direction) {
+                case "up":    worldY -= speed; break;
+                case "down":  worldY += speed; break;
+                case "left":  worldX -= speed; break;
+                case "right": worldX += speed; break;
+            }
         }
 
-        // Di chuyển Y
-        if (Math.abs(worldY - targetY) > speed) {
-            direction = (worldY < targetY) ? "down" : "up";
-            collisionOn = false;
-            gp.cChecker.checkTile(this);
-            if (!collisionOn)
-                worldY += (worldY < targetY) ? speed : -speed;
-        } else {
-            worldY = targetY;
+        if(invicible == true){
+            invicibleCounter++;
+
+            if(invicibleCounter > 30){ // khoảng 0.5 giây
+                invicible = false;
+                invicibleCounter = 0;
+            }
         }
 
         spriteCounter++;
@@ -116,10 +120,14 @@ public class Mon_Boss_1 extends Entity {
             spriteNum = (spriteNum == 1) ? 2 : 1;
             spriteCounter = 0;
         }
+        //speed = 10;
     }
 
     @Override
     public void draw(Graphics2D g2) {
+        // Nhấp nháy khi invincible: bỏ qua vẽ mỗi 5 frame
+         if (invicible && (invicibleCounter / 5) % 2 == 1) return;
+
         int screenX = worldX - gp.player.worldX + gp.player.screenX;
         int screenY = worldY - gp.player.worldY + gp.player.screenY;
 
@@ -137,6 +145,40 @@ public class Mon_Boss_1 extends Entity {
             }
 
             g2.drawImage(image, screenX, screenY, gp.tileSize * 3, gp.tileSize * 3, null);
+
+            // ── THANH MÁU ──────────────────────────────────────────────
+            int barW     = gp.tileSize * 3;       // rộng bằng sprite boss
+            int barH     = 10;                     // chiều cao thanh
+            int barX     = screenX;
+            int barY     = screenY - barH - 6;     // trên đầu boss, cách 6px
+
+            int maxLife  = 100;
+            int fillW    = (int)((life / (double) maxLife) * barW);
+            fillW = Math.max(0, Math.min(fillW, barW));
+
+            // Nền đỏ tối
+            g2.setColor(new java.awt.Color(100, 0, 0));
+            g2.fillRoundRect(barX, barY, barW, barH, 6, 6);
+
+            // Phần máu còn lại (đỏ tươi → vàng → xanh theo HP)
+            float ratio = life / (float) maxLife;
+            java.awt.Color fillColor;
+            if (ratio > 0.5f) {
+                fillColor = new java.awt.Color(0, 200, 50);        // xanh lá
+            } else if (ratio > 0.25f) {
+                fillColor = new java.awt.Color(220, 180, 0);       // vàng
+            } else {
+                fillColor = new java.awt.Color(220, 40, 40);       // đỏ
+            }
+            g2.setColor(fillColor);
+            if (fillW > 0)
+                g2.fillRoundRect(barX, barY, fillW, barH, 6, 6);
+
+            // Viền trắng
+            g2.setColor(java.awt.Color.WHITE);
+            g2.setStroke(new java.awt.BasicStroke(1.5f));
+            g2.drawRoundRect(barX, barY, barW, barH, 6, 6);
+            g2.setStroke(new java.awt.BasicStroke(1f)); // reset stroke
         }
     }
 }

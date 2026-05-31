@@ -48,6 +48,7 @@ public class GamePanel extends JPanel implements Runnable {
     public Player player = new Player(this, keyH);
     public SuperObject obj[] = new SuperObject[10];
     public Entity npc[] = new Entity[50];
+    public Entity monster[] = new Entity[10];
 
     //GAME STATE
     public int gameState;
@@ -67,13 +68,6 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyH);
         this.setFocusable(true);
     }
-
-    // public void setUpGame() {
-    //     aSetter.setObject();
-    //     playMusic(0);
-    //     stopMusic();
-    //     gameState = playState;
-    // }
 
         public void setUpGame() {
             aSetter.setObject();
@@ -139,6 +133,9 @@ public class GamePanel extends JPanel implements Runnable {
         if (gameState == pauseState){
 
         }
+        for (Entity m : monster) {
+            if (m != null) m.update();
+        }
     }
     public void paintComponent(Graphics g) {
 
@@ -156,6 +153,11 @@ public class GamePanel extends JPanel implements Runnable {
         // NPC
         for (Entity n : npc) {
             if (n != null) n.draw(g2);
+        }
+
+        //MONSTER
+        for (Entity m : monster) {
+            if (m != null) m.draw(g2);
         }
 
         // PLAYER

@@ -18,6 +18,7 @@ public class Entity {
     public int speed;
 
     public BufferedImage up1, up2, down1, down2, left1, left2, right1, right2;
+    public BufferedImage attackUpl, attackUp2, attackDown1, attackDown2, attackLeft1, attackLeft2, attackRight1, attackRight2;
     public String direction;
     public int actionLockCounter=0;
 
@@ -27,6 +28,13 @@ public class Entity {
     public Rectangle solidArea;
     public int solidAreaDefaultX, solidAreaDefaultY;
     public boolean collisionOn = false;
+    public boolean attacking = false;
+    public Rectangle attackArea = new Rectangle(0,0,48,48);
+
+    public boolean invicible = false;
+    public int invicibleCounter = 0;
+
+    public int life;
 
     public Entity (GamePanel gp){
         this.gp = gp;

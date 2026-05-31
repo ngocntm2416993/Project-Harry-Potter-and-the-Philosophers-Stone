@@ -80,6 +80,7 @@ public class Mon_Chess extends Entity{
         setAction();
         collisionOn = false;
         gp.cChecker.checkTile(this);
+        gp.cChecker.checkPlayer(this);
 
         boolean hitPlayer = gp.cChecker.checkPlayer(this); // ← đổi void thành boolean
         if (hitPlayer) {
