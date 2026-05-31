@@ -5,8 +5,10 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -42,7 +44,15 @@ public class UI {
 
     public UI(GamePanel gp) {
         this.gp = gp;
-        baseFont = new Font("Arial", Font.PLAIN, 22);
+        try {
+        baseFont = Font.createFont(
+            Font.TRUETYPE_FONT,
+            getClass().getResourceAsStream("/font/FVF Fernando 08.ttf")
+        ).deriveFont(Font.PLAIN, 22F);
+        GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(baseFont);
+    } catch (Exception e) {
+        baseFont = new Font("Arial", Font.PLAIN, 22); // fallback nếu load lỗi
+    }
         loadHpBarImages();
     }
 
