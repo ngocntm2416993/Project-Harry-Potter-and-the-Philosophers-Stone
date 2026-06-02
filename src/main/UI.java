@@ -8,7 +8,6 @@ import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
-import java.awt.GraphicsEnvironment;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -131,8 +130,8 @@ public class UI {
         int sprH   = 16 * scale;   // 48
         int margin = 12;
 
-        //Góc trên phải
-        int drawX = gp.screenWidth - sprW - margin;
+    // ĐỔI THÀNH GÓC TRÊN BÊN TRÁI
+        int drawX = margin; 
         int drawY = margin;
 
         int hp    = Math.max(0, gp.player.HP);
