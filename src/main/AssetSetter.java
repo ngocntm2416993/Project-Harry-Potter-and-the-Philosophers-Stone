@@ -185,6 +185,8 @@ public class AssetSetter {
             gp.npc[5].worldX = leftX;
             gp.npc[8].worldX = rightX;
         }
-        // map khác: để trống hoặc thêm NPC khác sau
+        if (gp.currentMap == 4) {
+            gp.monster[0] = new entity.Mon_Boss_4(gp, 12, 8); // spawn tại waypoint NAM
+        }
     }
 }

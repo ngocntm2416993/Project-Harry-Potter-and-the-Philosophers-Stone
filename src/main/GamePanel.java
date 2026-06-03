@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+
 import javax.swing.JPanel;
 
 import entity.Entity;
@@ -49,6 +51,8 @@ public class GamePanel extends JPanel implements Runnable {
     public SuperObject obj[] = new SuperObject[10];
     public Entity npc[] = new Entity[50];
     public Entity monster[] = new Entity[10];
+    public ArrayList<Entity> entityList = new ArrayList<>();
+    public ArrayList<Entity> projectTileList = new ArrayList<>();
 
     //GAME STATE
     public int gameState;
@@ -102,7 +106,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
     public void update() {
-        if (gameState == gameOverState) {
+        if (gameState == gameOverState ) {
             if (keyH.restartPressed) {
                 int spawnX = AssetSetter.MAP_SPAWN[1][0]; // index 1 = map2
                 int spawnY = AssetSetter.MAP_SPAWN[1][1];
@@ -126,15 +130,29 @@ public class GamePanel extends JPanel implements Runnable {
             for (Entity n : npc){
                 if (n != null) n.update();
             }
-            if (gameState == playState) {
-                currentObject = null;
-            }
-        }
-        if (gameState == pauseState){
 
+            if (gameState == pauseState){
+
+            }
+            for (Entity m : monster) {
+                if (m != null) m.update();
+            }
+
+            for(int i=0;i<projectTileList.size();i++){
+                if(projectTileList.get(i)!=null){
+                    if(projectTileList.get(i).alive==true){
+                        projectTileList.get(i).update();
+                    }
+                    if(projectTileList.get(i).alive==false){
+                        projectTileList.remove(i);
+                    }
+                }
+            }
+            
         }
-        for (Entity m : monster) {
-            if (m != null) m.update();
+        
+        if (gameState == playState) {
+            currentObject = null;
         }
     }
     public void paintComponent(Graphics g) {
@@ -157,6 +175,11 @@ public class GamePanel extends JPanel implements Runnable {
 
         //MONSTER
         for (Entity m : monster) {
+            if (m != null) m.draw(g2);
+        }
+
+        //ProjectTile
+        for (Entity m : projectTileList) {
             if (m != null) m.draw(g2);
         }
 
