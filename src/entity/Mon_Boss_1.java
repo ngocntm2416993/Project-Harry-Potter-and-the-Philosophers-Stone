@@ -14,7 +14,7 @@ public class Mon_Boss_1 extends Entity {
     private static final int BOUND_LEFT   = 5;
     private static final int BOUND_TOP    = 5;
     private static final int BOUND_RIGHT  = 21;
-    private static final int BOUND_BOTTOM = 19;
+    private static final int BOUND_BOTTOM = 18;
 
     // ── Điểm canh giữ trung tâm (pixel) ──────────────────────────────────
     private final int guardX;
@@ -46,7 +46,7 @@ public class Mon_Boss_1 extends Entity {
         this.worldY    = row * gp.tileSize;
         this.direction = "down";
         this.speed     = 10;
-        this.life      = 300;
+        this.life      = 20;
         this.invicible = false;
 
         // Tâm vùng bound = trung tâm giữa (10,10)→(19,19)

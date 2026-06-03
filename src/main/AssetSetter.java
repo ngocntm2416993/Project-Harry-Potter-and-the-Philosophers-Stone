@@ -44,6 +44,12 @@ public class AssetSetter {
             potion.worldY = 5  * gp.tileSize;
             gp.obj[idx++] = potion;
         }
+        if (gp.currentMap == 3) {
+            OBJ_Potion_Ulti potion = new OBJ_Potion_Ulti(gp.tileSize);
+            potion.worldX = 5 * gp.tileSize;
+            potion.worldY = 18 * gp.tileSize;
+            gp.obj[idx++] = potion;
+        }
     }
 
     private SuperObject createObject(int tileId, int worldX, int worldY,

@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 
 import entity.Entity;
 import entity.Player;
+import object.OBJ_Ulti;
 import object.SuperObject;
 import tile.TileManager;
 
@@ -48,7 +49,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     // ENTITY AND OBJECT
     public Player player = new Player(this, keyH);
-    public SuperObject obj[] = new SuperObject[10];
+    public SuperObject obj[] = new SuperObject[50];
     public Entity npc[] = new Entity[50];
     public Entity monster[] = new Entity[10];
     public ArrayList<Entity> entityList = new ArrayList<>();
@@ -154,6 +155,8 @@ public class GamePanel extends JPanel implements Runnable {
         if (gameState == playState) {
             currentObject = null;
         }
+
+        OBJ_Ulti.tickCooldown();
     }
     public void paintComponent(Graphics g) {
 

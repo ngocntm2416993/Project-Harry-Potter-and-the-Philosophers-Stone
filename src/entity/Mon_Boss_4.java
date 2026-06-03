@@ -160,6 +160,15 @@ public class Mon_Boss_4  extends Entity{
             }
         }
 
+        // ── Invincible counter ────────────────────────────────────────────
+        if (invicible) {
+            invicibleCounter++;
+            if (invicibleCounter > 30) {
+                invicible = false;
+                invicibleCounter = 0;
+            }
+        }
+
         // 30 frame cuối trước khi ẩn → dùng ảnh 2 (trắng)
         // còn lại luôn dùng ảnh 1
         if (visibleTimer < 10) {
@@ -171,8 +180,52 @@ public class Mon_Boss_4  extends Entity{
 
     @Override
     public void draw(java.awt.Graphics2D g2) {
-        if (!isVisible) return; // không vẽ gì cả
-        super.draw(g2);         // vẽ bình thường khi visible
+        if (!isVisible) return;
+        // Nhấp nháy khi invincible
+        if (invicible && (invicibleCounter / 5) % 2 == 1) return;
+
+        int screenX = worldX - gp.player.worldX + gp.player.screenX;
+        int screenY = worldY - gp.player.worldY + gp.player.screenY;
+
+        if (worldX + gp.tileSize * 3 > gp.player.worldX - gp.player.screenX &&
+            worldX < gp.player.worldX + gp.player.screenX + gp.tileSize &&
+            worldY + gp.tileSize * 3 > gp.player.worldY - gp.player.screenY &&
+            worldY < gp.player.worldY + gp.player.screenY + gp.tileSize) {
+
+            BufferedImage image;
+            switch (direction) {
+                case "up":    image = (spriteNum == 1) ? up1    : up2;    break;
+                case "left":  image = (spriteNum == 1) ? left1  : left2;  break;
+                case "right": image = (spriteNum == 1) ? right1 : right2; break;
+                default:      image = (spriteNum == 1) ? down1  : down2;  break;
+            }
+            g2.drawImage(image, screenX, screenY, gp.tileSize * 2, gp.tileSize * 4, null);
+
+            // ── Thanh máu ─────────────────────────────────────────────────────
+            int barW    = gp.tileSize * 2;
+            int barH    = 10;
+            int barX    = screenX;
+            int barY    = screenY - barH - 6;
+            int maxLife = 10000;
+            int fillW   = (int)((life / (double) maxLife) * barW);
+            fillW = Math.max(0, Math.min(fillW, barW));
+
+            g2.setColor(new java.awt.Color(100, 0, 0));
+            g2.fillRoundRect(barX, barY, barW, barH, 6, 6);
+
+            float ratio = life / (float) maxLife;
+            g2.setColor(ratio > 0.5f
+                ? new java.awt.Color(0, 200, 50)
+                : ratio > 0.25f
+                    ? new java.awt.Color(220, 180, 0)
+                    : new java.awt.Color(220, 40, 40));
+            if (fillW > 0) g2.fillRoundRect(barX, barY, fillW, barH, 6, 6);
+
+            g2.setColor(java.awt.Color.WHITE);
+            g2.setStroke(new java.awt.BasicStroke(1.5f));
+            g2.drawRoundRect(barX, barY, barW, barH, 6, 6);
+            g2.setStroke(new java.awt.BasicStroke(1f));
+        }
     }
 
 }

@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import main.GamePanel;
 import main.KeyHandler;
 import object.OBJ_Slash;
+import object.OBJ_Ulti;
 
 public class Player extends Entity {
 
@@ -23,8 +24,10 @@ public class Player extends Entity {
     private int activeDialogObjIndex = -1;
     private int nearbyObjIndex = -1;
     // ── Unlock flags ──────────────────────────────────────────────────────
-    public boolean hasSlash = false;      // nhặt lọ A mới dùng được
-    public boolean hasFireball = false;   // ví dụ chiêu khác sau này
+    public boolean hasSlash = false;      // nhặt lọ xanh dương mới dùng được
+    public boolean hasFireball = false;   
+    public boolean hasUlti = false;
+    private boolean ultiConsumed = false;
 
     public Player(GamePanel gp, KeyHandler keyH) {
         super(gp);
@@ -176,7 +179,49 @@ public class Player extends Entity {
                 gp.projectTileList.add(projectTile);
             }
         }
+
+        if (keyH.UltiPressed) {
+            if (!hasUlti) {
+                gp.ui.showMessage("Cần lọ thuốc tím để dùng chiêu này!");
+            } else {
+                useUlti();
+            }
+        }
+        
         checkNPCContact();
+    }
+
+    // private void useUlti() {
+    //     if (ultiConsumed) return; // chặn giữ phím
+    //     ultiConsumed = true;
+
+    //     String[] dirs = {"up", "down", "left", "right"};
+    //     for (String dir : dirs) {
+    //         entity.ProjectTile pt = new object.OBJ_Slash(gp);
+    //         pt.set(worldX, worldY, dir, true, this);
+    //         gp.projectTileList.add(pt);
+    //     }
+    //     gp.ui.showMessage("Ulti!");
+    //     gp.playSE(1);
+    // }
+
+    private void useUlti() {
+        if (!OBJ_Ulti.isReady()) {
+            int sec = OBJ_Ulti.cooldownTimer / 60 + 1;
+            gp.ui.showMessage("Ulti hồi chiêu: còn " + sec + "s");
+            return;
+        }
+
+        String[] dirs = {"up", "down", "left", "right"};
+        for (String dir : dirs) {
+            OBJ_Ulti pt = new OBJ_Ulti(gp);
+            pt.set(worldX, worldY, dir, true, this);
+            gp.projectTileList.add(pt);
+        }
+
+        OBJ_Ulti.triggerCooldown(); // ← bắt đầu đếm cooldown
+        gp.ui.showMessage("Ulti!");
+        gp.playSE(1);
     }
 
     public void attacking() {

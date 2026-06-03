@@ -7,6 +7,12 @@ import main.GamePanel;
 
 public class ProjectTile extends Entity{
     Entity user;
+    public boolean started = false;
+    public int startX, startY;
+    public int maxLife;
+    public int attack;
+    public int useCost;
+    public int defense;
     public ProjectTile( GamePanel gp){
         super(gp);
         solidArea = new java.awt.Rectangle(0, 0, gp.tileSize, gp.tileSize);
@@ -20,6 +26,9 @@ public class ProjectTile extends Entity{
         this.alive = alive;
         this.user= user;
         this.life = this.maxLife;
+        this.startX=worldX;
+        this.startY=worldY;
+        this.started=true;
     }
     public void update(){
         if( user == gp.player){
@@ -30,9 +39,7 @@ public class ProjectTile extends Entity{
 
             }
         }
-        if( user != gp.player){
 
-        }
         switch(direction) {
             case "up": worldY -= speed; break; 
             case "down": worldY += speed; break;
