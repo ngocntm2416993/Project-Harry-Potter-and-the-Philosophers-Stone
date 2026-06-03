@@ -1,0 +1,8 @@
+# Chặn toàn bộ file đã biên dịch trong thư mục bin
+bin/
+*.class
+
+# Chặn cấu hình riêng của IDE (nếu có)
+.idea/
+*.iml
+out/
