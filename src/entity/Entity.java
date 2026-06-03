@@ -12,7 +12,7 @@ import main.UtilityTool;
 
 public class Entity {
 
-    GamePanel gp;
+    protected GamePanel gp;
 
     public int worldX, worldY;
     public int speed;
@@ -21,6 +21,9 @@ public class Entity {
     public BufferedImage attackUpl, attackUp2, attackDown1, attackDown2, attackLeft1, attackLeft2, attackRight1, attackRight2;
     public String direction;
     public int actionLockCounter=0;
+    public boolean alive;
+    public int attack;  
+    public String name = ""; 
 
     public int spriteCounter = 0;
     public int spriteNum = 1;
@@ -33,8 +36,17 @@ public class Entity {
 
     public boolean invicible = false;
     public int invicibleCounter = 0;
+    public ProjectTile projectTile;
 
     public int life;
+    public int maxLife;
+    public int mana;
+    public int maxMana;
+    
+    //public ProjectTile projectTile;
+    public int useCost;
+
+    public int defense=0;
 
     public Entity (GamePanel gp){
         this.gp = gp;

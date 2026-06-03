@@ -6,11 +6,14 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
+
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import entity.Entity;
 import entity.Player;
+import object.OBJ_Ulti;
 import object.SuperObject;
 import tile.TileManager;
 
@@ -49,9 +52,11 @@ public class GamePanel extends JPanel implements Runnable {
 
     // ENTITY AND OBJECT
     public Player player = new Player(this, keyH);
-    public SuperObject obj[] = new SuperObject[10];
+    public SuperObject obj[] = new SuperObject[50];
     public Entity npc[] = new Entity[50];
     public Entity monster[] = new Entity[10];
+    public ArrayList<Entity> entityList = new ArrayList<>();
+    public ArrayList<Entity> projectTileList = new ArrayList<>();
 
     // GAME STATE
     public int gameState;
@@ -61,6 +66,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int gameOverState = 4;
     public final int settingState = 5;
 
+    //đối tượng đang tương tác
     public SuperObject currentObject;
 
     public GamePanel() {
@@ -180,21 +186,21 @@ public class GamePanel extends JPanel implements Runnable {
 
         while (gameThread != null) {
             currentTime = System.nanoTime();
+
             delta += (currentTime - lastTime) / drawInterval;
             lastTime = currentTime;
 
-            if (delta >= 1) {
+            if (delta >= 1){
                 update();
                 repaint();
-                delta--;
+                delta --;
             }
         }
     }
-
     public void update() {
         if (gameState == gameOverState) {
             if (keyH.restartPressed) {
-                int spawnX = AssetSetter.MAP_SPAWN[1][0];
+                int spawnX = AssetSetter.MAP_SPAWN[1][0]; // index 1 = map2
                 int spawnY = AssetSetter.MAP_SPAWN[1][1];
                 player.worldX = spawnX * tileSize;
                 player.worldY = spawnY * tileSize;
@@ -205,43 +211,81 @@ public class GamePanel extends JPanel implements Runnable {
             }
             return;
         }
-
-        if (gameState == playState || gameState == dialogState) {
+        if (gameState == playState || gameState == dialogState ){
+            //PLAYER
             player.update();
+
+            //MAPS
             mapTransition.update();
-            for (Entity n : npc) {
+
+            // NPC 
+            for (Entity n : npc){
                 if (n != null) n.update();
             }
             if (gameState == playState) {
                 currentObject = null;
             }
+
+
+
+            for (Entity m : monster) {
+                if (m != null) m.update();
+            }
+
+            for(int i=0;i<projectTileList.size();i++){
+                if(projectTileList.get(i)!=null){
+                    if(projectTileList.get(i).alive==true){
+                        projectTileList.get(i).update();
+                    }
+                    if(projectTileList.get(i).alive==false){
+                        projectTileList.remove(i);
+                    }
+                }
+            }
+
         }
 
-        for (Entity m : monster) {
-            if (m != null) m.update();
+        if (gameState == playState) {
+            currentObject = null;
         }
+
+        OBJ_Ulti.tickCooldown();
     }
-
     public void paintComponent(Graphics g) {
+
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
+        // TILE
         tileM.draw(g2);
 
+        // OBJECT
         for (SuperObject o : obj) {
             if (o != null) o.draw(g2, this);
         }
 
+        // NPC
         for (Entity n : npc) {
             if (n != null) n.draw(g2);
         }
 
+        //MONSTER
         for (Entity m : monster) {
             if (m != null) m.draw(g2);
         }
 
+        //ProjectTile
+        for (Entity m : projectTileList) {
+            if (m != null) m.draw(g2);
+        }
+
+        // PLAYER
         player.draw(g2);
+
+        // UI
         ui.draw(g2);
+
+        // MAP TRANSITION
         mapTransition.draw(g2);
 
         g2.dispose();
@@ -251,7 +295,8 @@ public class GamePanel extends JPanel implements Runnable {
         mapTransition.startTransition(mapId);
     }
 
-    public void playMusic(int i) {
+    public void playMusic (int i) {
+        
         music.setFile(i);
         music.play();
         music.loop();
@@ -265,4 +310,6 @@ public class GamePanel extends JPanel implements Runnable {
         se.setFile(i);
         se.play();
     }
+
+
 }

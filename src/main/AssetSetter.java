@@ -38,6 +38,18 @@ public class AssetSetter {
                 if (obj != null) gp.obj[idx++] = obj;
             }
         }
+        if (gp.currentMap == 1) {
+            OBJ_Potion_Slash potion = new OBJ_Potion_Slash(gp.tileSize);
+            potion.worldX = 10 * gp.tileSize;
+            potion.worldY = 5  * gp.tileSize;
+            gp.obj[idx++] = potion;
+        }
+        if (gp.currentMap == 3) {
+            OBJ_Potion_Ulti potion = new OBJ_Potion_Ulti(gp.tileSize);
+            potion.worldX = 5 * gp.tileSize;
+            potion.worldY = 18 * gp.tileSize;
+            gp.obj[idx++] = potion;
+        }
     }
 
     private SuperObject createObject(int tileId, int worldX, int worldY,
@@ -185,6 +197,8 @@ public class AssetSetter {
             gp.npc[5].worldX = leftX;
             gp.npc[8].worldX = rightX;
         }
-        // map khác: để trống hoặc thêm NPC khác sau
+        if (gp.currentMap == 4) {
+            gp.monster[0] = new entity.Mon_Boss_4(gp, 12, 8); // spawn tại waypoint NAM
+        }
     }
 }
