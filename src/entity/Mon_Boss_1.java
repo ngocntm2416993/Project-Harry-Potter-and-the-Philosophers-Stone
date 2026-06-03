@@ -40,8 +40,8 @@ public class Mon_Boss_1 extends Entity {
     public void getImage() {
         left1    = setupBoss("/monster/Boss_1/Left(1)");
         left2    = setupBoss("/monster/Boss_1/Left(2)");
-        right1  = setupBoss("/monster/Boss_1/Right(1)");
-        right2  = setupBoss("/monster/Boss_1/Right(2)");
+        right1  = setupBoss("/monster/Boss_1/BackRight(1)");
+        right2  = setupBoss("/monster/Boss_1/BackRight(2)");
         up1    = setupBoss("/monster/Boss_1/BackLeft(1)");
         up2    = setupBoss("/monster/Boss_1/BackLeft(2)");
         down1  = setupBoss("/monster/Boss_1/Left(1)");
