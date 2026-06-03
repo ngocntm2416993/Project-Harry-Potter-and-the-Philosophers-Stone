@@ -22,6 +22,9 @@ public class Player extends Entity {
     private boolean justClosedDialog = false;
     private int activeDialogObjIndex = -1;
     private int nearbyObjIndex = -1;
+    // ── Unlock flags ──────────────────────────────────────────────────────
+    public boolean hasSlash = false;      // nhặt lọ A mới dùng được
+    public boolean hasFireball = false;   // ví dụ chiêu khác sau này
 
     public Player(GamePanel gp, KeyHandler keyH) {
         super(gp);
@@ -144,9 +147,6 @@ public class Player extends Entity {
                 spriteCounter = 0;
             }
         }
-        // if (gp.monster[0] != null) {
-        //     pushPlayerFromBoss(); // ← đẩy ra sau
-        // }
 
         if (speedBoostEndTime > 0 && System.currentTimeMillis() > speedBoostEndTime) {
             speed = normalSpeed;
@@ -162,12 +162,20 @@ public class Player extends Entity {
             }
         }
 
-        if (keyH.slashPressed && !projectTile.alive) {
-            projectTile = new OBJ_Slash(gp);  // tạo mới mỗi lần bắn
-            projectTile.set(worldX, worldY, direction, true, this);
-            gp.projectTileList.add(projectTile);
+        // if (keyH.slashPressed && !projectTile.alive) {
+        //     projectTile = new OBJ_Slash(gp);  // tạo mới mỗi lần bắn
+        //     projectTile.set(worldX, worldY, direction, true, this);
+        //     gp.projectTileList.add(projectTile);
+        // }
+        if (keyH.slashPressed) {
+            if (!hasSlash) {
+                gp.ui.showMessage("Cần lọ thuốc xanh dương để dùng chiêu Slash!");
+            } else if (!projectTile.alive) {
+                projectTile = new OBJ_Slash(gp);
+                projectTile.set(worldX, worldY, direction, true, this);
+                gp.projectTileList.add(projectTile);
+            }
         }
-
         checkNPCContact();
     }
 
@@ -307,33 +315,6 @@ public class Player extends Entity {
                 }
             }
         }
-
-        // // Bất kỳ map nào: check monster[0]  ← CHỈ GIỮ BLOCK NÀY, XÓA 2 BLOCK CŨ
-        // if (gp.monster[0] != null) {
-        //     java.awt.Rectangle playerRect = new java.awt.Rectangle(
-        //         worldX + solidAreaDefaultX,
-        //         worldY + solidAreaDefaultY,
-        //         solidArea.width, solidArea.height
-        //     );
-        //     java.awt.Rectangle bossRect = new java.awt.Rectangle(
-        //         gp.monster[0].worldX + gp.monster[0].solidAreaDefaultX,
-        //         gp.monster[0].worldY + gp.monster[0].solidAreaDefaultY,
-        //         gp.monster[0].solidArea.width, gp.monster[0].solidArea.height
-        //     );
-
-        //     if (playerRect.intersects(bossRect)&& !invicible) {
-        //         long now = System.currentTimeMillis();
-        //         if (now - lastDamageTime > DAMAGE_COOLDOWN) {
-        //             lastDamageTime = now;
-        //             HP -= 20;
-        //             invicible = true;
-        //             invicibleCounter = 0;
-        //             gp.ui.showMessage("Boss tấn công! -20 HP");
-        //             gp.playSE(1);
-        //             if (HP <= 0) { HP = 0; gp.gameState = gp.gameOverState; }
-        //         }
-        //     }
-        // }
     }
 
     private void checkProximity() {

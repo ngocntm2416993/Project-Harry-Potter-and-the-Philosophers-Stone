@@ -38,6 +38,12 @@ public class AssetSetter {
                 if (obj != null) gp.obj[idx++] = obj;
             }
         }
+        if (gp.currentMap == 1) {
+            OBJ_Potion_Slash potion = new OBJ_Potion_Slash(gp.tileSize);
+            potion.worldX = 10 * gp.tileSize;
+            potion.worldY = 5  * gp.tileSize;
+            gp.obj[idx++] = potion;
+        }
     }
 
     private SuperObject createObject(int tileId, int worldX, int worldY,

@@ -7,7 +7,7 @@ public class KeyHandler implements KeyListener{
 
     GamePanel gp;
     public boolean upPressed, downPressed, leftPressed, rightPressed;
-    public boolean slashPressed; 
+    public boolean slashPressed, UltiPressed; 
     public boolean interactPressed;
     public boolean restartPressed;
 
@@ -39,6 +39,9 @@ public class KeyHandler implements KeyListener{
         }
         if (code == KeyEvent.VK_1 || code == KeyEvent.VK_Q) {
             slashPressed = true;
+        }
+        if (code == KeyEvent.VK_2 || code == KeyEvent.VK_E) {
+            UltiPressed = true;
         }
         if (code == KeyEvent.VK_P) {
             if (gp.gameState == gp.playState) {
@@ -76,6 +79,10 @@ public class KeyHandler implements KeyListener{
 
         if (code == KeyEvent.VK_Q || code == KeyEvent.VK_1) {
             slashPressed = false;
+        }
+
+        if (code == KeyEvent.VK_E || code == KeyEvent.VK_2) {
+            UltiPressed = false;
         }
         // Trong keyReleased:
         if (code == KeyEvent.VK_R) restartPressed = false;
