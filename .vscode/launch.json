@@ -1,0 +1,12 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Chạy Game JavaFX",
+            "request": "launch",
+            "mainClass": "main.MainApp",
+            "vmArgs": "-Dprism.order=sw --module-path lib --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base"
+        }
+    ]
+}

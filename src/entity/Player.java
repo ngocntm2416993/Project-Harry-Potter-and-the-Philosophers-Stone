@@ -157,6 +157,8 @@ public class Player extends Entity {
                 invicibleCounter = 0;
             }
         }
+
+        checkNPCContact();
     }
 
     public void attacking() {
@@ -463,6 +465,7 @@ public class Player extends Entity {
                 }  
             break; 
         }
+        
         g2.drawImage(image, screenX, screenY, null);
     }
 }

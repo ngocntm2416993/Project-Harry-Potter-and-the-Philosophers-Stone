@@ -11,7 +11,6 @@ import java.io.IOException;
 public class Mon_Boss_1 extends Entity {
     private final int trapdoorCol = 12;
     private final int trapdoorRow = 11; // anchor góc trên trái của trapdoor 3x3
-    private int targetX, targetY;
 
     private final int[][] waypoints = {
         {12,  8},  // 0 = BẮC
@@ -40,13 +39,13 @@ public class Mon_Boss_1 extends Entity {
 
     public void getImage() {
         left1    = setupBoss("/monster/Boss_1/Left(1)");
-        left2    = setupBoss("/monster/Boss_1/Left(1)");
-        right1  = setupBoss("/monster/Boss_1/Left(1)");
-        right2  = setupBoss("/monster/Boss_1/Left(1)");
-        up1    = setupBoss("/monster/Boss_1/Left(1)");
-        up2    = setupBoss("/monster/Boss_1/Left(1)");
+        left2    = setupBoss("/monster/Boss_1/Left(2)");
+        right1  = setupBoss("/monster/Boss_1/BackRight(1)");
+        right2  = setupBoss("/monster/Boss_1/BackRight(2)");
+        up1    = setupBoss("/monster/Boss_1/BackLeft(1)");
+        up2    = setupBoss("/monster/Boss_1/BackLeft(2)");
         down1  = setupBoss("/monster/Boss_1/Left(1)");
-        down2  = setupBoss("/monster/Boss_1/Left(1)");
+        down2  = setupBoss("/monster/Boss_1/Left(2)");
     }
 
     private BufferedImage setupBoss(String path) {
