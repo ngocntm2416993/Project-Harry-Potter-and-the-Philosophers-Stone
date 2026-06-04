@@ -89,14 +89,11 @@ public class TileManager {
         // ── TRANG TRÍ 1x1 ────────────────────────────────────────────────
         setup(18, "/deco/banthuocdoc.png", true,  new Rectangle(0, 8, T, 34));
         setup(21, "/deco/guongthan.png");
-        setup(30, "/deco/candle.png",      true,  new Rectangle(16, 32, 16, 16));
-        setup(31, "/deco/torch.png",       true,  new Rectangle(16, 32, 16, 16));
+
         setup(32, "/deco/stone.png",       true,  new Rectangle(4, 4, 40, 40));
         setup(40, "/deco/vase.png",        true,  new Rectangle(5, 2, 38, 43));
         setup(41, "/deco/vase2.png",       true,  new Rectangle(6, 0, 37, 42));
         setup(49, "/deco/web.png");
-        setup(61, "/deco/pp1.png");
-        setup(62, "/deco/pp2.png");
         setup(63, "/deco/scroll.png");
             // npc
         setup(70, "/npc/oldman_down_1.png",true, full(1));
@@ -116,6 +113,8 @@ public class TileManager {
         setup(26, "/deco/barrow.png",     true, new Rectangle(24, 36, 48, 60));
         setup(27, "/deco/barrow2.png",    true, new Rectangle(24, 31, 48, 65));
         setup(28, "/deco/becua.png",      true, full(2));
+        setup(30, "/deco/candle.png",      true,  new Rectangle(16, 32, 16, 16));
+        setup(31, "/deco/torch.png",       true,  new Rectangle(16, 32, 16, 16));
         setup(33, "/deco/thunggo1.png",   true, new Rectangle(7,  27, 84, 69));
         setup(34, "/deco/thunggo2.png",   true, new Rectangle(4,  27, 84, 69));
         setup(35, "/deco/thunggo3.png",   true, new Rectangle(7,  33, 84, 63));
@@ -125,6 +124,9 @@ public class TileManager {
         setup(58, "/deco/bookpile.png",   true, new Rectangle(18, 2, 54, 80));
         setup(59, "/deco/bookpile2.png",  true, new Rectangle(13,0,54,80));
         setup(60, "/deco/giasach.png",    true, full(2));
+        setup(61, "/deco/pp1.png");
+        setup(62, "/deco/pp2.png");
+
 
         // ── TRANG TRÍ 3x3 ────────────────────────────────────────────────
         setup(25, "/deco/bookshelf4.png", true, full(3));
@@ -252,9 +254,9 @@ public class TileManager {
                         drawW = T; drawH = T * 3;
                     }
                     // 2x2
-                    else if ((ot >= 22 && ot <= 24) || ot == 26 || ot == 27 || ot == 28
-                            || (ot >= 33 && ot <= 36) || ot == 38 || ot == 42
-                            || (ot >= 58 && ot <= 60)) {
+                    else if ((ot >= 22 && ot <= 24) || ot == 26 || ot == 27 || ot == 28 || ot == 30
+                            || ot == 31 || (ot >= 33 && ot <= 36) || ot == 38
+                            || ot == 42 || (ot >= 58 && ot <= 62)) {
                         drawW = T * 2; drawH = T * 2;
                     }
                     // 3x3
