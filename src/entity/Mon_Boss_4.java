@@ -206,7 +206,6 @@ public class Mon_Boss_4  extends Entity{
             int barH    = 10;
             int barX    = screenX;
             int barY    = screenY - barH - 6;
-            int maxLife = 100;
             int fillW   = (int)((life / (double) maxLife) * barW);
             fillW = Math.max(0, Math.min(fillW, barW));
 

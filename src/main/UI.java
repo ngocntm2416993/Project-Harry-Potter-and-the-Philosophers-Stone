@@ -67,15 +67,14 @@ public class UI {
     public UI(GamePanel gp) {
         this.gp = gp;
         try {
-            // Đi từ thư mục gốc của dự án vào res/font/
-            java.io.File fontFile = new java.io.File("res/font/FVF Fernando 08.ttf");
-            baseFont = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(Font.PLAIN, 22F);
-
-            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(baseFont);
-        } catch (Exception e) {
-            e.printStackTrace();
-            baseFont = new Font("Arial", Font.PLAIN, 22);
-        }
+        baseFont = Font.createFont(
+            Font.TRUETYPE_FONT,
+            getClass().getResourceAsStream("/font/FVF Fernando 08.ttf")
+        ).deriveFont(Font.PLAIN, 22F);
+        GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(baseFont);
+    } catch (Exception e) {
+        baseFont = new Font("Arial", Font.PLAIN, 22); // fallback nếu load lỗi
+    }
         loadHpBarImages();
     }
 
@@ -89,6 +88,7 @@ public class UI {
         } catch (IOException | IllegalArgumentException e) {
             e.printStackTrace();
         }
+        baseFont = new Font("Arial", Font.PLAIN, 22);
         loadPauseImages();
         loadSettingImages(); // Khởi tạo nạp ảnh setting khi tạo UI
     }

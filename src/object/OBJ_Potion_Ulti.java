@@ -17,7 +17,7 @@ public class OBJ_Potion_Ulti extends SuperObject {
         try {
             UtilityTool uTool = new UtilityTool();
             BufferedImage raw = ImageIO.read(
-                    getClass().getResourceAsStream("/object/potion/thuocvang.png")
+                getClass().getResourceAsStream("/object/potion/thuocvang.png")
             );
             if (raw != null) image = uTool.scaleImage(raw, tileSize, tileSize);
         } catch (IOException e) {

@@ -9,14 +9,14 @@ public class OBJ_Slash extends ProjectTile {
 
     public OBJ_Slash(GamePanel gp) {
         super(gp);
-        name = "Slash";          
+        name = "Slash";
         speed = 5;
         maxLife = 80;
         life = maxLife;
-        attack = 20;              
+        attack = 20;
         useCost = 1;
         alive = false;
-        getImage();           
+        getImage();
     }
 
     public void set(int worldX, int worldY, String direction, boolean alive, entity.Entity user) {
@@ -46,7 +46,7 @@ public class OBJ_Slash extends ProjectTile {
         super.update();
     }
 
-    public void getImage() {   
+    public void getImage() {
         up1    = setup("/skill/Slash_up(1).png");
         up2    = setup("/skill/Slash_up(2).png");
         down1  = setup("/skill/Slash_down(1).png");
@@ -55,6 +55,6 @@ public class OBJ_Slash extends ProjectTile {
         left2  = setup("/skill/Slash_left(2).png");
         right1 = setup("/skill/Slash_right(1).png");
         right2 = setup("/skill/Slash_right(2).png");
-        
+
     }
 }
