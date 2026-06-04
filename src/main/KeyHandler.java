@@ -1,4 +1,5 @@
 package main;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -6,6 +7,7 @@ public class KeyHandler implements KeyListener{
 
     GamePanel gp;
     public boolean upPressed, downPressed, leftPressed, rightPressed;
+    public boolean slashPressed, UltiPressed;
     public boolean interactPressed;
     public boolean restartPressed;
 
@@ -35,12 +37,18 @@ public class KeyHandler implements KeyListener{
         if (code == KeyEvent.VK_F || code == KeyEvent.VK_ENTER) {
             interactPressed = true;
         }
-
+        if (code == KeyEvent.VK_1 || code == KeyEvent.VK_Q) {
+            slashPressed = true;
+        }
+        if (code == KeyEvent.VK_2 || code == KeyEvent.VK_E) {
+            UltiPressed = true;
+        }
         if (code == KeyEvent.VK_P) {
             if (gp.gameState == gp.playState) {
                 gp.gameState = gp.pauseState;
-            } else if (gp.gameState == gp.pauseState) {
-                gp.gameState = gp.playState; // nhấn P lần 2 để resume
+            }
+            else if (gp.gameState == gp.pauseState){
+                gp.gameState = gp.playState;
             }
         }
 
@@ -68,7 +76,14 @@ public class KeyHandler implements KeyListener{
         if (code == KeyEvent.VK_F || code == KeyEvent.VK_ENTER) {
             interactPressed = false;
         }
-        
+
+        if (code == KeyEvent.VK_Q || code == KeyEvent.VK_1) {
+            slashPressed = false;
+        }
+
+        if (code == KeyEvent.VK_E || code == KeyEvent.VK_2) {
+            UltiPressed = false;
+        }
         // Trong keyReleased:
         if (code == KeyEvent.VK_R) restartPressed = false;
     }

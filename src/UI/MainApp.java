@@ -33,8 +33,6 @@ public class MainApp extends Application {
     }
 
     public static void main(String[] args) {
-        System.setProperty("prism.order", "sw");
-        System.setProperty("prism.forceGPU", "false");
         launch(args);
     }
 }

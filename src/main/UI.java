@@ -11,8 +11,11 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.image.BufferedImage;
+import java.awt.Rectangle;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 public class UI {
 
@@ -25,10 +28,10 @@ public class UI {
     private static final int MESSAGE_DURATION = 100;
 
     private String dialogTitle = "";
-    private String dialogBody  = "";
+    private String dialogBody = "";
 
     private String proximityObjName = "";
-    private String proximityHint    = "";
+    private String proximityHint = "";
 
         // HP bar sprites
     private BufferedImage imgHpBg;
@@ -43,7 +46,7 @@ public class UI {
     private static final int FILL_MAX_W   = 47;   // max fillable pixels
     private static final int MAX_HP       = 200;
 
-        // Ảnh pause menu
+    // Ảnh pause menu
     private BufferedImage imgBgPause, imgPaused, imgSetting, imgResume, imgRestart;
 
     // Tài nguyên hình ảnh cho màn hình Setting bằng Swing Overlay
@@ -64,15 +67,30 @@ public class UI {
     public UI(GamePanel gp) {
         this.gp = gp;
         try {
-        baseFont = Font.createFont(
-            Font.TRUETYPE_FONT,
-            getClass().getResourceAsStream("/font/FVF Fernando 08.ttf")
-        ).deriveFont(Font.PLAIN, 22F);
-        GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(baseFont);
-    } catch (Exception e) {
-        baseFont = new Font("Arial", Font.PLAIN, 22); // fallback nếu load lỗi
-    }
+            // Đi từ thư mục gốc của dự án vào res/font/
+            java.io.File fontFile = new java.io.File("res/font/FVF Fernando 08.ttf");
+            baseFont = Font.createFont(Font.TRUETYPE_FONT, fontFile).deriveFont(Font.PLAIN, 22F);
+
+            GraphicsEnvironment.getLocalGraphicsEnvironment().registerFont(baseFont);
+        } catch (Exception e) {
+            e.printStackTrace();
+            baseFont = new Font("Arial", Font.PLAIN, 22);
+        }
         loadHpBarImages();
+    }
+
+    private void loadHpBarImages() {
+        try {
+            imgHpBg     = ImageIO.read(getClass().getResourceAsStream("/hp/hp_bar_bg.png"));
+            imgHpGreen  = ImageIO.read(getClass().getResourceAsStream("/hp/hp_fill_green.png"));
+            imgHpYellow = ImageIO.read(getClass().getResourceAsStream("/hp/hp_fill_yellow.png"));
+            imgHpRed    = ImageIO.read(getClass().getResourceAsStream("/hp/hp_bar_red.png"));
+            imgHpFrame  = ImageIO.read(getClass().getResourceAsStream("/hp/hp_bar_frame.png"));
+        } catch (IOException | IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+        loadPauseImages();
+        loadSettingImages(); // Khởi tạo nạp ảnh setting khi tạo UI
     }
 
     private void loadPauseImages() {
@@ -99,18 +117,6 @@ public class UI {
         }
     }
 
-    private void loadHpBarImages() {
-        try {
-            imgHpBg     = ImageIO.read(getClass().getResourceAsStream("/hp/hp_bar_bg.png"));
-            imgHpGreen  = ImageIO.read(getClass().getResourceAsStream("/hp/hp_fill_green.png"));
-            imgHpYellow = ImageIO.read(getClass().getResourceAsStream("/hp/hp_fill_yellow.png"));
-            imgHpRed    = ImageIO.read(getClass().getResourceAsStream("/hp/hp_bar_red.png"));
-            imgHpFrame  = ImageIO.read(getClass().getResourceAsStream("/hp/hp_bar_frame.png"));
-        } catch (IOException | IllegalArgumentException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void showMessage(String text) {
         currentMessage = text;
         messageTimer   = MESSAGE_DURATION;
@@ -118,18 +124,18 @@ public class UI {
 
     public void setDialog(String title, String body) {
         dialogTitle = title;
-        dialogBody  = body;
+        dialogBody = body;
     }
 
     public void setProximityHint(String objName, String hint) {
         proximityObjName = objName;
-        proximityHint    = hint;
+        proximityHint = hint;
     }
 
     public void draw(Graphics2D g2) {
         this.g2 = g2;
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                            RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
         if (gp.gameState == gp.playState || gp.gameState == gp.dialogState) {
             drawHUD();
@@ -141,7 +147,8 @@ public class UI {
         }
 
         if (gp.gameState == gp.dialogState) drawDialog();
-        if (gp.gameState == gp.pauseState)  drawPauseScreen();
+        if (gp.gameState == gp.pauseState) drawPauseMenu();
+        if (gp.gameState == gp.settingState) drawSettingMenu();
         if (gp.gameState == gp.gameOverState) drawGameOver();
     }
 
@@ -278,7 +285,7 @@ public class UI {
         int margin = 12;
 
     // ĐỔI THÀNH GÓC TRÊN BÊN TRÁI
-        int drawX = margin; 
+        int drawX = margin;
         int drawY = margin;
 
         int hp    = Math.max(0, gp.player.HP);

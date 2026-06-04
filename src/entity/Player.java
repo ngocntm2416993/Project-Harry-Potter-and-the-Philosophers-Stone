@@ -5,6 +5,8 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import main.GamePanel;
 import main.KeyHandler;
+import object.OBJ_Slash;
+import object.OBJ_Ulti;
 
 public class Player extends Entity {
 
@@ -21,6 +23,11 @@ public class Player extends Entity {
     private boolean justClosedDialog = false;
     private int activeDialogObjIndex = -1;
     private int nearbyObjIndex = -1;
+    // ── Unlock flags ──────────────────────────────────────────────────────
+    public boolean hasSlash = false;      // nhặt lọ xanh dương mới dùng được
+    public boolean hasFireball = false;
+    public boolean hasUlti = false;
+    private boolean ultiConsumed = false;
 
     public Player(GamePanel gp, KeyHandler keyH) {
         super(gp);
@@ -50,6 +57,9 @@ public class Player extends Entity {
         HP          = 200;
         attackArea.width= 36;
         attackArea.height=26;
+        life = maxLife;
+        projectTile = new OBJ_Slash(gp);
+
     }
 
     public void setPosition (int tileX, int tileY){
@@ -140,9 +150,6 @@ public class Player extends Entity {
                 spriteCounter = 0;
             }
         }
-        if (gp.currentMap == 1 && gp.monster[0] != null) {
-            pushPlayerFromBoss(); // ← đẩy ra sau
-        }
 
         if (speedBoostEndTime > 0 && System.currentTimeMillis() > speedBoostEndTime) {
             speed = normalSpeed;
@@ -158,7 +165,63 @@ public class Player extends Entity {
             }
         }
 
+        // if (keyH.slashPressed && !projectTile.alive) {
+        //     projectTile = new OBJ_Slash(gp);  // tạo mới mỗi lần bắn
+        //     projectTile.set(worldX, worldY, direction, true, this);
+        //     gp.projectTileList.add(projectTile);
+        // }
+        if (keyH.slashPressed) {
+            if (!hasSlash) {
+                gp.ui.showMessage("Cần lọ thuốc xanh dương để dùng chiêu Slash!");
+            } else if (!projectTile.alive) {
+                projectTile = new OBJ_Slash(gp);
+                projectTile.set(worldX, worldY, direction, true, this);
+                gp.projectTileList.add(projectTile);
+            }
+        }
+
+        if (keyH.UltiPressed) {
+            if (!hasUlti) {
+                gp.ui.showMessage("Cần lọ thuốc tím để dùng chiêu này!");
+            } else {
+                useUlti();
+            }
+        }
+
         checkNPCContact();
+    }
+
+    // private void useUlti() {
+    //     if (ultiConsumed) return; // chặn giữ phím
+    //     ultiConsumed = true;
+
+    //     String[] dirs = {"up", "down", "left", "right"};
+    //     for (String dir : dirs) {
+    //         entity.ProjectTile pt = new object.OBJ_Slash(gp);
+    //         pt.set(worldX, worldY, dir, true, this);
+    //         gp.projectTileList.add(pt);
+    //     }
+    //     gp.ui.showMessage("Ulti!");
+    //     gp.playSE(1);
+    // }
+
+    private void useUlti() {
+        if (!OBJ_Ulti.isReady()) {
+            int sec = OBJ_Ulti.cooldownTimer / 60 + 1;
+            gp.ui.showMessage("Ulti hồi chiêu: còn " + sec + "s");
+            return;
+        }
+
+        String[] dirs = {"up", "down", "left", "right"};
+        for (String dir : dirs) {
+            OBJ_Ulti pt = new OBJ_Ulti(gp);
+            pt.set(worldX, worldY, dir, true, this);
+            gp.projectTileList.add(pt);
+        }
+
+        OBJ_Ulti.triggerCooldown(); // ← bắt đầu đếm cooldown
+        gp.ui.showMessage("Ulti!");
+        gp.playSE(1);
     }
 
     public void attacking() {
@@ -183,8 +246,10 @@ public class Player extends Entity {
             solidArea.width = attackArea.width; 
             solidArea.height = attackArea.height; 
             //Check monster r collision with the updated worldX, worldY and solidArea 
+            attack =20;
             int monsterIndex = gp. cChecker.checkEntity(this, gp.monster) ;
-            damageMonster (monsterIndex);
+            damageMonster (monsterIndex,attack);
+
             // After checking collision, resotre the original data 
             worldX = currentWorldX;
             worldY = currentWorldY;
@@ -198,29 +263,6 @@ public class Player extends Entity {
         }
     }
 
-    private void damageMonster(int monsterIndex) {
-
-        if(monsterIndex == -1){
-            System.out.println("Miss!");
-            return;
-        }
-
-        Entity monster = gp.monster[monsterIndex];
-
-        if(monster == null) return;
-
-        if(!monster.invicible){
-
-            monster.life -= 10;
-            monster.invicible = true;
-
-            System.out.println("Boss HP: " + monster.life);
-
-            if(monster.life <= 0){
-                gp.monster[monsterIndex] = null;
-            }
-        }
-    }
 
     public void interactNPC (int i) {
         if (keyH.interactPressed==true){
@@ -317,35 +359,6 @@ public class Player extends Entity {
                 }
             }
         }
-
-        if (gp.currentMap == 1 && gp.monster[0] != null) {
-            // Check va chạm với boss
-            java.awt.Rectangle playerRect = new java.awt.Rectangle(
-                worldX + solidAreaDefaultX,
-                worldY + solidAreaDefaultY,
-                solidArea.width,
-                solidArea.height
-            );
-            java.awt.Rectangle bossRect = new java.awt.Rectangle(
-                gp.monster[0].worldX + gp.monster[0].solidAreaDefaultX,
-                gp.monster[0].worldY + gp.monster[0].solidAreaDefaultY,
-                gp.monster[0].solidArea.width,
-                gp.monster[0].solidArea.height
-            );
-            if (playerRect.intersects(bossRect)) {
-                long now = System.currentTimeMillis();
-                if (now - lastDamageTime > DAMAGE_COOLDOWN) {
-                    lastDamageTime = now;
-                    HP -= 20;
-                    // player nhấp nháy
-                    invicible = true;
-                    invicibleCounter = 0;
-                    gp.ui.showMessage("Boss tấn công! -20 HP");
-                    gp.playSE(1);
-                    if (HP <= 0) { HP = 0; gp.gameState = gp.gameOverState; }
-                }
-            }
-        }
     }
 
     private void checkProximity() {
@@ -427,6 +440,24 @@ public class Player extends Entity {
         if (gp.obj[i] != null) gp.obj[i].onContact(gp, this);
     }
 
+    public void damageMonster(int i, int attack) {
+        if (i == -1) return;
+        if (gp.monster[i] == null) return;
+
+        if (!gp.monster[i].invicible) {
+            try { gp.playSE(1); } catch (Exception e) {} // ← dùng index an toàn
+            int damage = attack - gp.monster[i].defense;
+            if (damage < 0) damage = 0;
+            gp.monster[i].life -= damage;
+            gp.ui.showMessage(damage + " damage!");
+            gp.monster[i].invicible = true;
+            if (gp.monster[i].life <= 0) {
+                gp.monster[i] = null;
+                gp.ui.showMessage("Boss defeated!");
+            }
+        }
+    }
+
     @Override
     public void draw(Graphics2D g2) {
         if (invicible && (invicibleCounter / 5) % 2 == 1) return;
@@ -465,7 +496,6 @@ public class Player extends Entity {
                 }  
             break; 
         }
-        
         g2.drawImage(image, screenX, screenY, null);
     }
 }

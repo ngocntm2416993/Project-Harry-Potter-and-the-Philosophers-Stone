@@ -9,27 +9,50 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 public class Mon_Boss_1 extends Entity {
-    private final int trapdoorCol = 12;
-    private final int trapdoorRow = 11; // anchor góc trên trái của trapdoor 3x3
 
+    // ── Vùng di chuyển cho phép (tile) ───────────────────────────────────
+    private static final int BOUND_LEFT   = 5;
+    private static final int BOUND_TOP    = 5;
+    private static final int BOUND_RIGHT  = 21;
+    private static final int BOUND_BOTTOM = 18;
+
+    // ── Điểm canh giữ trung tâm (pixel) ──────────────────────────────────
+    private final int guardX;
+    private final int guardY;
+
+    // ── Ngưỡng đuổi (pixel) ───────────────────────────────────────────────
+    private static final int CHASE_RANGE  = 10 ; // tile — phát hiện player
+    private static final int RETURN_RANGE = 11; // tile — bỏ đuổi
+
+    private enum State { GUARD, CHASE, RETURN }
+    private State state = State.GUARD;
+
+    // ── Waypoints tuần tra ────────────────────────────────────────────────
     private final int[][] waypoints = {
-        {12,  8},  // 0 = BẮC
-        {15, 11},  // 1 = ĐÔNG  
-        {12, 14},  // 2 = NAM
-        { 9, 11},  // 3 = TÂY
+        {12,  8},
+        {15, 11},
+        {12, 14},
+        { 9, 11},
     };
     private int targetWaypointIdx = 2;
 
+    // ── Damage ────────────────────────────────────────────────────────────
+    private long lastDamageTime = 0;
+    private static final long DAMAGE_COOLDOWN = 1000;
+
     public Mon_Boss_1(GamePanel gp, int col, int row) {
         super(gp);
-        this.worldX = col * gp.tileSize;
-        this.worldY = row * gp.tileSize;
+        this.worldX    = col * gp.tileSize;
+        this.worldY    = row * gp.tileSize;
         this.direction = "down";
-        this.speed = 10;
-        this.life = 100; // boss có 100 HP
-        this.invicible=false;
+        this.speed     = 10;
+        this.life      = 20;
+        this.invicible = false;
 
-        // solidArea khớp 3x3 tile
+        // Tâm vùng bound = trung tâm giữa (10,10)→(19,19)
+        guardX = (BOUND_LEFT + BOUND_RIGHT)  / 2 * gp.tileSize;
+        guardY = (BOUND_TOP  + BOUND_BOTTOM) / 2 * gp.tileSize;
+
         solidArea = new Rectangle(0, 0, gp.tileSize * 3, gp.tileSize * 3);
         solidAreaDefaultX = 0;
         solidAreaDefaultY = 0;
@@ -38,14 +61,9 @@ public class Mon_Boss_1 extends Entity {
     }
 
     public void getImage() {
-        left1    = setupBoss("/monster/Boss_1/Left(1)");
-        left2    = setupBoss("/monster/Boss_1/Left(2)");
-        right1  = setupBoss("/monster/Boss_1/BackRight(1)");
-        right2  = setupBoss("/monster/Boss_1/BackRight(2)");
-        up1    = setupBoss("/monster/Boss_1/BackLeft(1)");
-        up2    = setupBoss("/monster/Boss_1/BackLeft(2)");
-        down1  = setupBoss("/monster/Boss_1/Left(1)");
-        down2  = setupBoss("/monster/Boss_1/Left(2)");
+        left1 = left2 = right1 = right2 =
+        up1   = up2   = down1  = down2  =
+            setupBoss("/monster/Boss_1/Left(1)");
     }
 
     private BufferedImage setupBoss(String path) {
@@ -54,38 +72,139 @@ public class Mon_Boss_1 extends Entity {
         try {
             image = ImageIO.read(getClass().getResourceAsStream(path + ".png"));
             image = uTool.scaleImage(image, gp.tileSize * 3, gp.tileSize * 3);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        } catch (IOException e) { e.printStackTrace(); }
         return image;
+    }
+
+    /** Kẹp tọa độ boss trong vùng bound */
+    private void clampToBound() {
+        int minX = BOUND_LEFT   * gp.tileSize;
+        int minY = BOUND_TOP    * gp.tileSize;
+        int maxX = (BOUND_RIGHT  - 2) * gp.tileSize; // -2 vì boss rộng 3 tile
+        int maxY = (BOUND_BOTTOM - 2) * gp.tileSize;
+        worldX = Math.max(minX, Math.min(worldX, maxX));
+        worldY = Math.max(minY, Math.min(worldY, maxY));
+    }
+
+    /** Player có đang trong vùng bound không */
+    private boolean playerInBound() {
+        int px = gp.player.worldX / gp.tileSize;
+        int py = gp.player.worldY / gp.tileSize;
+        return px >= BOUND_LEFT && px <= BOUND_RIGHT
+            && py >= BOUND_TOP  && py <= BOUND_BOTTOM;
     }
 
     @Override
     public void setAction() {
-        int tdCX = (trapdoorCol + 1) * gp.tileSize;
-        int tdCY = (trapdoorRow + 1) * gp.tileSize;
-        int dx = gp.player.worldX - tdCX;
-        int dy = gp.player.worldY - tdCY;
+        // Tâm boss
+        int bossCX = worldX + solidArea.width  / 2;
+        int bossCY = worldY + solidArea.height / 2;
 
-        if (Math.abs(dx) > Math.abs(dy)) {
-            targetWaypointIdx = (dx > 0) ? 1 : 3;
-        } else {
-            targetWaypointIdx = (dy > 0) ? 2 : 0;
+        // Khoảng cách boss → player (tile)
+        int dxPlayer = gp.player.worldX - bossCX;
+        int dyPlayer = gp.player.worldY - bossCY;
+        double distToPlayer = Math.sqrt(dxPlayer * dxPlayer + dyPlayer * dyPlayer)
+                              / gp.tileSize;
+
+        // Khoảng cách boss → điểm canh giữ
+        int dxGuard = guardX - worldX;
+        int dyGuard = guardY - worldY;
+
+        // ── Chuyển trạng thái ─────────────────────────────────────────────
+        switch (state) {
+            case GUARD:
+                // Chỉ đuổi khi player vào trong vùng bound VÀ đủ gần
+                if (playerInBound() && distToPlayer <= CHASE_RANGE)
+                    state = State.CHASE;
+                break;
+            case CHASE:
+                // Dừng đuổi khi player ra khỏi bound HOẶC quá xa
+                if (!playerInBound() || distToPlayer > RETURN_RANGE)
+                    state = State.RETURN;
+                break;
+            case RETURN:
+                if (Math.abs(dxGuard) < speed * 2 && Math.abs(dyGuard) < speed * 2) {
+                    worldX = guardX;
+                    worldY = guardY;
+                    state  = State.GUARD;
+                }
+                break;
         }
 
-        int targetX = waypoints[targetWaypointIdx][0] * gp.tileSize;
-        int targetY = waypoints[targetWaypointIdx][1] * gp.tileSize;
-
-        if (Math.abs(worldX - targetX) > speed) {
-            direction = (worldX < targetX) ? "right" : "left";
-        } else {
-            worldX = targetX;
-            if (Math.abs(worldY - targetY) > speed) {
-                direction = (worldY < targetY) ? "down" : "up";
-            } else {
-                worldY = targetY;
-                direction = "down";
+        // ── Hành động theo trạng thái ─────────────────────────────────────
+        switch (state) {
+            case CHASE: {
+                speed = 3;
+                if (Math.abs(dxPlayer) > Math.abs(dyPlayer))
+                    direction = (dxPlayer > 0) ? "right" : "left";
+                else
+                    direction = (dyPlayer > 0) ? "down" : "up";
+                break;
             }
+            case RETURN: {
+                speed = 3;
+                if (Math.abs(dxGuard) > Math.abs(dyGuard))
+                    direction = (dxGuard > 0) ? "right" : "left";
+                else
+                    direction = (dyGuard > 0) ? "down" : "up";
+                break;
+            }
+            case GUARD: {
+                speed = 2;
+                int dx = gp.player.worldX - guardX;
+                int dy = gp.player.worldY - guardY;
+                if (Math.abs(dx) > Math.abs(dy))
+                    targetWaypointIdx = (dx > 0) ? 1 : 3;
+                else
+                    targetWaypointIdx = (dy > 0) ? 2 : 0;
+
+                int targetX = waypoints[targetWaypointIdx][0] * gp.tileSize;
+                int targetY = waypoints[targetWaypointIdx][1] * gp.tileSize;
+
+                if (Math.abs(worldX - targetX) > speed) {
+                    direction = (worldX < targetX) ? "right" : "left";
+                } else {
+                    worldX = targetX;
+                    if (Math.abs(worldY - targetY) > speed) {
+                        direction = (worldY < targetY) ? "down" : "up";
+                    } else {
+                        worldY = targetY;
+                        direction = "down";
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    private void pushPlayer() {
+        java.awt.Rectangle bossRect = new java.awt.Rectangle(
+            worldX + solidAreaDefaultX,
+            worldY + solidAreaDefaultY,
+            solidArea.width, solidArea.height
+        );
+        java.awt.Rectangle playerRect = new java.awt.Rectangle(
+            gp.player.worldX + gp.player.solidAreaDefaultX,
+            gp.player.worldY + gp.player.solidAreaDefaultY,
+            gp.player.solidArea.width, gp.player.solidArea.height
+        );
+
+        if (!bossRect.intersects(playerRect)) return;
+
+        int overlapLeft  = (playerRect.x + playerRect.width)  - bossRect.x;
+        int overlapRight = (bossRect.x   + bossRect.width)    - playerRect.x;
+        int overlapUp    = (playerRect.y + playerRect.height)  - bossRect.y;
+        int overlapDown  = (bossRect.y   + bossRect.height)    - playerRect.y;
+
+        int minX = Math.min(overlapLeft, overlapRight);
+        int minY = Math.min(overlapUp,   overlapDown);
+
+        if (minX < minY) {
+            if (overlapLeft < overlapRight) gp.player.worldX -= overlapLeft;
+            else                            gp.player.worldX += overlapRight;
+        } else {
+            if (overlapUp < overlapDown)    gp.player.worldY -= overlapUp;
+            else                            gp.player.worldY += overlapDown;
         }
     }
 
@@ -93,6 +212,37 @@ public class Mon_Boss_1 extends Entity {
     public void update() {
         setAction();
 
+        // ── Damage player khi chạm ────────────────────────────────────────
+        java.awt.Rectangle bossRect = new java.awt.Rectangle(
+            worldX + solidAreaDefaultX,
+            worldY + solidAreaDefaultY,
+            solidArea.width, solidArea.height
+        );
+        java.awt.Rectangle playerRect = new java.awt.Rectangle(
+            gp.player.worldX + gp.player.solidAreaDefaultX,
+            gp.player.worldY + gp.player.solidAreaDefaultY,
+            gp.player.solidArea.width, gp.player.solidArea.height
+        );
+
+        if (bossRect.intersects(playerRect)) {
+            long now = System.currentTimeMillis();
+            if (now - lastDamageTime > DAMAGE_COOLDOWN) {
+                lastDamageTime = now;
+                gp.player.HP -= 20;
+                gp.player.invicible = true;
+                gp.player.invicibleCounter = 0;
+                gp.ui.showMessage("Boss tấn công! -20 HP");
+                gp.playSE(1);
+                if (gp.player.HP <= 0) {
+                    gp.player.HP = 0;
+                    gp.gameState = gp.gameOverState;
+                }
+            }
+        }
+
+        pushPlayer();
+
+        // ── Di chuyển + kẹp trong vùng ───────────────────────────────────
         collisionOn = false;
         gp.cChecker.checkTile(this);
 
@@ -105,10 +255,12 @@ public class Mon_Boss_1 extends Entity {
             }
         }
 
-        if(invicible == true){
-            invicibleCounter++;
+        clampToBound(); // ← giữ boss không bao giờ ra khỏi vùng
 
-            if(invicibleCounter > 30){ // khoảng 0.5 giây
+        // ── Invincible counter ────────────────────────────────────────────
+        if (invicible) {
+            invicibleCounter++;
+            if (invicibleCounter > 30) {
                 invicible = false;
                 invicibleCounter = 0;
             }
@@ -119,13 +271,11 @@ public class Mon_Boss_1 extends Entity {
             spriteNum = (spriteNum == 1) ? 2 : 1;
             spriteCounter = 0;
         }
-        //speed = 10;
     }
 
     @Override
     public void draw(Graphics2D g2) {
-        // Nhấp nháy khi invincible: bỏ qua vẽ mỗi 5 frame
-         if (invicible && (invicibleCounter / 5) % 2 == 1) return;
+        if (invicible && (invicibleCounter / 5) % 2 == 1) return;
 
         int screenX = worldX - gp.player.worldX + gp.player.screenX;
         int screenY = worldY - gp.player.worldY + gp.player.screenY;
@@ -142,42 +292,32 @@ public class Mon_Boss_1 extends Entity {
                 case "right": image = (spriteNum == 1) ? right1 : right2; break;
                 default:      image = (spriteNum == 1) ? down1  : down2;  break;
             }
-
             g2.drawImage(image, screenX, screenY, gp.tileSize * 3, gp.tileSize * 3, null);
 
-            // ── THANH MÁU ──────────────────────────────────────────────
-            int barW     = gp.tileSize * 3;       // rộng bằng sprite boss
-            int barH     = 10;                     // chiều cao thanh
-            int barX     = screenX;
-            int barY     = screenY - barH - 6;     // trên đầu boss, cách 6px
-
-            int maxLife  = 100;
-            int fillW    = (int)((life / (double) maxLife) * barW);
+            // ── Thanh máu ─────────────────────────────────────────────────
+            int barW    = gp.tileSize * 3;
+            int barH    = 10;
+            int barX    = screenX;
+            int barY    = screenY - barH - 6;
+            int maxLife = 300;
+            int fillW   = (int)((life / (double) maxLife) * barW);
             fillW = Math.max(0, Math.min(fillW, barW));
 
-            // Nền đỏ tối
             g2.setColor(new java.awt.Color(100, 0, 0));
             g2.fillRoundRect(barX, barY, barW, barH, 6, 6);
 
-            // Phần máu còn lại (đỏ tươi → vàng → xanh theo HP)
             float ratio = life / (float) maxLife;
-            java.awt.Color fillColor;
-            if (ratio > 0.5f) {
-                fillColor = new java.awt.Color(0, 200, 50);        // xanh lá
-            } else if (ratio > 0.25f) {
-                fillColor = new java.awt.Color(220, 180, 0);       // vàng
-            } else {
-                fillColor = new java.awt.Color(220, 40, 40);       // đỏ
-            }
-            g2.setColor(fillColor);
-            if (fillW > 0)
-                g2.fillRoundRect(barX, barY, fillW, barH, 6, 6);
+            g2.setColor(ratio > 0.5f
+                ? new java.awt.Color(0, 200, 50)
+                : ratio > 0.25f
+                    ? new java.awt.Color(220, 180, 0)
+                    : new java.awt.Color(220, 40, 40));
+            if (fillW > 0) g2.fillRoundRect(barX, barY, fillW, barH, 6, 6);
 
-            // Viền trắng
             g2.setColor(java.awt.Color.WHITE);
             g2.setStroke(new java.awt.BasicStroke(1.5f));
             g2.drawRoundRect(barX, barY, barW, barH, 6, 6);
-            g2.setStroke(new java.awt.BasicStroke(1f)); // reset stroke
+            g2.setStroke(new java.awt.BasicStroke(1f));
         }
     }
 }

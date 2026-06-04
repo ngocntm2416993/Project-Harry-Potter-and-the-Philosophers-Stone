@@ -40,7 +40,7 @@ public class Mon_Chess extends Entity{
 
 
         // this.speed = random.nextInt(2) + 1; // tốc độ 1 hoặc 2
-        this.speed = 3;                      // cố định tốc độ 3
+        this.speed = 7;                      // cố định tốc độ 3
         this.speed = random.nextInt(2) + 2;  // random 2 hoặc 3
         this.speed = random.nextInt(3) + 2;  // random 2, 3 hoặc 4
 

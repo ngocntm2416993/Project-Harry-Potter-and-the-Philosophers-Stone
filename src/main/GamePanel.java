@@ -1,5 +1,4 @@
 package main;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -7,21 +6,24 @@ import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
+
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import entity.Entity;
 import entity.Player;
+import object.OBJ_Ulti;
 import object.SuperObject;
 import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable {
-    
+
     // SCREEN SETTINGS
     final int originalTileSize = 16;
     final int scale = 3;
 
-    public final int tileSize = originalTileSize * scale;  // 48 x 48 tile
+    public final int tileSize = originalTileSize * scale;
     public final int maxScreenCol = 16;
     public final int maxScreenRow = 12;
     public final int screenWidth = tileSize * maxScreenCol;
@@ -31,7 +33,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int maxWorldCol = 30;
     public final int maxWorldRow = 30;
     public final int worldWidth = tileSize * maxWorldCol;
-    public final int worldHeight = tileSize * maxWorldRow; 
+    public final int worldHeight = tileSize * maxWorldRow;
     public int currentMap = 1;
 
     // FPS
@@ -50,11 +52,13 @@ public class GamePanel extends JPanel implements Runnable {
 
     // ENTITY AND OBJECT
     public Player player = new Player(this, keyH);
-    public SuperObject obj[] = new SuperObject[10];
+    public SuperObject obj[] = new SuperObject[50];
     public Entity npc[] = new Entity[50];
     public Entity monster[] = new Entity[10];
+    public ArrayList<Entity> entityList = new ArrayList<>();
+    public ArrayList<Entity> projectTileList = new ArrayList<>();
 
-    //GAME STATE
+    // GAME STATE
     public int gameState;
     public final int playState = 1;
     public final int pauseState = 2;
@@ -66,12 +70,12 @@ public class GamePanel extends JPanel implements Runnable {
     public SuperObject currentObject;
 
     public GamePanel() {
-        
-        this.setPreferredSize(new Dimension (screenWidth, screenHeight));
+        this.setPreferredSize(new Dimension(screenWidth, screenHeight));
         this.setBackground(Color.BLACK);
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.setFocusable(true);
+
         // XỬ LÝ SỰ KIỆN CLICK CHUỘT
         this.addMouseListener(new MouseAdapter() {
             @Override
@@ -160,14 +164,14 @@ public class GamePanel extends JPanel implements Runnable {
         // music.setVolume(ui.musicVolume);
     }
 
+    public void setUpGame() {
+        aSetter.setObject();
+        aSetter.setNPC();
+        playMusic(0);
+        stopMusic();
+        gameState = playState;
+    }
 
-        public void setUpGame() {
-            aSetter.setObject();
-            aSetter.setNPC(); // ← thêm dòng này
-            playMusic(0);
-            stopMusic();
-            gameState = playState;
-        }
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
@@ -175,8 +179,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     @Override
     public void run() {
-        double drawInterval = 1000000000.0/FPS;
-        double delta  = 0;
+        double drawInterval = 1000000000.0 / FPS;
+        double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
 
@@ -221,13 +225,31 @@ public class GamePanel extends JPanel implements Runnable {
             if (gameState == playState) {
                 currentObject = null;
             }
-        }
-        if (gameState == pauseState){
+
+
+
+            for (Entity m : monster) {
+                if (m != null) m.update();
+            }
+
+            for(int i=0;i<projectTileList.size();i++){
+                if(projectTileList.get(i)!=null){
+                    if(projectTileList.get(i).alive==true){
+                        projectTileList.get(i).update();
+                    }
+                    if(projectTileList.get(i).alive==false){
+                        projectTileList.remove(i);
+                    }
+                }
+            }
 
         }
-        for (Entity m : monster) {
-            if (m != null) m.update();
+
+        if (gameState == playState) {
+            currentObject = null;
         }
+
+        OBJ_Ulti.tickCooldown();
     }
     public void paintComponent(Graphics g) {
 
@@ -249,6 +271,11 @@ public class GamePanel extends JPanel implements Runnable {
 
         //MONSTER
         for (Entity m : monster) {
+            if (m != null) m.draw(g2);
+        }
+
+        //ProjectTile
+        for (Entity m : projectTileList) {
             if (m != null) m.draw(g2);
         }
 
