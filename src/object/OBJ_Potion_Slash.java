@@ -17,8 +17,8 @@ public class OBJ_Potion_Slash extends SuperObject {
         try {
             UtilityTool uTool = new UtilityTool();
             image = uTool.scaleImage(
-                ImageIO.read(getClass().getResourceAsStream("/object/potion/thuocxanhduong.png")),
-                tileSize, tileSize
+                    ImageIO.read(getClass().getResourceAsStream("/object/potion/thuocxanhduong.png")),
+                    tileSize, tileSize
             );
         } catch (IOException e) {
             e.printStackTrace();
