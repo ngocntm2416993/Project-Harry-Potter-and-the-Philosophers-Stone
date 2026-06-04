@@ -271,7 +271,8 @@ public class TileManager {
                     }
                     // 6x6
                     else if (ot == 55 || ot == 57) {
-                        drawW = T * 6; drawH = T * 6;
+                        drawW = T * 6;
+                        drawH = T * 6;
                     }
                     // 1x1
                     else {

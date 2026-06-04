@@ -88,7 +88,6 @@ public class UI {
         } catch (IOException | IllegalArgumentException e) {
             e.printStackTrace();
         }
-        baseFont = new Font("Arial", Font.PLAIN, 22);
         loadPauseImages();
         loadSettingImages(); // Khởi tạo nạp ảnh setting khi tạo UI
     }
