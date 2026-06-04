@@ -11,6 +11,8 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import java.awt.Rectangle;
+import java.awt.Shape;
 
 public class UI {
 
@@ -41,6 +43,24 @@ public class UI {
     private static final int FILL_MAX_W   = 47;   // max fillable pixels
     private static final int MAX_HP       = 200;
 
+        // Ảnh pause menu
+    private BufferedImage imgBgPause, imgPaused, imgSetting, imgResume, imgRestart;
+
+    // Tài nguyên hình ảnh cho màn hình Setting bằng Swing Overlay
+    private BufferedImage imgBgSetting, imgBar, imgBarFull, imgIcon, imgBtnBack;
+
+    // Vùng click của từng nút khi ở màn hình Pause
+    public Rectangle btnSettingRect = new Rectangle();
+    public Rectangle btnResumeRect = new Rectangle();
+    public Rectangle btnRestartRect = new Rectangle();
+
+    // Vùng click cho nút Back và thanh trượt Slider khi ở màn hình Setting
+    public Rectangle btnBackRect = new Rectangle();
+    public Rectangle sliderBounds = new Rectangle();
+
+    // Biến lưu giá trị âm lượng thực tế của game (0 -> 100)
+    public int musicVolume = 50;
+
     public UI(GamePanel gp) {
         this.gp = gp;
         try {
@@ -53,6 +73,30 @@ public class UI {
         baseFont = new Font("Arial", Font.PLAIN, 22); // fallback nếu load lỗi
     }
         loadHpBarImages();
+    }
+
+    private void loadPauseImages() {
+        try {
+            imgBgPause = ImageIO.read(getClass().getResourceAsStream("/view/bgpause.png"));
+            imgPaused = ImageIO.read(getClass().getResourceAsStream("/view/paused.png"));
+            imgSetting = ImageIO.read(getClass().getResourceAsStream("/view/1.png"));
+            imgResume = ImageIO.read(getClass().getResourceAsStream("/view/resume.png"));
+            imgRestart = ImageIO.read(getClass().getResourceAsStream("/view/restart.png"));
+        } catch (IOException e) {
+            System.out.println("Không load được ảnh pause menu: " + e.getMessage());
+        }
+    }
+
+    private void loadSettingImages() {
+        try {
+            imgBgSetting = ImageIO.read(getClass().getResourceAsStream("/view/bgsetting.png"));
+            imgBar = ImageIO.read(getClass().getResourceAsStream("/view/bar.png"));
+            imgBarFull = ImageIO.read(getClass().getResourceAsStream("/view/barfull.png"));
+            imgIcon = ImageIO.read(getClass().getResourceAsStream("/view/icon.png"));
+            imgBtnBack = ImageIO.read(getClass().getResourceAsStream("/view/Start.png"));
+        } catch (IOException e) {
+            System.out.println("Không load được ảnh tài nguyên Setting: " + e.getMessage());
+        }
     }
 
     private void loadHpBarImages() {
@@ -99,6 +143,109 @@ public class UI {
         if (gp.gameState == gp.dialogState) drawDialog();
         if (gp.gameState == gp.pauseState)  drawPauseScreen();
         if (gp.gameState == gp.gameOverState) drawGameOver();
+    }
+
+    private void drawPauseMenu() {
+        int sw = gp.screenWidth;
+        int sh = gp.screenHeight;
+
+        if (imgBgPause != null) {
+            g2.drawImage(imgBgPause, 0, 0, sw, sh, null);
+        } else {
+            g2.setColor(new Color(0f, 0f, 0f, 0.7f));
+            g2.fillRect(0, 0, sw, sh);
+        }
+
+        int btnW = 265;
+        int btnH = 55;
+        int titleW = 300;
+        int titleH = 180;
+        int spacing = 12;
+        int centerX = sw / 2;
+
+        int totalH = titleH + spacing + btnH * 3 + spacing * 2;
+        int startY = (sh - totalH) / 2;
+
+        int titleX = centerX - titleW / 2;
+        if (imgPaused != null) {
+            g2.drawImage(imgPaused, titleX, startY, titleW, titleH, null);
+        }
+
+        int btnX = centerX - btnW / 2;
+        int currentY = startY + titleH + spacing;
+
+        if (imgSetting != null) g2.drawImage(imgSetting, btnX, currentY, btnW, btnH, null);
+        btnSettingRect.setBounds(btnX, currentY, btnW, btnH);
+        currentY += btnH + spacing;
+
+        if (imgResume != null) g2.drawImage(imgResume, btnX, currentY, btnW, btnH, null);
+        btnResumeRect.setBounds(btnX, currentY, btnW, btnH);
+        currentY += btnH + spacing;
+
+        if (imgRestart != null) g2.drawImage(imgRestart, btnX, currentY, btnW, btnH, null);
+        btnRestartRect.setBounds(btnX, currentY, btnW, btnH);
+    }
+
+    private void drawSettingMenu() {
+        int sw = gp.screenWidth;
+        int sh = gp.screenHeight;
+
+        if (imgBgPause != null) {
+            g2.drawImage(imgBgPause, 0, 0, sw, sh, null);
+        }
+
+        //Vẽ khung bảng điều khiển lớn ở trung tâm (800x600)
+        int bgW = 800;
+        int bgH = 600;
+        int bgX = (sw - bgW) / 2;
+        int bgY = (sh - bgH) / 2;
+        if (imgBgSetting != null) {
+            g2.drawImage(imgBgSetting, bgX, bgY, bgW, bgH, null);
+        }
+
+        //Thiết kế vẽ hệ thống Slider custom
+        int sliderX = bgX + 288;
+        int sliderY = bgY + 266;
+        int sliderW = 350;
+        int sliderH = 40;
+        sliderBounds.setBounds(sliderX, sliderY, sliderW, sliderH);
+
+        //Vẽ thanh nền trống
+        if (imgBar != null) {
+            g2.drawImage(imgBar, sliderX, sliderY, sliderW, sliderH, null);
+        }
+
+        //Cắt và vẽ thanh trạng thái đã kéo đầy
+        if (imgBarFull != null) {
+            double percent = musicVolume / 100.0;
+            int drawWidth = (int) (sliderW * percent);
+
+            if (drawWidth > 0) {
+                Shape oldClip = g2.getClip(); // Lưu lại clip cũ
+                g2.setClip(sliderX, sliderY, drawWidth, sliderH);
+                g2.drawImage(imgBarFull, sliderX, sliderY, sliderW, sliderH, null);
+                g2.setClip(oldClip); // Khôi phục clip cũ hệ thống an toàn
+            }
+        }
+
+        //Vẽ con trỏ icon hình nốt nhạc vàng chuyển động
+        int iconW = 50;
+        int iconH = 50;
+        double percent = musicVolume / 100.0;
+        int iconX = sliderX + (int) (sliderW * percent) - (iconW / 2);
+        int iconY = sliderY + (sliderH - iconH) / 2;
+        if (imgIcon != null) {
+            g2.drawImage(imgIcon, iconX, iconY, iconW, iconH, null);
+        }
+
+        int btnW = 250;
+        int btnH = 60;
+        int btnX = bgX + 275;
+        int btnY = bgY + 416;
+        if (imgBtnBack != null) {
+            g2.drawImage(imgBtnBack, btnX, btnY, btnW, btnH, null);
+        }
+        btnBackRect.setBounds(btnX, btnY, btnW, btnH);
     }
 
     private void drawGameOver() {

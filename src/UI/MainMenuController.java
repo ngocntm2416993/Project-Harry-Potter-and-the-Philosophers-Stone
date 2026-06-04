@@ -1,8 +1,10 @@
-package main;
+package UI;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import javax.swing.JFrame;
@@ -22,6 +24,7 @@ public class MainMenuController {
     @FXML
     void onStartClicked(ActionEvent event) {
         System.out.println("Loading game...");
+
 
         // 1. Tắt cửa sổ Menu JavaFX hiện tại
         Stage stage = (Stage) btnStart.getScene().getWindow();
@@ -48,7 +51,20 @@ public class MainMenuController {
 
     @FXML
     void onSettingClicked(ActionEvent event) {
-        System.out.println("Setting Clicked!");
+        System.out.println("Opening Setting Menu...");
+        try {
+            // Lấy Stage hiện tại
+            Stage stage = (Stage) btnSetting.getScene().getWindow();
+
+            // Nạp giao diện SettingMenu từ thư mục tài nguyên res/view
+            Parent root = FXMLLoader.load(getClass().getResource("/view/SettingMenu.fxml"));
+
+            // Thay đổi nội dung hiển thị của cửa sổ sang giao diện Setting
+            stage.getScene().setRoot(root);
+        } catch (Exception e) {
+            System.out.println("Không thể mở giao diện Setting!");
+            e.printStackTrace();
+        }
     }
 
     @FXML

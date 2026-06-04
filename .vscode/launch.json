@@ -3,10 +3,17 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Chạy Game JavaFX",
+            "name": "Main",
             "request": "launch",
-            "mainClass": "main.MainApp",
-            "vmArgs": "-Dprism.order=sw --module-path lib --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.base"
+            "mainClass": "main.Main",
+            "projectName": "TreasureHunting"
+        },
+        {
+            "type": "java",
+            "name": "Chạy Dự Án JavaFX",
+            "request": "launch",
+            "mainClass": "UI.MainApp",
+            "vmArgs": "--module-path \"D:/oop_project/lib\" --add-modules javafx.controls,javafx.fxml,javafx.graphics,javafx.swing --enable-native-access=javafx.graphics"
         }
     ]
 }
