@@ -9,11 +9,13 @@ import main.UtilityTool;
 import entity.Player;
 
 public class OBJ_HP extends SuperObject {
-    private int spawnDelay;
 
-    public OBJ_HP(int tileSize) {
+    private int spawnDelay; // frame delay trước khi hiển thị (60fps)
+
+    public OBJ_HP(int tileSize, int delaySeconds) {
         name      = "Hồi máu";
         collision = false;
+        spawnDelay = delaySeconds * 60;
 
         try {
             UtilityTool uTool = new UtilityTool();
@@ -30,17 +32,29 @@ public class OBJ_HP extends SuperObject {
         solidAreaDefaultY = 0;
     }
 
+    // Constructor cũ không delay — giữ để không break chỗ khác
+    public OBJ_HP(int tileSize) {
+        this(tileSize, 0);
+    }
+
+    @Override
+    public void draw(java.awt.Graphics2D g2, GamePanel gp) {
+        if (spawnDelay > 0) {
+            spawnDelay--;
+            return; // chưa đến giờ → không vẽ, không tương tác
+        }
+        collision = true; // bật collision khi đã hiển thị
+        super.draw(g2, gp);
+    }
+
     @Override
     public void onContact(GamePanel gp, Player player) {
-        player.HP = Math.min(player.HP + 50, 200); // cộng 50HP, không vượt max
+        if (spawnDelay > 0) return; // chưa hiển thị thì không nhặt được
+        player.HP = Math.min(player.HP + 50, 200);
         gp.ui.showMessage("Hồi máu +50 HP!");
         gp.playSE(1);
-
         for (int i = 0; i < gp.obj.length; i++) {
-            if (gp.obj[i] == this) {
-                gp.obj[i] = null;
-                break;
-            }
+            if (gp.obj[i] == this) { gp.obj[i] = null; break; }
         }
     }
 
@@ -50,7 +64,7 @@ public class OBJ_HP extends SuperObject {
     }
 
     @Override
-    public boolean hasProximityHint() { return true; }
+    public boolean hasProximityHint() { return spawnDelay <= 0; }
 
     @Override
     public String getProximityHint() {

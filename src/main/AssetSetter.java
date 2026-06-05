@@ -67,41 +67,24 @@ public class AssetSetter {
         }
 
         if (gp.currentMap == 4) {
+            int[][] potions = {
+                {21, 25,  0},  // xuất hiện ngay
+                {6, 24, 10},  // sau 10s
+                {3,  7, 20},  // sau 20s
+                {27, 13, 30}, 
+                {20,  5, 40},
+                {17,  12, 40},
+                {9,  9, 20},
+                {19, 10, 30},  
+            };
 
-            OBJ_HP potion0 = new OBJ_HP(gp.tileSize);
-            potion0.worldX = 21 * gp.tileSize;
-            potion0.worldY = 25 * gp.tileSize;
-            gp.obj[idx++] = potion0;
+            for (int[] p : potions) {
+                OBJ_HP hp = new OBJ_HP(gp.tileSize, p[2]); // p[2] = delay giây
+                hp.worldX = p[0] * gp.tileSize;
+                hp.worldY = p[1] * gp.tileSize;
+                gp.obj[idx++] = hp;
+            }
 
-            OBJ_HP potion1 = new OBJ_HP(gp.tileSize);
-            potion1.worldX = 6 * gp.tileSize;
-            potion1.worldY = 24 * gp.tileSize;
-            gp.obj[idx++] = potion1;
-
-            OBJ_HP potion2 = new OBJ_HP(gp.tileSize);
-            potion2.worldX = 9 * gp.tileSize;
-            potion2.worldY = 9 * gp.tileSize;
-            gp.obj[idx++] = potion2;
-
-            OBJ_HP potion3 = new OBJ_HP(gp.tileSize);
-            potion3.worldX = 17 * gp.tileSize;
-            potion3.worldY = 12 * gp.tileSize;
-            gp.obj[idx++] = potion3;
-
-            OBJ_HP potion4 = new OBJ_HP(gp.tileSize);
-            potion4.worldX = 20 * gp.tileSize;
-            potion4.worldY = 5 * gp.tileSize;
-            gp.obj[idx++] = potion4;
-
-            OBJ_HP potion5 = new OBJ_HP(gp.tileSize);
-            potion5.worldX = 27 * gp.tileSize;
-            potion5.worldY = 13 * gp.tileSize;
-            gp.obj[idx++] = potion5;
-
-            OBJ_HP potion6 = new OBJ_HP(gp.tileSize);
-            potion6.worldX = 3 * gp.tileSize;
-            potion6.worldY = 7 * gp.tileSize;
-            gp.obj[idx++] = potion6;
         }
         
     }
