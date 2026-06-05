@@ -12,7 +12,7 @@ public class OBJ_NPC_map_1 extends SuperObject {
         this.dialogs = new String[] {
                 "Bạn cần vượt qua 4 màn để kết thúc trò chơi",
                 "Dùng phím [F] để đánh quái",
-                "Ngoài ra có thể dùng [E] và [Q[ để thi triển\nSlash và Ultimate",
+                "Ngoài ra có thể dùng [E] và [Q] để thi triển\nSlash và Ultimate",
                 "2 kĩ năng trên\nCần có item kích hoạt",
                 "Những item này được đặt rải rác\ntrong các màn chơi",
                 "Ngoài ra sẽ có một số item hỗ trợ\nđược đặt rải rác trong màn chơi",
