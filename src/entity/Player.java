@@ -454,7 +454,7 @@ public class Player extends Entity {
             gp.monster[i].invicible = true;
             if (gp.monster[i].life <= 0) {
                 gp.monster[i] = null;
-                gp.ui.showMessage("Boss defeated!");
+                gp.ui.showCenterMessage("Boss defeated!");
             }
         }
     }

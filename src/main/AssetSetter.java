@@ -1,10 +1,25 @@
 package main;
 
-import object.*;
 import java.util.Arrays;
+import java.util.Random;
 
 import entity.Mon_Boss_1;
 import entity.Mon_Chess;
+import object.OBJ_BookTable;
+import object.OBJ_Bookshelf;
+import object.OBJ_Door;
+import object.OBJ_FallenChess;
+import object.OBJ_HP;
+import object.OBJ_Mirror;
+import object.OBJ_NPC_map_1;
+import object.OBJ_NPC_map_2;
+import object.OBJ_NPC_map_3;
+import object.OBJ_NPC_map_4;
+import object.OBJ_Potion_Slash;
+import object.OBJ_Potion_Ulti;
+import object.OBJ_Scroll;
+import object.OBJ_Trapdoor;
+import object.SuperObject;
 
 public class AssetSetter {
 
@@ -50,6 +65,45 @@ public class AssetSetter {
             potion.worldY = 18 * gp.tileSize;
             gp.obj[idx++] = potion;
         }
+
+        if (gp.currentMap == 4) {
+
+            OBJ_HP potion0 = new OBJ_HP(gp.tileSize);
+            potion0.worldX = 21 * gp.tileSize;
+            potion0.worldY = 25 * gp.tileSize;
+            gp.obj[idx++] = potion0;
+
+            OBJ_HP potion1 = new OBJ_HP(gp.tileSize);
+            potion1.worldX = 6 * gp.tileSize;
+            potion1.worldY = 24 * gp.tileSize;
+            gp.obj[idx++] = potion1;
+
+            OBJ_HP potion2 = new OBJ_HP(gp.tileSize);
+            potion2.worldX = 9 * gp.tileSize;
+            potion2.worldY = 9 * gp.tileSize;
+            gp.obj[idx++] = potion2;
+
+            OBJ_HP potion3 = new OBJ_HP(gp.tileSize);
+            potion3.worldX = 17 * gp.tileSize;
+            potion3.worldY = 12 * gp.tileSize;
+            gp.obj[idx++] = potion3;
+
+            OBJ_HP potion4 = new OBJ_HP(gp.tileSize);
+            potion4.worldX = 20 * gp.tileSize;
+            potion4.worldY = 5 * gp.tileSize;
+            gp.obj[idx++] = potion4;
+
+            OBJ_HP potion5 = new OBJ_HP(gp.tileSize);
+            potion5.worldX = 27 * gp.tileSize;
+            potion5.worldY = 13 * gp.tileSize;
+            gp.obj[idx++] = potion5;
+
+            OBJ_HP potion6 = new OBJ_HP(gp.tileSize);
+            potion6.worldX = 3 * gp.tileSize;
+            potion6.worldY = 7 * gp.tileSize;
+            gp.obj[idx++] = potion6;
+        }
+        
     }
 
     private SuperObject createObject(int tileId, int worldX, int worldY,
@@ -82,12 +136,11 @@ public class AssetSetter {
                 obj.collision = true;
                 break;
             case 22:
-                obj = new OBJ_Bookshelf("/deco/bookshelf.png",
-                        "Kệ sách chứa những cuốn sách cũ kỹ...", ts);
+                obj = new OBJ_Scroll("/deco/bookshelf.png",
+                        "Một là độc dược, dù giấu kỹ càng. Dễ dàng tìm được, bên trái rượu tầm ma (1);", ts);
                 break;
             case 23:
-                obj = new OBJ_Bookshelf("/deco/bookshelf2.png",
-                        "Một quyển sách mở ra: 'Chương I: Bí mật của căn hầm...'", ts);
+                obj = new OBJ_Scroll("/deco/bookshelf2.png","Hai là hai chai đứng ở hai đầu. Khác nhau và không giúp mi tiến tới (2);'", ts);
                 break;
             case 24:
                 obj = new OBJ_Bookshelf("/deco/bookshelf3.png",

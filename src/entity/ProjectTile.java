@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import main.GamePanel;
 
 public class ProjectTile extends Entity{
-    Entity user;
+    protected Entity user;
     public boolean started = false;
     public int startX, startY;
     public int maxLife;
