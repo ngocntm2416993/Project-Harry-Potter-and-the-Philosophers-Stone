@@ -10,7 +10,7 @@ public class OBJ_NPC_map_1 extends SuperObject {
     public OBJ_NPC_map_1(int tileSize) {
         this.name       = "Old Man";
         this.dialogs = new String[] {
-            "vào OBJ_NPC đẻ thêm thoại", "chia ra làm npc 1,2,3,4,....", "nếu được thay bằng mỗi map 1 người sẽ hay hơn"
+            "Dùng ", "chia ra làm npc 1,2,3,4,....", "nếu được thay bằng mỗi map 1 người sẽ hay hơn"
         };
         this.hintText   = "[F] Xem hướng dẫn";
         this.collision  = true;
@@ -23,7 +23,7 @@ public class OBJ_NPC_map_1 extends SuperObject {
         solidAreaDefaultX = 0;
         solidAreaDefaultY = 0;
         try {
-            image = ImageIO.read(getClass().getResourceAsStream("/npc/oldman_down_1.png"));
+            image = ImageIO.read(getClass().getResourceAsStream("/npc/char_1.png"));
         } catch (IOException e) { e.printStackTrace(); }
     }
     @Override

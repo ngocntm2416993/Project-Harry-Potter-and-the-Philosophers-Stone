@@ -19,6 +19,7 @@ public class Player extends Entity {
     public int normalSpeed;
     public long speedBoostEndTime = 0;
 
+    public boolean isCompleteGame = true;
     private boolean interactConsumed = false;
     private boolean justClosedDialog = false;
     private int activeDialogObjIndex = -1;
@@ -221,7 +222,7 @@ public class Player extends Entity {
 
         OBJ_Ulti.triggerCooldown(); // ← bắt đầu đếm cooldown
         gp.ui.showMessage("Ulti!");
-        gp.playSE(1);
+        gp.playSE();
     }
 
     public void attacking() {
@@ -349,7 +350,7 @@ public class Player extends Entity {
                         invicible = true;
                         invicibleCounter = 0;
                         gp.ui.showMessage("Bị quân cờ tấn công! -10 HP");
-                        gp.playSE(1);
+                        gp.playSE();
                         if (HP <= 0) {
                             HP = 0;
                             gp.gameState = gp.gameOverState;
@@ -445,7 +446,7 @@ public class Player extends Entity {
         if (gp.monster[i] == null) return;
 
         if (!gp.monster[i].invicible) {
-            try { gp.playSE(1); } catch (Exception e) {} // ← dùng index an toàn
+            try { gp.playSE(); } catch (Exception e) {} // ← dùng index an toàn
             int damage = attack - gp.monster[i].defense;
             if (damage < 0) damage = 0;
             gp.monster[i].life -= damage;

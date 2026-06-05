@@ -42,8 +42,8 @@ public class GamePanel extends JPanel implements Runnable {
     // SYSTEM
     TileManager tileM = new TileManager(this);
     KeyHandler keyH = new KeyHandler(this);
-    Sound music = new Sound();
-    Sound se = new Sound();
+    public Sound music = new Sound();
+    public Sound se = new Sound();
     Thread gameThread;
     public CollisionChecker cChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
@@ -65,7 +65,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int dialogState = 3;
     public final int gameOverState = 4;
     public final int settingState = 5;
-
+    public final int endGameState = 6;
     //đối tượng đang tương tác
     public SuperObject currentObject;
 
@@ -88,6 +88,7 @@ public class GamePanel extends JPanel implements Runnable {
                     if (ui.btnResumeRect.contains(mx, my)) {
                         gameState = playState;
                     }
+
                     else if (ui.btnSettingRect.contains(mx, my)) {
                         gameState = settingState;
                     }
@@ -126,50 +127,85 @@ public class GamePanel extends JPanel implements Runnable {
                 }
 
                 //tương tác khi đang ở màn hình Cài đặt (Setting)
+                // Trong đoạn addMouseListener -> mousePressed:
                 else if (gameState == settingState) {
                     if (ui.btnBackRect.contains(mx, my)) {
                         gameState = pauseState;
                     }
-                    if (ui.sliderBounds.contains(mx, my)) {
+                    // Check click thanh Music
+                    else if (ui.sliderBounds.contains(mx, my)) {
                         updateVolumeFromMouse(mx);
                     }
+                    // Check click thanh Sound Effect (THÊM MỚI NHÁNH NÀY)
+                    else if (ui.sliderSEBounds.contains(mx, my)) {
+                        updateSEVolumeFromMouse(mx);
+                    }
                 }
+
             }
         });
 
         //XỬ LÝ KÉO RÊ CHUỘT ĐỂ ĐIỀU CHỈNH SLIDER VOLUME
+        // Trong đoạn addMouseMotionListener -> mouseDragged:
         this.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
                 if (gameState == settingState) {
                     int mx = e.getX();
-                    if (ui.sliderBounds.contains(mx, e.getY())) {
+                    int my = e.getY();
+                    // Kéo rê thanh Music
+                    if (ui.sliderBounds.contains(mx, my)) {
                         updateVolumeFromMouse(mx);
+                    }
+                    // Kéo rê thanh Sound Effect (THÊM MỚI NHÁNH NÀY)
+                    else if (ui.sliderSEBounds.contains(mx, my)) {
+                        updateSEVolumeFromMouse(mx);
                     }
                 }
             }
         });
     }
 
-    private void updateVolumeFromMouse(int mouseX) {
+    private void updateVolumeFromMouse(int mouseX) { // Đây là Music Volume
         double minX = ui.sliderBounds.x;
         double percent = (double) (mouseX - minX) / ui.sliderBounds.width;
         if (percent < 0) percent = 0;
         if (percent > 1) percent = 1;
 
         ui.musicVolume = (int) (percent * 100);
-        System.out.println("Volume cập nhật hệ thống: " + ui.musicVolume + "%");
+        System.out.println("Music Volume: " + ui.musicVolume + "%");
+        music.setVolume(ui.musicVolume);
+    }
 
-        // Cập nhật âm thanh thực tế nếu cần:
-        // music.setVolume(ui.musicVolume);
+    private void updateSEVolumeFromMouse(int mouseX) { // THÊM MỚI HÀM NÀY CHO SE
+        double minX = ui.sliderSEBounds.x;
+        double percent = (double) (mouseX - minX) / ui.sliderSEBounds.width;
+        if (percent < 0) percent = 0;
+        if (percent > 1) percent = 1;
+
+        ui.seVolume = (int) (percent * 100);
+        System.out.println("Sound Effect Volume: " + ui.seVolume + "%");
+        se.setVolume(ui.seVolume);
+    }
+
+    private void loadSounds() {
+        music.soundURL[0] = getClass().getResource("/sound/man1.wav");
+        music.soundURL[1] = getClass().getResource("/sound/man2.wav");
+        music.soundURL[2] = getClass().getResource("/sound/man3.wav");
+        music.soundURL[3] = getClass().getResource("/sound/man4.wav");
+
+        se.soundURL[0] = getClass().getResource("/sound/power_up.wav");
     }
 
     public void setUpGame() {
         aSetter.setObject();
         aSetter.setNPC();
+        loadSounds();
+        music.setVolume(ui.musicVolume); // 50 mặc định
+        se.setVolume(ui.seVolume);//50 mặc định
         playMusic(0);
-        stopMusic();
         gameState = playState;
+        GamePanelHolder.instance = this;
     }
 
     public void startGameThread() {
@@ -198,6 +234,7 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
     public void update() {
+
         if (gameState == gameOverState) {
             if (keyH.restartPressed) {
                 int spawnX = AssetSetter.MAP_SPAWN[1][0]; // index 1 = map2
@@ -249,6 +286,7 @@ public class GamePanel extends JPanel implements Runnable {
             currentObject = null;
         }
 
+
         OBJ_Ulti.tickCooldown();
     }
     public void paintComponent(Graphics g) {
@@ -295,21 +333,63 @@ public class GamePanel extends JPanel implements Runnable {
         mapTransition.startTransition(mapId);
     }
 
-    public void playMusic (int i) {
-        
-        music.setFile(i);
-        music.play();
-        music.loop();
+    public void playMusic(int i) {
+        try {
+            music.setFile(i);
+            music.setVolume(ui.musicVolume);
+            music.play();
+            music.loop();
+        } catch (Exception e) {
+            System.err.println("Lỗi playMusic index " + i + ": " + e.getMessage());
+        }
     }
 
     public void stopMusic() {
-        music.stop();
+        if (music.clip != null) {
+            music.clip.stop();
+            music.clip.close(); //giải phóng tài nguyên
+        }
     }
 
-    public void playSE(int i) {
-        se.setFile(i);
+    public void playSE() {
+        se.setFile(0);
         se.play();
     }
 
+    public void changeMusic(int mapId) {
+        stopMusic();
+        playMusic(mapId);
+    }
+
+    public void backToMainMenu() {
+        // 1. Dừng luồng game để tránh lỗi xung đột bộ nhớ
+        gameThread = null;
+        stopMusic();
+
+        // 2. Đóng cửa sổ Game Swing hiện tại
+        SwingUtilities.invokeLater(() -> {
+            java.awt.Window window = SwingUtilities.getWindowAncestor(this);
+            if (window != null) {
+                window.dispose();
+            }
+        });
+
+        // 3. Khởi chạy lại cửa sổ JavaFX MainMenu
+        javafx.application.Platform.runLater(() -> {
+            try {
+                javafx.stage.Stage mainStage = new javafx.stage.Stage();
+                javafx.scene.Parent root = javafx.fxml.FXMLLoader.load(
+                        getClass().getResource("/view/MainMenu.fxml")
+                );
+                mainStage.setTitle("Harry Potter and the Philosopher's Stone");
+                mainStage.setScene(new javafx.scene.Scene(root, 1024, 768));
+                mainStage.setResizable(false);
+                mainStage.show();
+            } catch (Exception ex) {
+                System.err.println("Lỗi khi tải MainMenu FXML:");
+                ex.printStackTrace();
+            }
+        });
+    }
 
 }

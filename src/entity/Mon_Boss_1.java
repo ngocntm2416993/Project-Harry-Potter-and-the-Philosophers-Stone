@@ -46,7 +46,7 @@ public class Mon_Boss_1 extends Entity {
         this.worldY    = row * gp.tileSize;
         this.direction = "down";
         this.speed     = 10;
-        this.life      = 20;
+        this.life      = 60;
         this.invicible = false;
 
         // Tâm vùng bound = trung tâm giữa (10,10)→(19,19)
@@ -232,7 +232,7 @@ public class Mon_Boss_1 extends Entity {
                 gp.player.invicible = true;
                 gp.player.invicibleCounter = 0;
                 gp.ui.showMessage("Boss tấn công! -20 HP");
-                gp.playSE(1);
+                gp.playSE();
                 if (gp.player.HP <= 0) {
                     gp.player.HP = 0;
                     gp.gameState = gp.gameOverState;

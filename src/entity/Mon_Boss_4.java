@@ -25,7 +25,7 @@ public class Mon_Boss_4  extends Entity{
         this.worldY = row * gp.tileSize;
         this.direction = "down";
         this.speed     = 2;
-        this.life = 10000;
+        this.life = 500;
 
         // solidArea — bắt buộc phải có
         solidArea = new java.awt.Rectangle(0, 0, gp.tileSize * 3, gp.tileSize * 3);
@@ -138,7 +138,7 @@ public class Mon_Boss_4  extends Entity{
                 gp.player.invicible = true;
                 gp.player.invicibleCounter = 0;
                 gp.ui.showMessage("Boss tấn công! -20 HP");
-                gp.playSE(1);
+                gp.playSE();
                 if (gp.player.HP <= 0) {
                     gp.player.HP = 0;
                     gp.gameState = gp.gameOverState;

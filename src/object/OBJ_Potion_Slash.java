@@ -37,7 +37,7 @@ public class OBJ_Potion_Slash extends SuperObject {
         }
         player.hasSlash = true;
         gp.ui.showMessage("Đã học được chiêu Slash!");
-        gp.playSE(1);
+        gp.playSE();
 
         for (int i = 0; i < gp.obj.length; i++) {
             if (gp.obj[i] == this) {

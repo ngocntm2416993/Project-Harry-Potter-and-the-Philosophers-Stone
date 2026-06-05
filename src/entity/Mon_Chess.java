@@ -89,7 +89,7 @@ public class Mon_Chess extends Entity{
                 lastDamageTime = now;
                 gp.player.HP -= 10;
                 gp.ui.showMessage("Bị quân cờ tấn công! -10 HP");
-                gp.playSE(1);
+                gp.playSE();
                 if (gp.player.HP <= 0) {
                     gp.player.HP = 0;
                     gp.gameState = gp.gameOverState;

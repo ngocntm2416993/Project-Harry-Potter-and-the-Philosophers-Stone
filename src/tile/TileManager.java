@@ -87,7 +87,7 @@ public class TileManager {
         setup(54, "/door/luaden.png",     false, full(3));
 
         // ── TRANG TRÍ 1x1 ────────────────────────────────────────────────
-        setup(18, "/deco/banthuocdoc.png", true,  new Rectangle(0, 8, T, 34));
+        //setup(18, "/deco/banthuocdoc.png", true,  new Rectangle(0, 8, T, 34));
         setup(21, "/deco/guongthan.png");
 
         setup(32, "/deco/stone.png",       true,  new Rectangle(4, 4, 40, 40));

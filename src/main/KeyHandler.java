@@ -21,7 +21,12 @@ public class KeyHandler implements KeyListener{
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
-
+        if (gp.gameState == gp.endGameState) {
+            if (code == KeyEvent.VK_ENTER) {
+                gp.backToMainMenu();
+            }
+            return; // Chặn các phím khác
+        }
         if (code == KeyEvent.VK_W || code == KeyEvent.VK_UP) {
             upPressed = true;
         }
@@ -37,10 +42,10 @@ public class KeyHandler implements KeyListener{
         if (code == KeyEvent.VK_F || code == KeyEvent.VK_ENTER) {
             interactPressed = true;
         }
-        if (code == KeyEvent.VK_1 || code == KeyEvent.VK_Q) {
+        if (code == KeyEvent.VK_1 || code == KeyEvent.VK_E) {
             slashPressed = true;
         }
-        if (code == KeyEvent.VK_2 || code == KeyEvent.VK_E) {
+        if (code == KeyEvent.VK_2 || code == KeyEvent.VK_Q) {
             UltiPressed = true;
         }
         if (code == KeyEvent.VK_P) {
@@ -77,11 +82,11 @@ public class KeyHandler implements KeyListener{
             interactPressed = false;
         }
 
-        if (code == KeyEvent.VK_Q || code == KeyEvent.VK_1) {
+        if (code == KeyEvent.VK_E || code == KeyEvent.VK_1) {
             slashPressed = false;
         }
 
-        if (code == KeyEvent.VK_E || code == KeyEvent.VK_2) {
+        if (code == KeyEvent.VK_Q || code == KeyEvent.VK_2) {
             UltiPressed = false;
         }
         // Trong keyReleased:

@@ -34,7 +34,7 @@ public class OBJ_FallenChess extends SuperObject {
             lastDamageTime = now;
             player.HP = Math.max(0, player.HP - 10);
             gp.ui.showMessage("Cờ gây 10 sát thương!");
-            gp.playSE(1);
+            gp.playSE();
         }
     }
 }

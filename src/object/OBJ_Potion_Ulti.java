@@ -37,7 +37,7 @@ public class OBJ_Potion_Ulti extends SuperObject {
         }
         player.hasUlti = true;
         gp.ui.showMessage("Đã học được chiêu Ulti!");
-        gp.playSE(1);
+        gp.playSE();
 
         for (int i = 0; i < gp.obj.length; i++) {
             if (gp.obj[i] == this) {

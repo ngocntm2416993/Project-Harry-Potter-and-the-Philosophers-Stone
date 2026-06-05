@@ -14,40 +14,56 @@ import java.io.IOException;
 
 public class SettingMenuController {
 
-    public enum BackTarget { MAIN_MENU, PAUSE }
-
     @FXML private Slider    sliderMusic;
+    @FXML private Slider    sliderSE;
     @FXML private Button    btnBack;
-    @FXML private ImageView imgBarFull;
+    @FXML private ImageView imgBarFullMusic;
+    @FXML private ImageView imgBarFullSE;
 
-    private final Rectangle clip = new Rectangle();
+    private final Rectangle clipMusic = new Rectangle();
+    private final Rectangle clipSE    = new Rectangle();
 
-    private BackTarget backTarget = BackTarget.MAIN_MENU;
-    private Stage      pauseStage = null;
-    private Runnable   onResume   = null;
-
-    // Callback đơn giản: gọi khi back — do bên ngoài truyền vào
     private Runnable onBack = null;
-
-    public void setOnBack(Runnable onBack) {
-        this.onBack = onBack;
-    }
-
-    public void setBackTarget(BackTarget target, Stage stage, Runnable onResume) {
-        this.backTarget = target;
-        this.pauseStage = stage;
-        this.onResume   = onResume;
-    }
+    public void setOnBack(Runnable onBack) { this.onBack = onBack; }
 
     @FXML
     public void initialize() {
-        if (sliderMusic == null || imgBarFull == null) return;
+        setupSlider(sliderMusic, imgBarFullMusic, clipMusic, true);
+        setupSlider(sliderSE,    imgBarFullSE,    clipSE,    false);
+    }
+
+    private void setupSlider(Slider slider, ImageView imgBarFull,
+                             Rectangle clip, boolean isMusic) {
+        if (slider == null || imgBarFull == null) return;
+
         imgBarFull.setClip(clip);
-        sliderMusic.valueProperty().addListener((obs, o, n) -> updateBarFull());
+
+        // 1. Đồng bộ chính xác giá trị từ UI hệ thống Swing (0 -> 100) vào Slider JavaFX
+        main.GamePanel gp = main.GamePanelHolder.instance;
+        if (gp != null && gp.ui != null) {
+            slider.setValue(isMusic ? gp.ui.musicVolume : gp.ui.seVolume);
+        }
+
+        // 2. Lắng nghe thay đổi → Đồng bộ song song cả biến UI (int) lẫn thực thể âm thanh (float)
+        slider.valueProperty().addListener((obs, oldVal, newVal) -> {
+            updateBarFull(slider, clip);
+            main.GamePanel gp2 = main.GamePanelHolder.instance;
+            if (gp2 != null) {
+                if (isMusic) {
+                    gp2.ui.musicVolume = newVal.intValue(); // Đồng bộ biến hiển thị Swing
+                    gp2.music.setVolume(newVal.floatValue()); // Cập nhật âm thanh thực tế
+                } else {
+                    gp2.ui.seVolume = newVal.intValue(); // Đồng bộ biến hiển thị Swing
+                    gp2.se.setVolume(newVal.floatValue()); // Cập nhật âm thanh thực tế
+                }
+            }
+        });
+
+        // 3. Căn vị trí imgBarFull bằng cơ chế Luồng đồ họa JavaFX (Giữ nguyên - Đang chạy rất tốt)
         Platform.runLater(() -> {
-            sliderMusic.applyCss();
-            sliderMusic.layout();
-            javafx.scene.Node track = sliderMusic.lookup(".track");
+            slider.applyCss();
+            slider.layout();
+            javafx.scene.Node track = slider.lookup(".track");
             if (track != null) {
                 javafx.geometry.Bounds ts = track.localToScene(track.getBoundsInLocal());
                 javafx.geometry.Bounds ps = imgBarFull.getParent()
@@ -57,32 +73,30 @@ public class SettingMenuController {
                 imgBarFull.setFitWidth(ts.getWidth());
                 imgBarFull.setFitHeight(ts.getHeight());
                 clip.setHeight(ts.getHeight());
-                sliderMusic.setUserData(ts.getWidth());
+                slider.setUserData(ts.getWidth());
             }
-            updateBarFull();
+            updateBarFull(slider, clip);
         });
     }
 
-    private void updateBarFull() {
-        if (sliderMusic.getUserData() == null) return;
-        double trackW  = (double) sliderMusic.getUserData();
-        double percent = (sliderMusic.getValue() - sliderMusic.getMin())
-                / (sliderMusic.getMax() - sliderMusic.getMin());
+    private void updateBarFull(Slider slider, Rectangle clip) {
+        if (slider.getUserData() == null) return;
+        double trackW  = (double) slider.getUserData();
+        double percent = (slider.getValue() - slider.getMin())
+                / (slider.getMax() - slider.getMin());
         clip.setWidth(trackW * percent);
     }
 
     @FXML
     void onBackClicked(ActionEvent event) {
+        if (onBack != null) {
+            onBack.run();
+            return;
+        }
         Stage stage = (Stage) btnBack.getScene().getWindow();
-
-    /* Mẹo kiểm tra: Nếu Stage này ở trạng thái KHÔNG CÓ VIỀN (UNDECORATED)
-       thì chứng tỏ nó được mở từ màn hình Pause Game của Swing.
-       Lúc này ta chỉ cần đóng nó đi!
-    */
         if (stage.getStyle() == javafx.stage.StageStyle.UNDECORATED) {
             stage.close();
         } else {
-            // Ngược lại, nếu mở từ MainMenu, ta chuyển cảnh về MainMenu bình thường
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("/view/MainMenu.fxml"));
                 stage.getScene().setRoot(root);

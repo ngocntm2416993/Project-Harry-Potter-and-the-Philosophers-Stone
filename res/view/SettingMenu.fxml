@@ -11,21 +11,20 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="UI.SettingMenuController">
     <children>
-        <!-- Ảnh nền chính -->
+
+        <!-- Nền -->
         <ImageView fitHeight="768.0" fitWidth="1024.0" pickOnBounds="true" preserveRatio="true">
             <image><Image url="@bg.jpg"/></image>
         </ImageView>
 
-        <!-- Khung setting -->
+        <!-- Khung setting (đã có text Music / Sound Effect bên trong ảnh) -->
         <ImageView fitHeight="600.0" fitWidth="800.0" layoutX="112.0" layoutY="84.0"
                    pickOnBounds="true" preserveRatio="true">
             <image><Image url="@bgsetting.png"/></image>
         </ImageView>
 
-        <!-- [THÊM MỚI] barfull: nằm đúng vị trí track, clip bằng Java -->
-        <!-- layoutX/Y khớp với Slider bên dưới, mouseTransparent để không chặn tương tác -->
-        <!-- barfull: fitWidth = đúng bằng prefWidth của Slider -->
-        <ImageView fx:id="imgBarFull"
+        <!-- barfull Music (Java tự set vị trí) -->
+        <ImageView fx:id="imgBarFullMusic"
                    layoutX="0.0" layoutY="0.0"
                    fitHeight="32.0" fitWidth="350.0"
                    preserveRatio="false"
@@ -33,24 +32,43 @@
             <image><Image url="@barfull.png"/></image>
         </ImageView>
 
-        <!-- Slider — track (bar.png) vẫn giữ nguyên qua CSS -->
+        <!-- Slider Music — hàng trên -->
         <Slider fx:id="sliderMusic"
-                layoutX="400.0" layoutY="350.0"
-                max="100.0" min="0.0"
-                prefHeight="40.0" prefWidth="350.0"
-                styleClass="custom-slider"
-                value="50.0"/>
+                layoutX="460.0" layoutY="270.0"
+                max="100.0" min="0.0" value="50.0"
+                prefHeight="40.0" prefWidth="310.0"
+                styleClass="custom-slider"/>
 
-        <!-- Nút Back -->
-        <Button fx:id="btnBack" layoutX="387.0" layoutY="500.0"
+
+
+
+        <!-- barfull SE (Java tự set vị trí) -->
+        <ImageView fx:id="imgBarFullSE"
+                   layoutX="0.0" layoutY="0.0"
+                   fitHeight="32.0" fitWidth="350.0"
+                   preserveRatio="false"
+                   mouseTransparent="true">
+            <image><Image url="@barfull.png"/></image>
+        </ImageView>
+
+        <Slider fx:id="sliderSE"
+                layoutX="460.0" layoutY="390.0"
+                max="100.0" min="0.0" value="50.0"
+                prefHeight="40.0" prefWidth="310.0"
+                styleClass="custom-slider"/>
+
+        <Button fx:id="btnBack"
+                layoutX="387.0" layoutY="520.0"
                 mnemonicParsing="false" onAction="#onBackClicked"
                 prefHeight="60.0" prefWidth="250.0"
                 style="-fx-background-color: transparent; -fx-cursor: hand;">
             <graphic>
                 <ImageView fitHeight="60.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true">
-                    <image><Image url="@Start.png"/></image>
+                    <image>
+                        <Image url="@back.png"/> </image>
                 </ImageView>
             </graphic>
         </Button>
+
     </children>
 </AnchorPane>

@@ -59,19 +59,26 @@ public class AssetSetter {
 
         switch (tileId) {
             case 15:
-                obj = new OBJ_Trapdoor(nextMap, spawnX, spawnY, ts);
+                OBJ_Trapdoor trapDoor = new OBJ_Trapdoor(nextMap, spawnX, spawnY, ts);
+                trapDoor.bossRequiredMap = 1;
+                obj = trapDoor;
                 break;
             case 16: case 19: case 20:
-                obj = new OBJ_Door("/door/" + getDoorFile(tileId), nextMap, spawnX, spawnY, ts);
+                obj = new OBJ_Door("/door/" + getDoorFile(tileId), nextMap, ts);
                 break;
             case 39:
-                obj = new OBJ_Door("/door/cuaphong.png", nextMap, spawnX, spawnY, ts);
+                OBJ_Door door = new OBJ_Door("/door/cuaphong.png", nextMap, ts);
+                door.interactable = true;
+                door.bossRequiredMap = 1;
+                obj = door;
                 break;
             case 53:
-                obj = new OBJ_Door("/door/luatim.png", nextMap, spawnX, spawnY, ts);
+                obj = new OBJ_Door("/door/luatim.png", nextMap, ts);
                 break;
             case 54:
-                obj = new OBJ_Door("/door/luaden.png", nextMap, spawnX, spawnY, ts);
+                object.OBJ_Door cuaLuaDen = new OBJ_Door("/door/luaden.png", nextMap, ts);
+                cuaLuaDen.setInteractable(false);
+                obj = cuaLuaDen;
                 break;
             case 21:
                 obj = new OBJ_Mirror(ts);
@@ -137,6 +144,7 @@ public class AssetSetter {
 
     private String getDoorFile(int tileId) {
         return switch (tileId) {
+            case 16 -> "cua.png";
             case 19 -> "cuaden.png";
             case 20 -> "cualuahong.png";
             default -> "cua.png";
@@ -158,7 +166,7 @@ public class AssetSetter {
 
             gp.npc[1]  = new Mon_Chess(gp, L, 5,  L, R, "/chess/codenthap");
             gp.npc[1].worldX = leftX;
-            gp.npc[11] = new Mon_Chess(gp, L, 5,  L, R, "/chess/cotrangcao");
+            gp.npc[11] = new Mon_Chess(gp, L, 5,  L, R, "/chess/cotrang");
             gp.npc[11].worldX = rightX;
 
             gp.npc[2]  = new Mon_Chess(gp, L, 7,  L, R, "/chess/conguaden");
@@ -166,22 +174,22 @@ public class AssetSetter {
             gp.npc[12] = new Mon_Chess(gp, L, 7,  L, R, "/chess/codencao");
             gp.npc[12].worldX = rightX;
 
-            gp.npc[3]  = new Mon_Chess(gp, L, 9,  L, R, "/chess/cotrangcao");
+            gp.npc[3]  = new Mon_Chess(gp, L, 9,  L, R, "/chess/cotrang");
             gp.npc[3].worldX = leftX;
             gp.npc[13] = new Mon_Chess(gp, L, 9,  L, R, "/chess/codenthap");
             gp.npc[13].worldX = rightX;
 
-            gp.npc[4]  = new Mon_Chess(gp, L, 13, L, R, "/chess/cotrangthap");
+            gp.npc[4]  = new Mon_Chess(gp, L, 13, L, R, "/chess/cotrang");
             gp.npc[4].worldX = leftX;
-            gp.npc[14] = new Mon_Chess(gp, L, 13, L, R, "/chess/cotrangcao");
+            gp.npc[14] = new Mon_Chess(gp, L, 13, L, R, "/chess/cotrang");
             gp.npc[14].worldX = rightX;
 
             gp.npc[9]  = new Mon_Chess(gp, L, 11, L, R, "/chess/codencao");
             gp.npc[9].worldX = leftX;
-            gp.npc[17] = new Mon_Chess(gp, L, 11, L, R, "/chess/cotrangcao");
+            gp.npc[17] = new Mon_Chess(gp, L, 11, L, R, "/chess/cotrang");
             gp.npc[17].worldX = rightX;
 
-            gp.npc[16] = new Mon_Chess(gp, L, 19, L, R, "/chess/cotrangcao");
+            gp.npc[16] = new Mon_Chess(gp, L, 19, L, R, "/chess/cotrang");
             gp.npc[16].worldX = leftX;
             gp.npc[7]  = new Mon_Chess(gp, L, 19, L, R, "/chess/conguaden");
             gp.npc[7].worldX = rightX;
@@ -193,7 +201,7 @@ public class AssetSetter {
 
             // hàng 15 chỉ có 1 con
             gp.npc[5]  = new Mon_Chess(gp, L, 15, L, R, "/chess/codencao");
-            gp.npc[8]  = new Mon_Chess(gp, L, 15, L, R, "/chess/cotrangcao");
+            gp.npc[8]  = new Mon_Chess(gp, L, 15, L, R, "/chess/cotrang");
             gp.npc[5].worldX = leftX;
             gp.npc[8].worldX = rightX;
         }

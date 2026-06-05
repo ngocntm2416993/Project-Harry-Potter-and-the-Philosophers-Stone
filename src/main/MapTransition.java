@@ -29,6 +29,12 @@ public class MapTransition {
             alpha += FADE_SPEED;
             if (alpha >= 1f) {
                 alpha = 1f;
+
+                // Đổi nhạc nền
+                gp.stopMusic(); // Dừng nhạc map cũ khi màn hình đã tối đen
+                // Phát nhạc map mới
+                gp.playMusic(nextMapId - 1);
+
                 gp.currentMap = nextMapId;
                 gp.tileM.loadMap("/maps/map" + nextMapId + ".txt");
                 int spawnX = AssetSetter.MAP_SPAWN[nextMapId - 1][0];
@@ -39,7 +45,7 @@ public class MapTransition {
                 gp.aSetter.setObject();
                 gp.aSetter.setNPC();
 
-                fadingOut = false;
+                fadingOut = false; // Bắt đầu quá trình Fade-in (sáng lên) kèm nhạc mới
             }
         } else {
             alpha -= FADE_SPEED;

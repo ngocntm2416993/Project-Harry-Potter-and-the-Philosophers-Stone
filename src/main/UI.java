@@ -46,6 +46,8 @@ public class UI {
     private static final int FILL_MAX_W   = 47;   // max fillable pixels
     private static final int MAX_HP       = 200;
 
+
+    private int endgameAlpha = 0;
     // Ảnh pause menu
     private BufferedImage imgBgPause, imgPaused, imgSetting, imgResume, imgRestart;
 
@@ -60,10 +62,11 @@ public class UI {
     // Vùng click cho nút Back và thanh trượt Slider khi ở màn hình Setting
     public Rectangle btnBackRect = new Rectangle();
     public Rectangle sliderBounds = new Rectangle();
+    public Rectangle sliderSEBounds = new Rectangle();
 
     // Biến lưu giá trị âm lượng thực tế của game (0 -> 100)
     public int musicVolume = 50;
-
+    public int seVolume = 50;
     public UI(GamePanel gp) {
         this.gp = gp;
         try {
@@ -110,7 +113,7 @@ public class UI {
             imgBar = ImageIO.read(getClass().getResourceAsStream("/view/bar.png"));
             imgBarFull = ImageIO.read(getClass().getResourceAsStream("/view/barfull.png"));
             imgIcon = ImageIO.read(getClass().getResourceAsStream("/view/icon.png"));
-            imgBtnBack = ImageIO.read(getClass().getResourceAsStream("/view/Start.png"));
+            imgBtnBack = ImageIO.read(getClass().getResourceAsStream("/view/back.png"));
         } catch (IOException e) {
             System.out.println("Không load được ảnh tài nguyên Setting: " + e.getMessage());
         }
@@ -149,6 +152,7 @@ public class UI {
         if (gp.gameState == gp.pauseState) drawPauseMenu();
         if (gp.gameState == gp.settingState) drawSettingMenu();
         if (gp.gameState == gp.gameOverState) drawGameOver();
+        if (gp.gameState == gp.endGameState) drawEndgameScreen();
     }
 
     private void drawPauseMenu() {
@@ -200,7 +204,6 @@ public class UI {
             g2.drawImage(imgBgPause, 0, 0, sw, sh, null);
         }
 
-        //Vẽ khung bảng điều khiển lớn ở trung tâm (800x600)
         int bgW = 800;
         int bgH = 600;
         int bgX = (sw - bgW) / 2;
@@ -209,45 +212,66 @@ public class UI {
             g2.drawImage(imgBgSetting, bgX, bgY, bgW, bgH, null);
         }
 
-        //Thiết kế vẽ hệ thống Slider custom
-        int sliderX = bgX + 288;
-        int sliderY = bgY + 266;
         int sliderW = 350;
         int sliderH = 40;
-        sliderBounds.setBounds(sliderX, sliderY, sliderW, sliderH);
-
-        //Vẽ thanh nền trống
-        if (imgBar != null) {
-            g2.drawImage(imgBar, sliderX, sliderY, sliderW, sliderH, null);
-        }
-
-        //Cắt và vẽ thanh trạng thái đã kéo đầy
-        if (imgBarFull != null) {
-            double percent = musicVolume / 100.0;
-            int drawWidth = (int) (sliderW * percent);
-
-            if (drawWidth > 0) {
-                Shape oldClip = g2.getClip(); // Lưu lại clip cũ
-                g2.setClip(sliderX, sliderY, drawWidth, sliderH);
-                g2.drawImage(imgBarFull, sliderX, sliderY, sliderW, sliderH, null);
-                g2.setClip(oldClip); // Khôi phục clip cũ hệ thống an toàn
-            }
-        }
-
-        //Vẽ con trỏ icon hình nốt nhạc vàng chuyển động
         int iconW = 50;
         int iconH = 50;
-        double percent = musicVolume / 100.0;
-        int iconX = sliderX + (int) (sliderW * percent) - (iconW / 2);
-        int iconY = sliderY + (sliderH - iconH) / 2;
-        if (imgIcon != null) {
-            g2.drawImage(imgIcon, iconX, iconY, iconW, iconH, null);
-        }
 
+        // --- SLIDER 1: MUSIC (Đẩy cao lên) ---
+        int musicSliderX = bgX + 288;
+        int musicSliderY = bgY + 195; // Giảm xuống 195 (gốc trước đó là 240) để đẩy cao lên
+        sliderBounds.setBounds(musicSliderX, musicSliderY, sliderW, sliderH);
+
+        // Vẽ thanh trống Music
+        if (imgBar != null) g2.drawImage(imgBar, musicSliderX, musicSliderY, sliderW, sliderH, null);
+
+        // Vẽ thanh đầy Music
+        if (imgBarFull != null) {
+            double percentMusic = musicVolume / 100.0;
+            int drawWidthMusic = (int) (sliderW * percentMusic);
+            if (drawWidthMusic > 0) {
+                Shape oldClip = g2.getClip();
+                g2.setClip(musicSliderX, musicSliderY, drawWidthMusic, sliderH);
+                g2.drawImage(imgBarFull, musicSliderX, musicSliderY, sliderW, sliderH, null);
+                g2.setClip(oldClip);
+            }
+        }
+        // Vẽ Icon nút kéo Music
+        int iconMusicX = musicSliderX + (int) (sliderW * (musicVolume / 100.0)) - (iconW / 2);
+        int iconMusicY = musicSliderY + (sliderH - iconH) / 2;
+        if (imgIcon != null) g2.drawImage(imgIcon, iconMusicX, iconMusicY, iconW, iconH, null);
+
+
+        // --- SLIDER 2: SOUND EFFECT (Đẩy cao lên) ---
+        int seSliderX = bgX + 288;
+        int seSliderY = bgY + 315; // Giảm xuống 315 (gốc trước đó là 360) để đẩy cao lên
+        sliderSEBounds.setBounds(seSliderX, seSliderY, sliderW, sliderH);
+
+        // Vẽ thanh trống SE
+        if (imgBar != null) g2.drawImage(imgBar, seSliderX, seSliderY, sliderW, sliderH, null);
+
+        // Vẽ thanh đầy SE
+        if (imgBarFull != null) {
+            double percentSE = seVolume / 100.0;
+            int drawWidthSE = (int) (sliderW * percentSE);
+            if (drawWidthSE > 0) {
+                Shape oldClip = g2.getClip();
+                g2.setClip(seSliderX, seSliderY, drawWidthSE, sliderH);
+                g2.drawImage(imgBarFull, seSliderX, seSliderY, sliderW, sliderH, null);
+                g2.setClip(oldClip);
+            }
+        }
+        // Vẽ Icon nút kéo SE
+        int iconSEX = seSliderX + (int) (sliderW * (seVolume / 100.0)) - (iconW / 2);
+        int iconSEY = seSliderY + (sliderH - iconH) / 2;
+        if (imgIcon != null) g2.drawImage(imgIcon, iconSEX, iconSEY, iconW, iconH, null);
+
+
+        // --- NÚT BACK (Đẩy cao lên) ---
         int btnW = 250;
         int btnH = 60;
         int btnX = bgX + 275;
-        int btnY = bgY + 416;
+        int btnY = bgY + 435; // Giảm xuống 435 (gốc trước đó là 480) để đẩy cao lên
         if (imgBtnBack != null) {
             g2.drawImage(imgBtnBack, btnX, btnY, btnW, btnH, null);
         }
@@ -430,6 +454,54 @@ public class UI {
         FontMetrics fm = g2.getFontMetrics();
         g2.drawString(text, gp.screenWidth / 2 - fm.stringWidth(text) / 2,
                             gp.screenHeight / 2);
+    }
+
+    public void drawEndgameScreen() {
+        // 1. Tăng dần giá trị alpha (tối đa 255)
+        if (endgameAlpha < 255) {
+            endgameAlpha += 5; // Tốc độ hiện dần (càng lớn càng nhanh)
+        }
+
+        // 2. Phủ mờ nền (alpha dựa trên endgameAlpha)
+        g2.setColor(new Color(0, 0, 0, Math.min(endgameAlpha / 2, 150)));
+        g2.fillRect(0, 0, gp.screenWidth, gp.screenHeight);
+
+        // 3. Thiết lập khung và nội dung (dùng alpha cho màu sắc)
+        int boxW = 500;
+        int boxH = 260;
+        int boxX = (gp.screenWidth - boxW) / 2;
+        int boxY = (gp.screenHeight - boxH) / 2;
+
+        // Sử dụng endgameAlpha để làm cho toàn bộ bảng "hiện dần"
+        int alpha = Math.min(endgameAlpha, 255);
+
+        // Nền hộp thoại
+        g2.setColor(new Color(10, 10, 30, (int)(alpha * 0.9)));
+        g2.fillRoundRect(boxX, boxY, boxW, boxH, 20, 20);
+
+        // Viền hộp thoại
+        g2.setColor(new Color(160, 160, 255, alpha));
+        g2.setStroke(new BasicStroke(2));
+        g2.drawRoundRect(boxX, boxY, boxW, boxH, 20, 20);
+
+        // 4. Vẽ chữ (cũng cần áp dụng alpha để mờ dần hiện ra)
+        g2.setFont(baseFont.deriveFont(Font.BOLD, 30F));
+        g2.setColor(new Color(255, 220, 100, alpha));
+        String title = "SẢN PHẦM CỦA NHÓM 3";
+        g2.drawString(title, boxX + 20, boxY + 45);
+
+        g2.setFont(baseFont.deriveFont(Font.PLAIN, 22F));
+        g2.setColor(new Color(255, 255, 255, alpha));
+        g2.drawString("Cảm ơn bạn đã trải nghiệm game.", boxX + 20, boxY + 90);
+        g2.setColor(new Color(180, 255, 180, alpha));
+        g2.drawString("CẢM ƠN ANH ĐỘ MIXI", boxX + 20, boxY + 125);
+
+        g2.setFont(baseFont.deriveFont(Font.ITALIC, 16F));
+        g2.setColor(new Color(160, 160, 160, alpha));
+        g2.drawString("[ENTER] Quay lại Main menu", boxX + boxW - 190, boxY + boxH - 15);
+    }
+    public void resetEndgameAlpha() {
+        this.endgameAlpha = 0;
     }
 
     public int getXforCenteredText(String text) {

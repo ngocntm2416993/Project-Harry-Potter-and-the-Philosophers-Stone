@@ -37,7 +37,7 @@ public class OBJ_Chest extends SuperObject {
             player.speedBoostEndTime = System.currentTimeMillis() + 5000;
             gp.ui.showMessage("Rương: Tăng tốc 5 giây!");
         }
-        gp.playSE(1);
+        gp.playSE();
         for (int i = 0; i < gp.obj.length; i++) {
             if (gp.obj[i] == this) { gp.obj[i] = null; break; }
         }

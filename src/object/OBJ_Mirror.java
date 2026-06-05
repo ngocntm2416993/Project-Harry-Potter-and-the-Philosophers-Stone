@@ -1,5 +1,8 @@
 package object;
 
+import entity.Player;
+import main.GamePanel;
+
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
@@ -22,5 +25,24 @@ public class OBJ_Mirror extends SuperObject {
         try {
             image = ImageIO.read(getClass().getResourceAsStream("/deco/guongthan.png"));
         } catch (IOException e) { e.printStackTrace(); }
+    }
+    @Override
+    public void onInteract(GamePanel gp, Player player){
+        boolean boss4Alive = false;
+        for (entity.Entity m : gp.monster) {
+            if (m != null && m instanceof entity.Mon_Boss_4) {
+                boss4Alive = true;
+                break;
+            }
+        }
+        if (boss4Alive) {
+            // Khi boss chưa chết: Chỉ hiện thoại bình thường
+            gp.ui.setDialog(this.name, this.dialogText);
+            gp.gameState = gp.dialogState;
+        } else {
+            gp.gameState = gp.dialogState;
+            gp.ui.resetEndgameAlpha();
+            gp.gameState = gp.endGameState;
+        }
     }
 }
