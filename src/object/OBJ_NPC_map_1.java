@@ -8,9 +8,15 @@ import java.io.IOException;
 
 public class OBJ_NPC_map_1 extends SuperObject {
     public OBJ_NPC_map_1(int tileSize) {
-        this.name       = "Old Man";
+        this.name       = "Hồn ma";
         this.dialogs = new String[] {
-            "Dùng ", "chia ra làm npc 1,2,3,4,....", "nếu được thay bằng mỗi map 1 người sẽ hay hơn"
+                "Bạn cần vượt qua 4 màn để kết thúc trò chơi",
+                "Dùng phím [F] để đánh quái",
+                "Ngoài ra có thể dùng [E] và [Q[ để thi triển\nSlash và Ultimate",
+                "2 kĩ năng trên\nCần có item kích hoạt",
+                "Những item này được đặt rải rác\ntrong các màn chơi",
+                "Ngoài ra sẽ có một số item hỗ trợ\nđược đặt rải rác trong màn chơi",
+                "Chúc bạn thành công!"
         };
         this.hintText   = "[F] Xem hướng dẫn";
         this.collision  = true;
@@ -23,7 +29,7 @@ public class OBJ_NPC_map_1 extends SuperObject {
         solidAreaDefaultX = 0;
         solidAreaDefaultY = 0;
         try {
-            image = ImageIO.read(getClass().getResourceAsStream("/npc/char_1.png"));
+            image = ImageIO.read(getClass().getResourceAsStream("/npc/NPC_1.png"));
         } catch (IOException e) { e.printStackTrace(); }
     }
     @Override
