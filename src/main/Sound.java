@@ -6,15 +6,43 @@ import javax.sound.sampled.*;
 public class Sound {
     Clip clip;
     URL soundURL[] = new URL[30];
-    private float volumePercent = 100f; // 0 → 100
+    private float volumePercent = 100f;
 
+    // Cache: mỗi index có 1 Clip đã load sẵn, không load lại mỗi lần play
+    private Clip[] cachedClips = new Clip[30];
+
+    /**
+     * Load trước tất cả sound effect vào cache.
+     * Gọi một lần duy nhất sau khi gán xong soundURL[].
+     */
+    public void preloadAll() {
+        for (int i = 0; i < soundURL.length; i++) {
+            if (soundURL[i] != null) {
+                cachedClips[i] = loadClip(i);
+            }
+        }
+    }
+
+    private Clip loadClip(int i) {
+        try {
+            AudioInputStream ais = AudioSystem.getAudioInputStream(soundURL[i]);
+            Clip c = AudioSystem.getClip();
+            c.open(ais);
+            applyVolumeToClip(c);
+            return c;
+        } catch (Exception e) {
+            System.err.println("Sound: lỗi load file index " + i);
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /** Dùng cho music: load + giữ clip hiện tại (hành vi cũ) */
     public void setFile(int i) {
-        // Null-check index
         if (i < 0 || i >= soundURL.length || soundURL[i] == null) {
             System.err.println("Sound: không tìm thấy soundURL[" + i + "]");
             return;
         }
-        // Đóng clip cũ trước khi mở mới
         if (clip != null && clip.isOpen()) {
             clip.stop();
             clip.close();
@@ -30,48 +58,60 @@ public class Sound {
         }
     }
 
+    /**
+     * Play sound effect từ cache — KHÔNG tạo Clip mới, không block.
+     * Gọi thay cho setFile(i) + play() khi phát SE.
+     */
+    public void playCached(int i) {
+        if (i < 0 || i >= cachedClips.length) return;
+        Clip c = cachedClips[i];
+        if (c == null) return;
+        // Nếu đang phát thì tua về đầu để phát lại ngay
+        if (c.isRunning()) c.stop();
+        c.setFramePosition(0);
+        applyVolumeToClip(c);
+        c.start();
+    }
+
     public void play() {
-        clip.start();
+        if (clip != null) clip.start();
     }
 
     public void loop() {
-        clip.loop(Clip.LOOP_CONTINUOUSLY);
+        if (clip != null) clip.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
     public void stop() {
-        clip.stop();
+        if (clip != null) clip.stop();
     }
 
-    /**
-     * Đặt âm lượng: percent từ 0.0 (tắt) đến 100.0 (max)
-     */
     public void setVolume(float percent) {
         this.volumePercent = Math.max(0f, Math.min(100f, percent));
         applyVolume();
+        // Cập nhật volume cho tất cả cached clip
+        for (Clip c : cachedClips) {
+            if (c != null) applyVolumeToClip(c);
+        }
     }
 
-    public float getVolume() {
-        return volumePercent;
-    }
+    public float getVolume() { return volumePercent; }
 
     private void applyVolume() {
-        if (clip == null) return;
-        if (!clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) return;
+        if (clip != null) applyVolumeToClip(clip);
+    }
 
-        FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-
-        // MASTER_GAIN tính bằng decibel: min thường -80dB, max 6dB
-        float min = gainControl.getMinimum(); // thường -80.0
-        float max = gainControl.getMaximum(); // thường 6.0
-
-        float gain;
+    private void applyVolumeToClip(Clip c) {
+        if (c == null) return;
+        if (!c.isControlSupported(FloatControl.Type.MASTER_GAIN)) return;
+        FloatControl gain = (FloatControl) c.getControl(FloatControl.Type.MASTER_GAIN);
+        float min = gain.getMinimum();
+        float max = gain.getMaximum();
+        float val;
         if (volumePercent <= 0f) {
-            gain = min; // tắt hoàn toàn
+            val = min;
         } else {
-            // Convert percent → dB theo logarithm tự nhiên
-            gain = min + (max - min) * (float)(Math.log10(1 + volumePercent * 9 / 100) / Math.log10(10));
+            val = min + (max - min) * (float)(Math.log10(1 + volumePercent * 9 / 100.0) / Math.log10(10));
         }
-
-        gainControl.setValue(gain);
+        gain.setValue(val);
     }
 }

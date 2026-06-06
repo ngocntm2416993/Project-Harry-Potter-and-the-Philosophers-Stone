@@ -1,24 +1,47 @@
 package object;
 import entity.ProjectTile;
 import main.*;
-public class OBJ_Ulti extends ProjectTile {
-     // Bay hết màn hình: screenWidth / tileSize = 16 tile
-    private static final int MAX_RANGE = 20; // tile, dư ra 4 tile ngoài viền
+import java.awt.image.BufferedImage;
 
-    // Cooldown: 5 giây = 300 frame (60fps)
+public class OBJ_Ulti extends ProjectTile {
+    private static final int MAX_RANGE = 20;
+
     public static final int COOLDOWN_FRAMES = 300;
-    public static int cooldownTimer = 0; // static → dùng chung mọi instance
+    public static int cooldownTimer = 0;
+
+    // Cache ảnh tĩnh — load 1 lần duy nhất, mọi instance dùng chung
+    private static BufferedImage cachedUp1, cachedUp2;
+    private static BufferedImage cachedDown1, cachedDown2;
+    private static BufferedImage cachedLeft1, cachedLeft2;
+    private static BufferedImage cachedRight1, cachedRight2;
+    private static boolean imagesLoaded = false;
 
     public OBJ_Ulti(GamePanel gp) {
         super(gp);
-        name = "Ulti";          
+        name = "Ulti";
         speed = 8;
         maxLife = 999;
         life = maxLife;
-        attack = 500;              
+        attack = 500;
         useCost = 1;
         alive = false;
-        getImage();           
+        // Chỉ load ảnh 1 lần duy nhất trong suốt game
+        if (!imagesLoaded) {
+            cachedUp1    = setup("/skill/Ulti_1.png");
+            cachedUp2    = setup("/skill/Ulti_2.png");
+            cachedDown1  = setup("/skill/Ulti_1.png");
+            cachedDown2  = setup("/skill/Ulti_3.png");
+            cachedLeft1  = setup("/skill/Ulti_1.png");
+            cachedLeft2  = setup("/skill/Ulti_2.png");
+            cachedRight1 = setup("/skill/Ulti_1.png");
+            cachedRight2 = setup("/skill/Ulti_3.png");
+            imagesLoaded = true;
+        }
+        // Gán từ cache — không tốn I/O
+        up1 = cachedUp1; up2 = cachedUp2;
+        down1 = cachedDown1; down2 = cachedDown2;
+        left1 = cachedLeft1; left2 = cachedLeft2;
+        right1 = cachedRight1; right2 = cachedRight2;
     }
 
     public static void tickCooldown() {
@@ -33,14 +56,9 @@ public class OBJ_Ulti extends ProjectTile {
         cooldownTimer = COOLDOWN_FRAMES;
     }
 
-    // public void set(int worldX, int worldY, String direction, boolean alive, entity.Entity user) {
-    //     super.set(worldX, worldY, direction, alive, user);
-    // }
-
     @Override
     public void update() {
         if (!alive) return;
-        // Check khoảng cách đã đi
         if (started) {
             int dist = Math.max(
                 Math.abs(worldX - startX),
@@ -51,19 +69,9 @@ public class OBJ_Ulti extends ProjectTile {
                 return;
             }
         }
-        
         super.update();
     }
 
-    public void getImage() {   
-        up1    = setup("/skill/Ulti_1.png");
-        up2    = setup("/skill/Ulti_2.png");
-        down1  = setup("/skill/Ulti_1.png");
-        down2  = setup("/skill/Ulti_3.png");
-        left1  = setup("/skill/Ulti_1.png");
-        left2  = setup("/skill/Ulti_2.png");
-        right1 = setup("/skill/Ulti_1.png");
-        right2 = setup("/skill/Ulti_3.png");
-        
-    }
+    // getImage() không cần nữa nhưng giữ lại để tránh lỗi nếu có nơi gọi
+    public void getImage() { /* no-op: dùng static cache trong constructor */ }
 }

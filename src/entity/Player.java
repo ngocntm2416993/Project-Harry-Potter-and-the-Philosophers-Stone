@@ -19,7 +19,6 @@ public class Player extends Entity {
     public int normalSpeed;
     public long speedBoostEndTime = 0;
 
-    public boolean isCompleteGame = true;
     private boolean interactConsumed = false;
     private boolean justClosedDialog = false;
     private int activeDialogObjIndex = -1;
@@ -97,7 +96,7 @@ public class Player extends Entity {
         }
 
         boolean moving = keyH.upPressed || keyH.downPressed ||
-                         keyH.leftPressed || keyH.rightPressed;
+                keyH.leftPressed || keyH.rightPressed;
 
         if (keyH.upPressed)         direction = "up";
         else if (keyH.downPressed)  direction = "down";
@@ -226,39 +225,39 @@ public class Player extends Entity {
     }
 
     public void attacking() {
-        spriteCounter++; 
+        spriteCounter++;
         if(spriteCounter <= 5){
             spriteNum = 1;
         }
-        if (spriteCounter > 5 && spriteCounter <= 25) { 
-            spriteNum = 2; 
-            // Save the current worldX, worldY, solidArea 
-            int currentWorldX = worldX; 
-            int currentWorldY = worldY; 
-            int solidAreaWidth = solidArea.width; 
-            int solidAreaHeight = solidArea.height; 
-            // Adiust plaver's worldX/Y for the attackArea 
-            switch (direction) { 
-                case "up": worldY -= attackArea.height; break; 
-                case "down": worldY += attackArea.height; break; 
-                case "left": worldX -= attackArea.width; break; 
-                case "right": worldX += attackArea. width; break; 
-            }            // attackArea becomes solidArea 
-            solidArea.width = attackArea.width; 
-            solidArea.height = attackArea.height; 
-            //Check monster r collision with the updated worldX, worldY and solidArea 
+        if (spriteCounter > 5 && spriteCounter <= 25) {
+            spriteNum = 2;
+            // Save the current worldX, worldY, solidArea
+            int currentWorldX = worldX;
+            int currentWorldY = worldY;
+            int solidAreaWidth = solidArea.width;
+            int solidAreaHeight = solidArea.height;
+            // Adiust plaver's worldX/Y for the attackArea
+            switch (direction) {
+                case "up": worldY -= attackArea.height; break;
+                case "down": worldY += attackArea.height; break;
+                case "left": worldX -= attackArea.width; break;
+                case "right": worldX += attackArea. width; break;
+            }            // attackArea becomes solidArea
+            solidArea.width = attackArea.width;
+            solidArea.height = attackArea.height;
+            //Check monster r collision with the updated worldX, worldY and solidArea
             attack =20;
             int monsterIndex = gp. cChecker.checkEntity(this, gp.monster) ;
             damageMonster (monsterIndex,attack);
 
-            // After checking collision, resotre the original data 
+            // After checking collision, resotre the original data
             worldX = currentWorldX;
             worldY = currentWorldY;
-            solidArea.width = solidAreaWidth; 
+            solidArea.width = solidAreaWidth;
             solidArea.height = solidAreaHeight;
         }
-        if (spriteCounter > 25) { 
-            spriteNum = 1; 
+        if (spriteCounter > 25) {
+            spriteNum = 1;
             spriteCounter = 0 ;
             attacking = false;
         }
@@ -267,9 +266,9 @@ public class Player extends Entity {
 
     public void interactNPC (int i) {
         if (keyH.interactPressed==true){
-            if (i != -1) { 
-                    gp.gameState = gp.dialogState; 
-                    gp.npc[i].setAction(); 
+            if (i != -1) {
+                gp.gameState = gp.dialogState;
+                gp.npc[i].setAction();
             }
             else attacking = true;
         }
@@ -279,16 +278,17 @@ public class Player extends Entity {
         if(gp.monster[0]==null) return;
         entity.Entity boss = gp.monster[0];
         java.awt.Rectangle playerRect = new java.awt.Rectangle(
-            worldX + solidAreaDefaultX,
-            worldY + solidAreaDefaultY,
-            solidArea.width, solidArea.height
+                worldX + solidAreaDefaultX,
+                worldY + solidAreaDefaultY,
+                solidArea.width, solidArea.height
         );
         java.awt.Rectangle bossRect = new java.awt.Rectangle(
-            boss.worldX + boss.solidAreaDefaultX,
-            boss.worldY + boss.solidAreaDefaultY,
-            boss.solidArea.width, boss.solidArea.height
+                boss.worldX + boss.solidAreaDefaultX,
+                boss.worldY + boss.solidAreaDefaultY,
+                boss.solidArea.width, boss.solidArea.height
         );
 
+        // if (!playerRect.intersects(bossRect)&& !invicible) return;
         if (!playerRect.intersects(bossRect)) return;
 
         // Tính overlap theo từng trục, đẩy ra theo trục nhỏ hơn
@@ -335,10 +335,10 @@ public class Player extends Entity {
             for (int i = 0; i < gp.npc.length; i++) {
                 if (gp.npc[i] == null) continue;
                 java.awt.Rectangle npcRect = new java.awt.Rectangle(
-                    gp.npc[i].worldX + gp.npc[i].solidAreaDefaultX,
-                    gp.npc[i].worldY + gp.npc[i].solidAreaDefaultY,
-                    gp.npc[i].solidArea.width,
-                    gp.npc[i].solidArea.height
+                        gp.npc[i].worldX + gp.npc[i].solidAreaDefaultX,
+                        gp.npc[i].worldY + gp.npc[i].solidAreaDefaultY,
+                        gp.npc[i].solidArea.width,
+                        gp.npc[i].solidArea.height
                 );
 
                 if (playerRect.intersects(npcRect)) {
@@ -380,8 +380,8 @@ public class Player extends Entity {
             int dy = Math.abs(playerCY - objCY);
 
             int range = gp.obj[i].proximityRange
-                      + gp.obj[i].solidArea.width  / 2
-                      + gp.obj[i].solidArea.height / 2;
+                    + gp.obj[i].solidArea.width  / 2
+                    + gp.obj[i].solidArea.height / 2;
             range = Math.min(range, gp.tileSize * 4);
 
             if (dx < range && dy < range) {
@@ -392,8 +392,8 @@ public class Player extends Entity {
 
         if (nearbyObjIndex >= 0) {
             gp.ui.setProximityHint(
-                gp.obj[nearbyObjIndex].name,
-                gp.obj[nearbyObjIndex].getProximityHint()
+                    gp.obj[nearbyObjIndex].name,
+                    gp.obj[nearbyObjIndex].getProximityHint()
             );
         } else {
             gp.ui.setProximityHint("", "");
@@ -464,38 +464,38 @@ public class Player extends Entity {
         if (invicible && (invicibleCounter / 5) % 2 == 1) return;
         BufferedImage image = null;
         switch (direction) {
-            case "up":    
+            case "up":
                 if(attacking == false ){
                     image = (spriteNum == 1) ? up1    : up2;
                 }
                 if(attacking==true){
                     image = (spriteNum == 1) ? attackUpl    : attackUp2;
-                }    
-            break;
+                }
+                break;
             case "down":
                 if(attacking == false ){
                     image = (spriteNum == 1) ? down1    : down2;
                 }
                 if(attacking==true){
                     image = (spriteNum == 1) ? attackDown1    : attackDown2;
-                }  
-            break;  
+                }
+                break;
             case "left":
                 if(attacking == false ){
                     image = (spriteNum == 1) ? left1    : left2;
                 }
                 if(attacking==true){
                     image = (spriteNum == 1) ? attackLeft1    : attackLeft2;
-                }  
-            break; 
-            case "right": 
+                }
+                break;
+            case "right":
                 if(attacking == false ){
                     image = (spriteNum == 1) ? right1    : right2;
                 }
                 if(attacking==true){
                     image = (spriteNum == 1) ? attackRight1    : attackRight2;
-                }  
-            break; 
+                }
+                break;
         }
         g2.drawImage(image, screenX, screenY, null);
     }

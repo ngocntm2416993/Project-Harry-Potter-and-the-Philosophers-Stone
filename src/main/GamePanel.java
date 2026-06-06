@@ -195,6 +195,8 @@ public class GamePanel extends JPanel implements Runnable {
         music.soundURL[3] = getClass().getResource("/sound/man4.wav");
 
         se.soundURL[0] = getClass().getResource("/sound/power_up.wav");
+        // Preload tất cả SE vào cache — chỉ chạy 1 lần khi khởi động
+        se.preloadAll();
     }
 
     public void setUpGame() {
@@ -352,8 +354,8 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void playSE() {
-        se.setFile(0);
-        se.play();
+        // Dùng clip đã cache sẵn — không load lại, không block game thread
+        se.playCached(0);
     }
 
     public void changeMusic(int mapId) {

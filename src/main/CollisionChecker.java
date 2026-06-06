@@ -87,7 +87,7 @@ public class CollisionChecker {
 
         Rectangle entityRect = new Rectangle(nextX, nextY, w, h);
 
-        int margin = 7;
+        int margin = 2; // giảm từ 7 → 2: quét vùng nhỏ hơn, giảm tải CPU mỗi frame
         int leftCol   = Math.max(0, nextX / gp.tileSize - margin);
         int rightCol  = Math.min(gp.maxWorldCol - 1, (nextX + w) / gp.tileSize + margin);
         int topRow    = Math.max(0, nextY / gp.tileSize - margin);
