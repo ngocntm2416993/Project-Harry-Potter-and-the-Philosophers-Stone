@@ -33,6 +33,11 @@ public class OBJ_Door extends SuperObject {
     }
     @Override
     public void onInteract(main.GamePanel gp, entity.Player player) {
+        if (targetMap == 4 && !gp.isDoorUnlocked) {
+            gp.ui.showMessage("Cửa vẫn còn khóa! Hãy tìm lọ thuốc an toàn.");
+            return;
+        }
+
         if (bossRequiredMap != -1) {
             boolean bossStillAlive = false;
 
