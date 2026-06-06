@@ -101,7 +101,6 @@ public class UI {
         }
         loadPauseImages();
         loadSettingImages(); // Khởi tạo nạp ảnh setting khi tạo UI
-        baseFont = new Font("Arial", Font.PLAIN, 22);  //chỗ này mới này 
     }
 
     private void loadPauseImages() {

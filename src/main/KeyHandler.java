@@ -56,7 +56,17 @@ public class KeyHandler implements KeyListener{
                 gp.gameState = gp.playState;
             }
         }
-
+        if (gp.gameState == gp.puzzleState) {
+            if (code == KeyEvent.VK_W) { gp.ui.puzzleSelection = (gp.ui.puzzleSelection == 0) ? 6 : gp.ui.puzzleSelection - 1; }
+            if (code == KeyEvent.VK_S) { gp.ui.puzzleSelection = (gp.ui.puzzleSelection == 6) ? 0 : gp.ui.puzzleSelection + 1; }
+            if (code == KeyEvent.VK_F) {
+                if (gp.currentObject instanceof object.OBJ_BookTable) {
+                    ((object.OBJ_BookTable)gp.currentObject).applyEffect(gp.ui.puzzleSelection, gp, gp.player);
+                }
+                gp.gameState = gp.playState;
+                gp.ui.puzzleSelection = 0;
+            }
+        }
         // Trong keyPressed:
         if (code == KeyEvent.VK_R) restartPressed = true;
 
