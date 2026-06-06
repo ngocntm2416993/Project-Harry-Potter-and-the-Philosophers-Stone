@@ -72,6 +72,8 @@ public class UI {
     // Biến lưu giá trị âm lượng thực tế của game (0 -> 100)
     public int musicVolume = 50;
     public int seVolume = 50;
+
+    public int puzzleSelection = 0;
     public UI(GamePanel gp) {
         this.gp = gp;
         try {
@@ -99,6 +101,7 @@ public class UI {
         }
         loadPauseImages();
         loadSettingImages(); // Khởi tạo nạp ảnh setting khi tạo UI
+        baseFont = new Font("Arial", Font.PLAIN, 22);  //chỗ này mới này 
     }
 
     private void loadPauseImages() {
@@ -189,6 +192,9 @@ public class UI {
         if (gp.gameState == gp.settingState) drawSettingMenu();
         if (gp.gameState == gp.gameOverState) drawGameOver();
         if (gp.gameState == gp.endGameState) drawEndgameScreen();
+        if (gp.gameState == gp.puzzleState && gp.currentObject instanceof object.OBJ_BookTable) {
+            drawPuzzleMenu(((object.OBJ_BookTable) gp.currentObject).choices);
+        }
     }
 
     private void drawPauseMenu() {
@@ -538,6 +544,33 @@ public class UI {
     }
     public void resetEndgameAlpha() {
         this.endgameAlpha = 0;
+    }
+
+    public void drawPuzzleMenu(String[] choices) {
+        int boxX = gp.tileSize * 2;
+        int boxY = gp.tileSize * 2;
+        int boxW = gp.screenWidth - (gp.tileSize * 4);
+        int boxH = gp.tileSize * 8;
+
+        g2.setColor(new Color(10, 10, 30, 230));
+        g2.fillRoundRect(boxX, boxY, boxW, boxH, 20, 20);
+        g2.setColor(new Color(160, 160, 255));
+        g2.drawRoundRect(boxX, boxY, boxW, boxH, 20, 20);
+
+        g2.setFont(baseFont.deriveFont(Font.BOLD, 22F));
+        g2.setColor(Color.WHITE);
+        g2.drawString("Chọn một chai thuốc:", boxX + 20, boxY + 40);
+
+        for (int i = 0; i < choices.length; i++) {
+            g2.setFont(baseFont.deriveFont(Font.PLAIN, 20F));
+            if (i == puzzleSelection) {
+                g2.setColor(Color.YELLOW);
+                g2.drawString("> " + choices[i], boxX + 40, boxY + 80 + (i * 40));
+            } else {
+                g2.setColor(Color.WHITE);
+                g2.drawString(choices[i], boxX + 40, boxY + 80 + (i * 40));
+            }
+        }
     }
 
     public int getXforCenteredText(String text) {

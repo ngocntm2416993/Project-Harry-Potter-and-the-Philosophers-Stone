@@ -7,6 +7,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -68,6 +69,9 @@ public class GamePanel extends JPanel implements Runnable {
     public final int endGameState = 6;
     //đối tượng đang tương tác
     public SuperObject currentObject;
+
+    public final int puzzleState = 7;
+    public boolean isDoorUnlocked = false;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -392,6 +396,31 @@ public class GamePanel extends JPanel implements Runnable {
                 ex.printStackTrace();
             }
         });
+    }
+
+    public void resetGame() {
+        this.currentMap = 1;
+
+        // Nạp lại map 1 - nó sẽ tự reset toàn bộ dữ liệu map cũ
+        tileM.loadMap("/maps/map1.txt");
+
+        // Reset trạng thái player
+        player.setDefaultValues();
+        player.hasSlash = false;
+        player.hasUlti = false;
+        isDoorUnlocked = false;
+
+        // Dọn dẹp các list đối tượng động
+        projectTileList.clear();
+        Arrays.fill(obj, null);
+        Arrays.fill(npc, null);
+        Arrays.fill(monster, null);
+
+        // Khởi tạo lại dữ liệu cho màn 1
+        aSetter.setObject();
+        aSetter.setNPC();
+
+        gameState = playState;
     }
 
 }

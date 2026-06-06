@@ -133,14 +133,27 @@ public class AssetSetter {
             case 50:
                 obj = new OBJ_FallenChess(ts);
                 break;
+            // case 55:
+            //     obj = new OBJ_BookTable("/deco/bansach.png", 6, 6,
+            //             "Một chiếc bàn phủ đầy sách và giấy tờ.", ts);
+            //     break;
+            // case 56:
+            //     obj = new OBJ_BookTable("/deco/banchinh.png", 4, 4,
+            //             "Chiếc bàn chính — trên đó có một tấm bản đồ bí ẩn.", ts);
+            //     break;
+
             case 55:
-                obj = new OBJ_BookTable("/deco/bansach.png", 6, 6,
-                        "Một chiếc bàn phủ đầy sách và giấy tờ.", ts);
+                obj = new OBJ_BookTable("/deco/bansach.png", false, 6, 6,
+                        new String[]{"Một chiếc bàn phủ đầy sách và giấy tờ."}, ts);
                 break;
             case 56:
-                obj = new OBJ_BookTable("/deco/banchinh.png", 4, 4,
-                        "Chiếc bàn chính — trên đó có một tấm bản đồ bí ẩn.", ts);
+                obj = new OBJ_BookTable("/deco/banchinh.png", true, 4, 4,
+                        new String[]{
+                            "Trên bàn có nhiều lọ thuốc khác màu...",
+                            "Hãy chọn đúng lọ để mở cửa thoát ra."
+                        }, ts);
                 break;
+                
             case 70:
                 obj = new OBJ_NPC_map_1(ts);
                 break;
