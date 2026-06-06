@@ -9,6 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Random;
 import java.util.random.*;
+import object.OBJ_FireBall;
 
 public class Mon_Boss_4  extends Entity{
     private int targetWaypointIdx = 2;
@@ -18,6 +19,8 @@ public class Mon_Boss_4  extends Entity{
     private boolean isVisible  = true;
     private long lastDamageTime = 0;
     private static final long DAMAGE_COOLDOWN = 1000;
+    private int fireballCooldown = 10;
+    private static final int FIREBALL_INTERVAL = 120; // bắn mỗi 2s (120 frame)
 
     public Mon_Boss_4(GamePanel gp, int col, int row) {
         super(gp);
@@ -25,7 +28,7 @@ public class Mon_Boss_4  extends Entity{
         this.worldY = row * gp.tileSize;
         this.direction = "down";
         this.speed     = 2;
-        this.life = 500;
+        this.life = 1000;
 
         // solidArea — bắt buộc phải có
         solidArea = new java.awt.Rectangle(0, 0, gp.tileSize * 3, gp.tileSize * 3);
@@ -160,6 +163,12 @@ public class Mon_Boss_4  extends Entity{
             }
         }
 
+        fireballCooldown--;
+        if (fireballCooldown <= 0) {
+            shootFireball();
+            fireballCooldown = FIREBALL_INTERVAL;
+        }
+
         // ── Invincible counter ────────────────────────────────────────────
         if (invicible) {
             invicibleCounter++;
@@ -168,14 +177,39 @@ public class Mon_Boss_4  extends Entity{
                 invicibleCounter = 0;
             }
         }
-
-        // 30 frame cuối trước khi ẩn → dùng ảnh 2 (trắng)
-        // còn lại luôn dùng ảnh 1
+        
         if (visibleTimer < 10) {
             spriteNum = 2;
         } else {
             spriteNum = 1;
         }
+    }
+
+    private void shootFireball() {
+        int dx = gp.player.worldX - worldX;
+        int dy = gp.player.worldY - worldY;
+
+        // Chuẩn hoá góc về 8 hướng
+        double angle = Math.atan2(dy, dx);
+        int sector = (int) Math.round(angle / (Math.PI / 4));
+        String shootDir;
+        switch (((sector % 8) + 8) % 8) {
+            case 0: shootDir = "right";      break;
+            case 1: shootDir = "down-right"; break;
+            case 2: shootDir = "down";       break;
+            case 3: shootDir = "down-left";  break;
+            case 4: shootDir = "left";       break;
+            case 5: shootDir = "up-left";    break;
+            case 6: shootDir = "up";         break;
+            case 7: shootDir = "up-right";   break;
+            default: shootDir = "down";      break;
+        }
+
+        OBJ_FireBall fb = new OBJ_FireBall(gp);
+        int spawnX = worldX + (gp.tileSize * 3) / 2 - gp.tileSize / 2;
+        int spawnY = worldY + (gp.tileSize * 3) / 2 - gp.tileSize / 2;
+        fb.set(spawnX, spawnY, shootDir, true, this);
+        gp.projectTileList.add(fb);
     }
 
     @Override
@@ -206,6 +240,7 @@ public class Mon_Boss_4  extends Entity{
             int barH    = 10;
             int barX    = screenX;
             int barY    = screenY - barH - 6;
+            int maxLife = 10000;
             int fillW   = (int)((life / (double) maxLife) * barW);
             fillW = Math.max(0, Math.min(fillW, barW));
 

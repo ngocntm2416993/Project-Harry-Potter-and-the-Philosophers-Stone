@@ -50,6 +50,26 @@ public class AssetSetter {
             potion.worldY = 18 * gp.tileSize;
             gp.obj[idx++] = potion;
         }
+        if (gp.currentMap == 4) {
+            int[][] potions = {
+                {21, 25,  0},  // xuất hiện ngay
+                {6, 24, 10},  // sau 10s
+                {3,  7, 20},  // sau 20s
+                {27, 13, 30}, 
+                {20,  5, 40},
+                {17,  12, 40},
+                {9,  9, 20},
+                {19, 10, 30},  
+            };
+
+            for (int[] p : potions) {
+                OBJ_HP hp = new OBJ_HP(gp.tileSize, p[2]); // p[2] = delay giây
+                hp.worldX = p[0] * gp.tileSize;
+                hp.worldY = p[1] * gp.tileSize;
+                gp.obj[idx++] = hp;
+            }
+
+        }
     }
 
     private SuperObject createObject(int tileId, int worldX, int worldY,

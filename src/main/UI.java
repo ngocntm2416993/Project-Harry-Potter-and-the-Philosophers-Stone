@@ -23,6 +23,11 @@ public class UI {
     Font baseFont;
     Graphics2D g2;
 
+    private String centerMessage = "";
+    private int centerMessageTimer = 0;
+    private static final int CENTER_MESSAGE_DURATION = 180; // 3s
+
+
     private String currentMessage = "";
     private int messageTimer = 0;
     private static final int MESSAGE_DURATION = 100;
@@ -80,6 +85,7 @@ public class UI {
     }
         loadHpBarImages();
     }
+    
 
     private void loadHpBarImages() {
         try {
@@ -118,11 +124,40 @@ public class UI {
             System.out.println("Không load được ảnh tài nguyên Setting: " + e.getMessage());
         }
     }
+    
+    public void showCenterMessage(String text) {
+        centerMessage      = text;
+        centerMessageTimer = CENTER_MESSAGE_DURATION;
+    }
+
+    private void drawCenterMessage() {
+        if (centerMessageTimer <= 0) return;
+
+            g2.setFont(baseFont.deriveFont(Font.BOLD, 36F));
+            FontMetrics fm = g2.getFontMetrics();
+            int w = fm.stringWidth(centerMessage) + 40;
+            int h = 60;
+            int x = gp.screenWidth  / 2 - w / 2;
+            int y = gp.screenHeight / 2 - h / 2;
+
+            float alpha = Math.min(1f, centerMessageTimer / 60f); // fade out 1s cuối
+            g2.setColor(new Color(0f, 0f, 0f, 0.7f * alpha));
+            g2.fillRoundRect(x, y, w, h, 16, 16);
+
+            g2.setFont(baseFont.deriveFont(Font.BOLD, 36F));
+            g2.setColor(new Color(1f, 0.85f, 0f, alpha));
+            g2.drawString(centerMessage,
+                gp.screenWidth  / 2 - fm.stringWidth(centerMessage) / 2,
+                y + h / 2 + fm.getAscent() / 2 - 4);
+
+            centerMessageTimer--;
+    }
 
     public void showMessage(String text) {
         currentMessage = text;
         messageTimer   = MESSAGE_DURATION;
     }
+
 
     public void setDialog(String title, String body) {
         dialogTitle = title;
@@ -142,6 +177,7 @@ public class UI {
         if (gp.gameState == gp.playState || gp.gameState == gp.dialogState) {
             drawHUD();
             drawMessage();
+            drawCenterMessage();
         }
 
         if (gp.gameState == gp.playState && !proximityHint.isEmpty()) {

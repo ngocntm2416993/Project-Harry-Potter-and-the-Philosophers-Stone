@@ -191,20 +191,6 @@ public class Player extends Entity {
         checkNPCContact();
     }
 
-    // private void useUlti() {
-    //     if (ultiConsumed) return; // chặn giữ phím
-    //     ultiConsumed = true;
-
-    //     String[] dirs = {"up", "down", "left", "right"};
-    //     for (String dir : dirs) {
-    //         entity.ProjectTile pt = new object.OBJ_Slash(gp);
-    //         pt.set(worldX, worldY, dir, true, this);
-    //         gp.projectTileList.add(pt);
-    //     }
-    //     gp.ui.showMessage("Ulti!");
-    //     gp.playSE(1);
-    // }
-
     private void useUlti() {
         if (!OBJ_Ulti.isReady()) {
             int sec = OBJ_Ulti.cooldownTimer / 60 + 1;
@@ -454,7 +440,7 @@ public class Player extends Entity {
             gp.monster[i].invicible = true;
             if (gp.monster[i].life <= 0) {
                 gp.monster[i] = null;
-                gp.ui.showMessage("Boss defeated!");
+                gp.ui.showCenterMessage("Boss defeated!");
             }
         }
     }
