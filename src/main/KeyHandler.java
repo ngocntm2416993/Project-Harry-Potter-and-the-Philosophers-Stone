@@ -21,6 +21,7 @@ public class KeyHandler implements KeyListener{
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
+        
         if (gp.gameState == gp.endGameState) {
             if (code == KeyEvent.VK_ENTER) {
                 gp.backToMainMenu();
@@ -54,6 +55,17 @@ public class KeyHandler implements KeyListener{
             }
             else if (gp.gameState == gp.pauseState){
                 gp.gameState = gp.playState;
+            }
+        }
+        if (gp.gameState == gp.puzzleState) {
+            if (code == KeyEvent.VK_W) { gp.ui.puzzleSelection = (gp.ui.puzzleSelection == 0) ? 6 : gp.ui.puzzleSelection - 1; }
+            if (code == KeyEvent.VK_S) { gp.ui.puzzleSelection = (gp.ui.puzzleSelection == 6) ? 0 : gp.ui.puzzleSelection + 1; }
+            if (code == KeyEvent.VK_F) {
+                if (gp.currentObject instanceof object.OBJ_BookTable) {
+                    ((object.OBJ_BookTable)gp.currentObject).applyEffect(gp.ui.puzzleSelection, gp, gp.player);
+                }
+                gp.gameState = gp.playState;
+                gp.ui.puzzleSelection = 0;
             }
         }
 

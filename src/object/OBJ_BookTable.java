@@ -33,12 +33,9 @@ public class OBJ_BookTable extends SuperObject {
             image = ImageIO.read(getClass().getResourceAsStream(imagePath));
         } catch (IOException e) { e.printStackTrace(); }
     }
+    
     @Override
     public void onInteract(GamePanel gp, Player player){
-        if (isUsed) {
-            gp.ui.showMessage("Chiếc bàn này không còn gì để xem.\n" + "hãy qua màn mới");
-            return;
-        }
         if (isPuzzleTable){
             gp.currentObject = this;
             gp.gameState = gp.puzzleState;
@@ -54,33 +51,27 @@ public class OBJ_BookTable extends SuperObject {
         }
     }
 
-    public void markAsUsed() {
-        this.isUsed = true;
-    }
-
     public void applyEffect(int index, GamePanel gp, entity.Player player) {
         switch(index) {
-            case 0: case 1: case 2: // White, Green, Yellow -> Độc 1HP
+            case 0: case 1: case 2:
                 gp.isDoorUnlocked = true;
                 player.HP = 1;
                 gp.ui.showMessage("Trúng kịch độc! HP còn 1.");
                 break;
-            case 3: // Blue -> Mở cửa
+            case 3:
                 gp.isDoorUnlocked = true;
-                gp.ui.showMessage("An toàn");
+                gp.ui.showMessage("An toàn. Cửa đã được mở");
                 break;
-            case 4: case 5: // Red, Black -> -50HP
+            case 4: case 5:
                 gp.isDoorUnlocked = true;
                 player.HP = Math.max(1, player.HP - 50);
                 gp.ui.showMessage("Chai rượu, vấp cỏ -50HP.");
                 break;
-            case 6: // Purple -> Reset
+            case 6:
                 gp.resetGame();
                 gp.ui.showMessage("Trò chơi thất bại!");
                 break;
         }
-
-        this.markAsUsed();
 
         if (player.HP <= 0) gp.gameState = gp.gameOverState;
     }

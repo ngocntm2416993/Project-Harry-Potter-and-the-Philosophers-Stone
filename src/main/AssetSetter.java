@@ -9,6 +9,13 @@ import entity.Mon_Chess;
 public class AssetSetter {
 
     GamePanel gp;
+    // Vị trí spawn khi chuyển gameover (tileX, tileY)
+    static final int[][] MAP_SPAWN_player = {
+        {27, 27},
+        {15, 28},
+        {17, 28},
+        {27, 25},
+    };
 
     // Vị trí spawn khi chuyển map (tileX, tileY)
     static final int[][] MAP_SPAWN = {
