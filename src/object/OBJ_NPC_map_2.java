@@ -8,9 +8,12 @@ import java.io.IOException;
 
 public class OBJ_NPC_map_2 extends SuperObject {
     public OBJ_NPC_map_2(int tileSize) {
-        this.name       = "Old Man";
+        this.name       = "Người lùn";
         this.dialogs = new String[] {
-                "vào OBJ_NPC_map_2 đẻ thêm thoại", "chia ra làm npc 1,2,3,4,....", "nếu được thay bằng mỗi map 1 người sẽ hay hơn"
+                "Cửa ải này các quân cờ sẽ bắt đầu sống dậy",
+                "Chúng sẽ là trở ngại mà ngươi phải đối đầu",
+                "Hãy vượt qua chúng",
+                "Xin hãy lưu ý rằng\nĐừng để bước chân của chúng dẫm phải"
         };
         this.hintText   = "[F] Xem hướng dẫn";
         this.collision  = true;

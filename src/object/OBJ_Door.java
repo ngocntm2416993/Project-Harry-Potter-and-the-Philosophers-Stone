@@ -9,6 +9,7 @@ public class OBJ_Door extends SuperObject {
     public int targetMap;
     public int bossRequiredMap = -1; // -1 là map không có boss
     public boolean interactable = true;
+    public boolean isLocked = false;
     public OBJ_Door(String imagePath, int targetMap,  int tileSize) {
         this.name       = "Cửa";
         this.targetMap  = targetMap;
@@ -33,12 +34,13 @@ public class OBJ_Door extends SuperObject {
     }
     @Override
     public void onInteract(main.GamePanel gp, entity.Player player) {
+        if (isLocked && !gp.isDoorUnlocked) {
+            gp.ui.showMessage("Cánh cửa này đã bị khóa!");
+            return;
+        }
         if (bossRequiredMap != -1) {
             boolean bossStillAlive = false;
-
-            // Duyệt danh sách quái để xem còn Boss không
             for (Entity m : gp.monster) {
-                // Kiểm tra nếu Boss tồn tại và đang ở đúng màn yêu cầu
                 if (m != null && gp.currentMap == bossRequiredMap) {
                     bossStillAlive = true;
                     break;
@@ -47,7 +49,7 @@ public class OBJ_Door extends SuperObject {
 
             if (bossStillAlive) {
                 gp.ui.showMessage("Cánh cửa đã bị khóa bởi quyền năng của Boss!");
-                return; // Ngắt hàm, không thực hiện chuyển map
+                return;
             }
         }
         if (interactable) {

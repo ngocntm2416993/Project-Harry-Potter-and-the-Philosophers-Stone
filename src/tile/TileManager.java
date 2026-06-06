@@ -98,8 +98,8 @@ public class TileManager {
             // npc
         setup(70, "/npc/NPC_1.png",true, full(1));
         setup(71, "/npc/NPC_2.png",true, full(1));
-        setup(72, "/npc/oldman_down_1.png",true, full(1));
-        setup(73, "/npc/fox1.png",true, full(1));
+        setup(72, "/npc/NPC_3.png",true, full(1));
+        setup(73, "/npc/NPC_4.png",true, full(1));
 
         // ── TRANG TRÍ 1x3 (cột đứng) ─────────────────────────────────────
         setup(37, "/deco/cotduoc.png", true, new Rectangle(8, 0, 32, T * 3));

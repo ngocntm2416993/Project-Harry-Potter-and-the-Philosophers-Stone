@@ -21,6 +21,7 @@ public class KeyHandler implements KeyListener{
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
+        
         if (gp.gameState == gp.endGameState) {
             if (code == KeyEvent.VK_ENTER) {
                 gp.backToMainMenu();
@@ -67,6 +68,7 @@ public class KeyHandler implements KeyListener{
                 gp.ui.puzzleSelection = 0;
             }
         }
+
         // Trong keyPressed:
         if (code == KeyEvent.VK_R) restartPressed = true;
 

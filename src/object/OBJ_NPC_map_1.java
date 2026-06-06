@@ -10,13 +10,13 @@ public class OBJ_NPC_map_1 extends SuperObject {
     public OBJ_NPC_map_1(int tileSize) {
         this.name       = "Hồn ma";
         this.dialogs = new String[] {
-                "Bạn cần vượt qua 4 màn để kết thúc trò chơi",
+                "Ngươi cần vượt qua 4 cửa ải để vượt qua phòng bí mật",
                 "Dùng phím [F] để đánh quái",
                 "Ngoài ra có thể dùng [E] và [Q] để thi triển\nSlash và Ultimate",
                 "2 kĩ năng trên\nCần có item kích hoạt",
-                "Những item này được đặt rải rác\ntrong các màn chơi",
-                "Ngoài ra sẽ có một số item hỗ trợ\nđược đặt rải rác trong màn chơi",
-                "Chúc bạn thành công!"
+                "Những item này được đặt rải rác\ntrong các cửa ải",
+                "Ngoài ra sẽ có một số item hỗ trợ\nđược đặt rải rác trong ải",
+                "Chúc ngươi thành công!"
         };
         this.hintText   = "[F] Xem hướng dẫn";
         this.collision  = true;

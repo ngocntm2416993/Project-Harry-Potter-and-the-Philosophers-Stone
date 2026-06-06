@@ -9,9 +9,12 @@ import java.util.Objects;
 
 public class OBJ_NPC_map_4 extends SuperObject {
     public OBJ_NPC_map_4(int tileSize) {
-        this.name       = "Old Man";
+        this.name       = "Pháp sư";
         this.dialogs = new String[] {
-                "vào OBJ_NPC_map_4 đẻ thêm thoại", "chia ra làm npc 1,2,3,4,....", "nếu được thay bằng mỗi map 1 người sẽ hay hơn"
+                "Đây là cửa ải cuối cùng",
+                "Hãy đánh bại trên pháp sư kia để thoát khỏi đây",
+                "Ngoài ra ta đã hỗ trợ một chút",
+                "Chúc ngươi may mắn"
         };
         this.hintText   = "[F] Xem hướng dẫn";
         this.collision  = true;
@@ -24,7 +27,7 @@ public class OBJ_NPC_map_4 extends SuperObject {
         solidAreaDefaultX = 0;
         solidAreaDefaultY = 0;
         try {
-            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/npc/fox1.png")));
+            image = ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/npc/NPC_4.png")));
         } catch (IOException e) { e.printStackTrace(); }
     }
     @Override

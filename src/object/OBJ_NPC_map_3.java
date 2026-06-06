@@ -8,9 +8,14 @@ import java.io.IOException;
 
 public class OBJ_NPC_map_3 extends SuperObject {
     public OBJ_NPC_map_3(int tileSize) {
-        this.name       = "Old Man";
+        this.name       = "Bộ xương";
         this.dialogs = new String[] {
-                "vào OBJ_NPC_map_3 đẻ thêm thoại", "chia ra làm npc 1,2,3,4,....", "nếu được thay bằng mỗi map 1 người sẽ hay hơn"
+                "Ở cửa ải này, ngươi cần vượt qua ngọn lửa tím\nđể tới cửa ải cuối cùng",
+                "Trên bàn là các lọ thuốc\nHãy tìm lọ thuốc đúng để băng qua ngọn lửa",
+                "Chọn [S] và [W] để di chuyển lên xuống\nChọn [F] để chọn thuốc cần uống",
+                "Các manh mối được rải rác trong đây",
+                "Hãy nhớ rằng\nKhông phải lọ thuốc nào cũng đem lại tác dụng tốt",
+                "Hãy cẩn trọng khi đưa ra lựa chọn"
         };
         this.hintText   = "[F] Xem hướng dẫn";
         this.collision  = true;
@@ -23,7 +28,7 @@ public class OBJ_NPC_map_3 extends SuperObject {
         solidAreaDefaultX = 0;
         solidAreaDefaultY = 0;
         try {
-            image = ImageIO.read(getClass().getResourceAsStream("/npc/oldman_down_1.png"));
+            image = ImageIO.read(getClass().getResourceAsStream("/npc/NPC_3.png"));
         } catch (IOException e) { e.printStackTrace(); }
     }
     @Override

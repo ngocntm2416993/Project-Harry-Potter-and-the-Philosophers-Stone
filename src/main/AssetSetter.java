@@ -12,10 +12,10 @@ public class AssetSetter {
 
     // Vị trí spawn khi chuyển map (tileX, tileY)
     static final int[][] MAP_SPAWN = {
-        {28, 27},
-        {15, 29},
-        {14, 29},
-        {15, 29},
+            {28, 27},
+            {15, 29},
+            {14, 29},
+            {15, 29},
     };
 
     public AssetSetter(GamePanel gp) {
@@ -52,14 +52,14 @@ public class AssetSetter {
         }
         if (gp.currentMap == 4) {
             int[][] potions = {
-                {21, 25,  0},  // xuất hiện ngay
-                {6, 24, 10},  // sau 10s
-                {3,  7, 20},  // sau 20s
-                {27, 13, 30}, 
-                {20,  5, 40},
-                {17,  12, 40},
-                {9,  9, 20},
-                {19, 10, 30},  
+                    {21, 25, 0},  // xuất hiện ngay
+                    {6, 24, 10},  // sau 10s
+                    {3, 7, 20},  // sau 20s
+                    {27, 13, 30},
+                    {20, 5, 40},
+                    {17, 12, 40},
+                    {9, 9, 20},
+                    {19, 10, 30},
             };
 
             for (int[] p : potions) {
@@ -68,7 +68,6 @@ public class AssetSetter {
                 hp.worldY = p[1] * gp.tileSize;
                 gp.obj[idx++] = hp;
             }
-
         }
     }
 
@@ -93,7 +92,9 @@ public class AssetSetter {
                 obj = door;
                 break;
             case 53:
-                obj = new OBJ_Door("/door/luatim.png", nextMap, ts);
+                OBJ_Door luatim = new OBJ_Door("/door/luatim.png", nextMap, ts);
+                luatim.isLocked = true;
+                obj = luatim;
                 break;
             case 54:
                 object.OBJ_Door cuaLuaDen = new OBJ_Door("/door/luaden.png", nextMap, ts);
@@ -110,15 +111,21 @@ public class AssetSetter {
                 break;
             case 22:
                 obj = new OBJ_Bookshelf("/deco/bookshelf.png",
-                        "Kệ sách chứa những cuốn sách cũ kỹ...", ts);
+                        "Một là độc dược, dù giấu kỹ càng\n" +
+                                "Dễ dàng tìm được, bên trái rượu tầm ma (1);\n" +
+                                "Hai là hai chai đứng ở hai đầu\n" +
+                                "Khác nhau và không giúp mi tiến tới (2);", ts);
                 break;
             case 23:
                 obj = new OBJ_Bookshelf("/deco/bookshelf2.png",
-                        "Một quyển sách mở ra: 'Chương I: Bí mật của căn hầm...'", ts);
+                        "Ba, như mi thấy, kích thước khác nhau\n" +
+                                "Tí hon, khổng lồ, không chứa cái chết (3)\n" +
+                                "Bốn là hai chai thứ hai mỗi đầu\n" +
+                                "Nếm thì giống nhau, nhìn thì thấy khác (4).", ts);
                 break;
             case 24:
                 obj = new OBJ_Bookshelf("/deco/bookshelf3.png",
-                        "Sách bụi phủ dày, tựa như đã lâu không ai chạm vào.", ts);
+                        "Kệ sách chứa những cuốn sách cũ kỹ.\n" + "Nhưng không có manh mối" , ts);
                 break;
             case 25: {
                 OBJ_Bookshelf bs = new OBJ_Bookshelf("/deco/bookshelf4.png",
@@ -133,27 +140,18 @@ public class AssetSetter {
             case 50:
                 obj = new OBJ_FallenChess(ts);
                 break;
-            // case 55:
-            //     obj = new OBJ_BookTable("/deco/bansach.png", 6, 6,
-            //             "Một chiếc bàn phủ đầy sách và giấy tờ.", ts);
-            //     break;
-            // case 56:
-            //     obj = new OBJ_BookTable("/deco/banchinh.png", 4, 4,
-            //             "Chiếc bàn chính — trên đó có một tấm bản đồ bí ẩn.", ts);
-            //     break;
-
             case 55:
-                obj = new OBJ_BookTable("/deco/bansach.png", false, 6, 6,
+                OBJ_BookTable banphu = new OBJ_BookTable("/deco/bansach.png",false, 6, 6,
                         new String[]{"Một chiếc bàn phủ đầy sách và giấy tờ."}, ts);
+                banphu.dialogs = new String[]{"trên bàn có một tờ giấy: 'Manh mối ở gần đây'"};
+                obj = banphu;
                 break;
             case 56:
-                obj = new OBJ_BookTable("/deco/banchinh.png", true, 4, 4,
-                        new String[]{
-                            "Trên bàn có nhiều lọ thuốc khác màu...",
-                            "Hãy chọn đúng lọ để mở cửa thoát ra."
-                        }, ts);
+                OBJ_BookTable bookTable = new OBJ_BookTable("/deco/banchinh.png",true ,4, 4,
+                        new String[]{""}, ts);
+                bookTable.dialogs = new String[]{""};
+                obj = bookTable;
                 break;
-                
             case 70:
                 obj = new OBJ_NPC_map_1(ts);
                 break;

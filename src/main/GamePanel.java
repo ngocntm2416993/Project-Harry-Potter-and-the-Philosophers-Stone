@@ -72,6 +72,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public final int puzzleState = 7;
     public boolean isDoorUnlocked = false;
+    public GamePanel gp;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -145,6 +146,7 @@ public class GamePanel extends JPanel implements Runnable {
                         updateSEVolumeFromMouse(mx);
                     }
                 }
+
 
             }
         });
@@ -243,14 +245,18 @@ public class GamePanel extends JPanel implements Runnable {
 
         if (gameState == gameOverState) {
             if (keyH.restartPressed) {
-                int spawnX = AssetSetter.MAP_SPAWN[1][0]; // index 1 = map2
-                int spawnY = AssetSetter.MAP_SPAWN[1][1];
-                player.worldX = spawnX * tileSize;
-                player.worldY = spawnY * tileSize;
-                player.HP = 200;
-                player.speed = player.normalSpeed;
-                aSetter.setNPC();
-                gameState = playState;
+                    System.out.println("currentMap = " + currentMap);
+                    int spawnX = AssetSetter.MAP_SPAWN[currentMap-1][0];
+                    int spawnY = AssetSetter.MAP_SPAWN[currentMap-1][1];
+                    System.out.println( spawnX);
+                    System.out.println( spawnY);
+                    
+                    player.worldX = spawnX * tileSize;
+                    player.worldY = spawnY * tileSize;
+                    player.HP = 200;
+                    player.speed = player.normalSpeed;
+                    aSetter.setNPC();
+                    gameState = playState;
             }
             return;
         }

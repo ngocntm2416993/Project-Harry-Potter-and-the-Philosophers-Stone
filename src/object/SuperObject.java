@@ -58,6 +58,11 @@ public class SuperObject {
     }
 
     public void onInteract(GamePanel gp, Player player) {
+        if(gp.gameState == gp.dialogState){
+            gp.gameState = gp.playState;
+            gp.ui.setDialog("","");
+            return;
+        }
         if (!dialogText.isEmpty()) {
             gp.ui.setDialog(name, dialogText);
             gp.gameState = gp.dialogState;

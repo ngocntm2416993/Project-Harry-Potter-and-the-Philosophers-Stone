@@ -25,7 +25,7 @@ public class UI {
 
     private String centerMessage = "";
     private int centerMessageTimer = 0;
-    private static final int CENTER_MESSAGE_DURATION = 180; // 3s
+    private static final int CENTER_MESSAGE_DURATION = 90; // 1.5s
 
 
     private String currentMessage = "";
@@ -526,21 +526,22 @@ public class UI {
         g2.drawRoundRect(boxX, boxY, boxW, boxH, 20, 20);
 
         // 4. Vẽ chữ (cũng cần áp dụng alpha để mờ dần hiện ra)
-        g2.setFont(baseFont.deriveFont(Font.BOLD, 20F));
+        g2.setFont(baseFont.deriveFont(Font.BOLD, 24F));
         g2.setColor(new Color(255, 220, 100, alpha));
         String title = "SẢN PHẦM CỦA NHÓM 3";
         g2.drawString(title, boxX + 20, boxY + 45);
 
-        g2.setFont(baseFont.deriveFont(Font.PLAIN, 22F));
+        g2.setFont(baseFont.deriveFont(Font.PLAIN, 19F));
         g2.setColor(new Color(255, 255, 255, alpha));
         g2.drawString("Cảm ơn bạn đã trải nghiệm game.", boxX + 20, boxY + 90);
         g2.setColor(new Color(180, 255, 180, alpha));
-        g2.drawString("CẢM ƠN ANH ĐỘ MIXI", boxX + 20, boxY + 150);
+        g2.drawString("CẢM ƠN ANH ĐỘ MIXI", boxX + 20, boxY + 125);
 
         g2.setFont(baseFont.deriveFont(Font.ITALIC, 14F));
         g2.setColor(new Color(160, 160, 160, alpha));
         g2.drawString("[ENTER] Quay lại Main menu", boxX + boxW - 250, boxY + boxH - 15);
     }
+
     public void resetEndgameAlpha() {
         this.endgameAlpha = 0;
     }

@@ -20,8 +20,8 @@ public class OBJ_HP extends SuperObject {
         try {
             UtilityTool uTool = new UtilityTool();
             image = uTool.scaleImage(
-                ImageIO.read(getClass().getResourceAsStream("/object/potion/thuocdo.png")),
-                tileSize, tileSize
+                    ImageIO.read(getClass().getResourceAsStream("/object/potion/thuocdo.png")),
+                    tileSize, tileSize
             );
         } catch (IOException e) {
             e.printStackTrace();
