@@ -1,0 +1,104 @@
+package main;
+
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
+public class KeyHandler implements KeyListener{
+
+    GamePanel gp;
+    public boolean upPressed, downPressed, leftPressed, rightPressed;
+    public boolean slashPressed, UltiPressed;
+    public boolean interactPressed;
+    public boolean restartPressed;
+
+    public KeyHandler(GamePanel gp){
+        this.gp = gp;
+    }
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int code = e.getKeyCode();
+        if (gp.gameState == gp.endGameState) {
+            if (code == KeyEvent.VK_ENTER) {
+                gp.backToMainMenu();
+            }
+            return; // Chặn các phím khác
+        }
+        if (code == KeyEvent.VK_W || code == KeyEvent.VK_UP) {
+            upPressed = true;
+        }
+        if (code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) {
+            downPressed = true;
+        }
+        if (code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT) {
+            leftPressed = true;
+        }
+        if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) {
+            rightPressed = true;
+        }
+        if (code == KeyEvent.VK_F || code == KeyEvent.VK_ENTER) {
+            interactPressed = true;
+        }
+        if (code == KeyEvent.VK_1 || code == KeyEvent.VK_Q) {
+            slashPressed = true;
+        }
+        if (code == KeyEvent.VK_2 || code == KeyEvent.VK_E) {
+            UltiPressed = true;
+        }
+        if (code == KeyEvent.VK_P) {
+            if (gp.gameState == gp.playState) {
+                gp.gameState = gp.pauseState;
+            }
+            else if (gp.gameState == gp.pauseState){
+                gp.gameState = gp.playState;
+            }
+        }
+        if (gp.gameState == gp.puzzleState) {
+            if (code == KeyEvent.VK_W) { gp.ui.puzzleSelection = (gp.ui.puzzleSelection == 0) ? 6 : gp.ui.puzzleSelection - 1; }
+            if (code == KeyEvent.VK_S) { gp.ui.puzzleSelection = (gp.ui.puzzleSelection == 6) ? 0 : gp.ui.puzzleSelection + 1; }
+            if (code == KeyEvent.VK_F) {
+                if (gp.currentObject instanceof object.OBJ_BookTable) {
+                    ((object.OBJ_BookTable)gp.currentObject).applyEffect(gp.ui.puzzleSelection, gp, gp.player);
+                }
+                gp.gameState = gp.playState;
+                gp.ui.puzzleSelection = 0;
+            }
+        }
+        if (code == KeyEvent.VK_R) restartPressed = true;
+
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        int code = e.getKeyCode();
+
+        if (code == KeyEvent.VK_W || code == KeyEvent.VK_UP) {
+            upPressed = false;
+        }
+        if (code == KeyEvent.VK_S || code == KeyEvent.VK_DOWN) {
+            downPressed = false;
+        }
+        if (code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT) {
+            leftPressed = false;
+        }
+        if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT) {
+            rightPressed = false;
+        }
+        if (code == KeyEvent.VK_F || code == KeyEvent.VK_ENTER) {
+            interactPressed = false;
+        }
+
+        if (code == KeyEvent.VK_Q || code == KeyEvent.VK_1) {
+            slashPressed = false;
+        }
+
+        if (code == KeyEvent.VK_E || code == KeyEvent.VK_2) {
+            UltiPressed = false;
+        }
+        // Trong keyReleased:
+        if (code == KeyEvent.VK_R) restartPressed = false;
+    }
+}
