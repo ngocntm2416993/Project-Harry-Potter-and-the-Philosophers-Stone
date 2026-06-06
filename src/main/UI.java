@@ -436,7 +436,7 @@ public class UI {
         g2.setColor(Color.WHITE);
         String[] lines = dialogBody.split("\n");
         int lineH = g2.getFontMetrics().getHeight();
-        int textY = boxY + (dialogTitle.isEmpty() ? 36 : 56);
+        int textY = boxY + (dialogTitle.isEmpty() ? 36 : 65);
         for (String line : lines) {
             g2.drawString(line, boxX + 20, textY);
             textY += lineH;
@@ -444,7 +444,7 @@ public class UI {
 
         g2.setFont(baseFont.deriveFont(Font.ITALIC, 14F));
         g2.setColor(new Color(160, 160, 160));
-        g2.drawString("[F] Đóng / Tương tác", boxX + boxW - 160, boxY + boxH - 10);
+        g2.drawString("[F] Đóng / Tương tác", boxX + boxW - 200, boxY + boxH - 10);
     }
 
     public void drawPauseScreen() {
@@ -485,7 +485,7 @@ public class UI {
         g2.drawRoundRect(boxX, boxY, boxW, boxH, 20, 20);
 
         // 4. Vẽ chữ (cũng cần áp dụng alpha để mờ dần hiện ra)
-        g2.setFont(baseFont.deriveFont(Font.BOLD, 30F));
+        g2.setFont(baseFont.deriveFont(Font.BOLD, 20F));
         g2.setColor(new Color(255, 220, 100, alpha));
         String title = "SẢN PHẦM CỦA NHÓM 3";
         g2.drawString(title, boxX + 20, boxY + 45);
@@ -494,11 +494,11 @@ public class UI {
         g2.setColor(new Color(255, 255, 255, alpha));
         g2.drawString("Cảm ơn bạn đã trải nghiệm game.", boxX + 20, boxY + 90);
         g2.setColor(new Color(180, 255, 180, alpha));
-        g2.drawString("CẢM ƠN ANH ĐỘ MIXI", boxX + 20, boxY + 125);
+        g2.drawString("CẢM ƠN ANH ĐỘ MIXI", boxX + 20, boxY + 150);
 
-        g2.setFont(baseFont.deriveFont(Font.ITALIC, 16F));
+        g2.setFont(baseFont.deriveFont(Font.ITALIC, 14F));
         g2.setColor(new Color(160, 160, 160, alpha));
-        g2.drawString("[ENTER] Quay lại Main menu", boxX + boxW - 190, boxY + boxH - 15);
+        g2.drawString("[ENTER] Quay lại Main menu", boxX + boxW - 250, boxY + boxH - 15);
     }
     public void resetEndgameAlpha() {
         this.endgameAlpha = 0;

@@ -97,7 +97,7 @@ public class TileManager {
         setup(63, "/deco/scroll.png");
             // npc
         setup(70, "/npc/NPC_1.png",true, full(1));
-        setup(71, "/npc/bird.png",true, full(1));
+        setup(71, "/npc/NPC_2.png",true, full(1));
         setup(72, "/npc/oldman_down_1.png",true, full(1));
         setup(73, "/npc/fox1.png",true, full(1));
 

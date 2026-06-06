@@ -23,7 +23,7 @@ public class OBJ_NPC_map_2 extends SuperObject {
         solidAreaDefaultX = 0;
         solidAreaDefaultY = 0;
         try {
-            image = ImageIO.read(getClass().getResourceAsStream("/npc/bird.png"));
+            image = ImageIO.read(getClass().getResourceAsStream("/npc/NPC_2.png"));
         } catch (IOException e) { e.printStackTrace(); }
     }
     @Override
