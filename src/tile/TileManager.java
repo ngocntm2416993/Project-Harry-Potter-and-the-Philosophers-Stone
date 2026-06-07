@@ -130,6 +130,8 @@ public class TileManager {
 
         // ── TRANG TRÍ 3x3 ────────────────────────────────────────────────
         setup(25, "/deco/bookshelf4.png", true, full(3));
+        setup(65, "/deco/bookshelf4.png", true, full(3)); //setup cho hint
+        setup(66, "/deco/bookshelf4.png", true, full(3));//setup cho hint
         setup(29, "/deco/becua2.png",     true, full(3));
         setup(45, "/deco/buc1.png",       true, full(3));
         setup(46, "/deco/buc2.png",       true, full(3));

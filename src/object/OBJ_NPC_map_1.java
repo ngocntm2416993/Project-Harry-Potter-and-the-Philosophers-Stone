@@ -10,7 +10,7 @@ public class OBJ_NPC_map_1 extends SuperObject {
     public OBJ_NPC_map_1(int tileSize) {
         this.name       = "Hồn ma";
         this.dialogs = new String[] {
-                "Ngươi cần vượt qua 4 cửa ải để vượt qua phòng bí mật",
+                "Ngươi cần vượt qua 4 cửa ải để vượt qua\nphòng bí mật",
                 "Dùng phím [F] để đánh quái",
                 "Ngoài ra có thể dùng [E] và [Q] để thi triển\nSlash và Ultimate",
                 "2 kĩ năng trên\nCần có item kích hoạt",

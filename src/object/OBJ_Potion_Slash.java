@@ -57,6 +57,6 @@ public class OBJ_Potion_Slash extends SuperObject {
 
     @Override
     public String getProximityHint() {
-        return "[F] Nhặt lọ thuốc màu xanh dương — mở khóa chiêu Slash";
+        return "Nhặt lọ thuốc màu xanh dương — mở khóa chiêu Slash";
     }
 }

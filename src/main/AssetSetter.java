@@ -120,12 +120,7 @@ public class AssetSetter {
                 break;
             case 23:
                 obj = new OBJ_Bookshelf("/deco/bookshelf2.png",
-                        new String[]{
-                                "Ba, như mi thấy, kích thước khác nhau\n" +
-                                        "Tí hon, khổng lồ, không chứa cái chết (3)\n",
-                                        "Bốn là hai chai thứ hai mỗi đầu\n" +
-                                        "Nếm thì giống nhau, nhìn thì thấy khác (4)."
-                        }, ts);
+                        "Tủ sách chứa những cuốn sách cũ kỳ.\n"+"Không có manh mối hữu ích", ts);
                 break;
             case 24:
                 obj = new OBJ_Bookshelf("/deco/bookshelf3.png",
@@ -141,11 +136,36 @@ public class AssetSetter {
                 obj = bs;
                 break;
             }
+            case 65: {
+                OBJ_Bookshelf bs = new OBJ_Bookshelf("/deco/bookshelf4.png",
+                        "Lọ thuốc đỏ không phải là độc", ts);
+                bs.drawSizeW        = 3;
+                bs.drawSizeH        = 3;
+                bs.solidArea.width  = ts * 3;
+                bs.solidArea.height = ts * 3;
+                obj = bs;
+                break;
+            }
+            case 66: {
+                OBJ_Bookshelf bs = new OBJ_Bookshelf("/deco/bookshelf4.png",
+                        new String[]{
+                                "Ba, như mi thấy, kích thước khác nhau\n" +
+                                        "Tí hon, khổng lồ, không chứa cái chết (3)\n",
+                                "Bốn là hai chai thứ hai mỗi đầu\n" +
+                                        "Nếm thì giống nhau, nhìn thì thấy khác (4)."
+                        }, ts);
+                bs.drawSizeW        = 3;
+                bs.drawSizeH        = 3;
+                bs.solidArea.width  = ts * 3;
+                bs.solidArea.height = ts * 3;
+                obj = bs;
+                break;
+            }
             case 50:
                 obj = new OBJ_FallenChess(ts);
                 break;
             case 55:
-                OBJ_BookTable banphu = new OBJ_BookTable("/deco/bansach.png",false, 6, 6,
+                OBJ_BookTable banphu = new OBJ_BookTable("/deco/bansach.png",false, 4, 4,
                         new String[]{"Một chiếc bàn phủ đầy sách và giấy tờ."}, ts);
                 banphu.dialogs = new String[]{"trên bàn có một tờ giấy: 'Manh mối ở gần đây'"};
                 obj = banphu;
