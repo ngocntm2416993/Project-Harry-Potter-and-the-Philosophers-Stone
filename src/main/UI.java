@@ -535,7 +535,7 @@ public class UI {
         g2.setColor(new Color(255, 255, 255, alpha));
         g2.drawString("Cảm ơn bạn đã trải nghiệm game.", boxX + 20, boxY + 90);
         g2.setColor(new Color(180, 255, 180, alpha));
-        g2.drawString("CẢM ƠN ANH ĐỘ MIXI", boxX + 20, boxY + 125);
+        g2.drawString("P/s: Cảm ơn nhóm 3\nvì đã còng lưng chạy dl", boxX + 20, boxY + 125);
 
         g2.setFont(baseFont.deriveFont(Font.ITALIC, 14F));
         g2.setColor(new Color(160, 160, 160, alpha));

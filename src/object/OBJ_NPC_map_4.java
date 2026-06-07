@@ -13,7 +13,7 @@ public class OBJ_NPC_map_4 extends SuperObject {
         this.dialogs = new String[] {
                 "Đây là cửa ải cuối cùng",
                 "Hãy đánh bại trên pháp sư kia để thoát khỏi đây",
-                "Ngoài ra ta đã hỗ trợ một chút",
+                "Ngoài ra ta đã hỗ trợ một chút sức mạnh",
                 "Chúc ngươi may mắn"
         };
         this.hintText   = "[F] Xem hướng dẫn";
