@@ -28,7 +28,7 @@ public class Mon_Boss_4  extends Entity{
         this.worldY = row * gp.tileSize;
         this.direction = "down";
         this.speed     = 2;
-        this.life = 500;
+        this.life = 10000;
 
         // solidArea — bắt buộc phải có
         solidArea = new java.awt.Rectangle(0, 0, gp.tileSize * 3, gp.tileSize * 3);
