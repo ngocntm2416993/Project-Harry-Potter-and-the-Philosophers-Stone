@@ -46,7 +46,7 @@ public class Mon_Boss_1 extends Entity {
         this.worldY    = row * gp.tileSize;
         this.direction = "down";
         this.speed     = 10;
-        this.life      = 60;
+        this.life      = 300;
         this.invicible = false;
 
         // Tâm vùng bound = trung tâm giữa (10,10)→(19,19)

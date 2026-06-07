@@ -175,6 +175,7 @@ public class Player extends Entity {
                 gp.ui.showMessage("Cần lọ thuốc xanh dương để dùng chiêu Slash!");
             } else if (!projectTile.alive) {
                 projectTile = new OBJ_Slash(gp);
+                if (gp.currentMap == 4) projectTile.attack = 100;
                 projectTile.set(worldX, worldY, direction, true, this);
                 gp.projectTileList.add(projectTile);
             }

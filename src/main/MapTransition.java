@@ -39,6 +39,8 @@ public class MapTransition {
                 gp.tileM.loadMap("/maps/map" + nextMapId + ".txt");
                 int spawnX = AssetSetter.MAP_SPAWN[nextMapId - 1][0];
                 int spawnY = AssetSetter.MAP_SPAWN[nextMapId - 1][1];
+                // Buff slash ở màn 4, reset ở màn khác
+                gp.player.projectTile.attack = (nextMapId == 4) ? 100 : 20;
                 gp.player.worldX = spawnX * gp.tileSize;
                 gp.player.worldY = spawnY * gp.tileSize;
                 gp.player.collisionOn = false;

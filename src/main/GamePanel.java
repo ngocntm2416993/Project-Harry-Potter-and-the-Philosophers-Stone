@@ -245,18 +245,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         if (gameState == gameOverState) {
             if (keyH.restartPressed) {
-                    System.out.println("currentMap = " + currentMap);
-                    int spawnX = AssetSetter.MAP_SPAWN[currentMap-1][0];
-                    int spawnY = AssetSetter.MAP_SPAWN[currentMap-1][1];
-                    System.out.println( spawnX);
-                    System.out.println( spawnY);
-                    
-                    player.worldX = spawnX * tileSize;
-                    player.worldY = spawnY * tileSize;
-                    player.HP = 200;
-                    player.speed = player.normalSpeed;
-                    aSetter.setNPC();
-                    gameState = playState;
+                resetGame();
             }
             return;
         }
@@ -409,11 +398,13 @@ public class GamePanel extends JPanel implements Runnable {
 
         // Nạp lại map 1 - nó sẽ tự reset toàn bộ dữ liệu map cũ
         tileM.loadMap("/maps/map1.txt");
+        playMusic(0);
 
         // Reset trạng thái player
         player.setDefaultValues();
         player.hasSlash = false;
         player.hasUlti = false;
+        player.projectTile.attack = 20;
         isDoorUnlocked = false;
 
         // Dọn dẹp các list đối tượng động
