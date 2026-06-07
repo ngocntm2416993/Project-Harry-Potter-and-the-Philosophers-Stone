@@ -264,7 +264,7 @@ public class TileManager {
                     // 3x3
                     else if (ot == 25 || ot == 29 || (ot >= 15 && ot <= 17)
                             || ot == 39 || (ot >= 45 && ot <= 48)
-                            || ot == 50 || ot == 53 || ot == 54) {
+                            || ot == 50 || ot == 53 || ot == 54||ot==65||ot==66) {
                         drawW = T * 3; drawH = T * 3;
                     }
                     // 4x4

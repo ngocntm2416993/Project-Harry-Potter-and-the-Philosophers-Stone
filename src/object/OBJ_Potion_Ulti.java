@@ -11,13 +11,13 @@ import entity.Player;
 public class OBJ_Potion_Ulti extends SuperObject {
 
     public OBJ_Potion_Ulti(int tileSize) {
-        name      = "Lọ thuốc Ulti";
+        name      = "Nấm kì lạ";
         collision = false;
 
         try {
             UtilityTool uTool = new UtilityTool();
             BufferedImage raw = ImageIO.read(
-                getClass().getResourceAsStream("/object/potion/thuocvang.png")
+                getClass().getResourceAsStream("/object/mushroom/Golden_Brittlegill.png")
             );
             if (raw != null) image = uTool.scaleImage(raw, tileSize, tileSize);
         } catch (IOException e) {
@@ -57,6 +57,6 @@ public class OBJ_Potion_Ulti extends SuperObject {
 
     @Override
     public String getProximityHint() {
-        return "Lại gần để nhặt lọ thuốc Ulti";
+        return "Lại gần để nhặt";
     }
 }

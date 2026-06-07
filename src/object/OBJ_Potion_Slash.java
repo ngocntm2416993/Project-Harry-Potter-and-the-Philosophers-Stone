@@ -11,13 +11,13 @@ import entity.Player;
 public class OBJ_Potion_Slash extends SuperObject {
 
     public OBJ_Potion_Slash(int tileSize) {
-        name      = "Lọ thuốc Slash";
+        name      = "Nấm ma thuật";
         collision = false;
 
         try {
             UtilityTool uTool = new UtilityTool();
             image = uTool.scaleImage(
-                ImageIO.read(getClass().getResourceAsStream("/object/potion/thuocxanhduong.png")),
+                ImageIO.read(getClass().getResourceAsStream("/object/mushroom/Aspen.png")),
                 tileSize, tileSize
             );
         } catch (IOException e) {
@@ -57,6 +57,6 @@ public class OBJ_Potion_Slash extends SuperObject {
 
     @Override
     public String getProximityHint() {
-        return "Nhặt lọ thuốc màu xanh dương — mở khóa chiêu Slash";
+        return "Ăn nấm đề mở khóa chiêu Slash";
     }
 }

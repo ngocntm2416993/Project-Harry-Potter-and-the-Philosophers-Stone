@@ -165,9 +165,9 @@ public class AssetSetter {
                 obj = new OBJ_FallenChess(ts);
                 break;
             case 55:
-                OBJ_BookTable banphu = new OBJ_BookTable("/deco/bansach.png",false, 4, 4,
+                OBJ_BookTable banphu = new OBJ_BookTable("/deco/bansach.png",false, 6, 6,
                         new String[]{"Một chiếc bàn phủ đầy sách và giấy tờ."}, ts);
-                banphu.dialogs = new String[]{"trên bàn có một tờ giấy: 'Manh mối ở gần đây'"};
+                banphu.dialogs = new String[]{"Trên bàn có một tờ giấy: 'Manh mối ở gần đây'"};
                 obj = banphu;
                 break;
             case 56:
