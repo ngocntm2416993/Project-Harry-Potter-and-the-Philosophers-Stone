@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 import javax.swing.JFrame;
 import main.GamePanel; // Import class quản lý logic game 2D của bạn
 
-public class MainMenuController {
+public class gMainMenuController {
 
     @FXML
     private Button btnStart;
@@ -35,7 +35,7 @@ public class MainMenuController {
             JFrame window = new JFrame();
             window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             window.setResizable(false);
-            window.setTitle("Treasure Hunting"); // Tên game của bạn
+            window.setTitle("Harry Potter and the Philosopher's Stone"); // Tên game của bạn
 
             GamePanel gamePanel = new GamePanel();
             window.add(gamePanel);
