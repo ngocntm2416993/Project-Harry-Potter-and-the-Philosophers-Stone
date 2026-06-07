@@ -13,7 +13,7 @@ public class OBJ_BookTable extends SuperObject {
     public OBJ_BookTable(String imagePath,boolean isPuzzleTable, int drawW, int drawH, String[] dialogs, int tileSize) {
         this.isPuzzleTable = isPuzzleTable;
         this.name       = "Bàn Sách";
-        this.dialogs = new String[]{""};
+        this.dialogs = (dialogs != null && dialogs.length > 0) ? dialogs : new String[]{""};
         this.hintText   = "[F] Xem bàn";
         this.collision  = true;
         this.drawSizeW  = drawW;
@@ -37,8 +37,19 @@ public class OBJ_BookTable extends SuperObject {
     @Override
     public void onInteract(GamePanel gp, Player player){
         if (isPuzzleTable){
-            gp.currentObject = this;
-            gp.gameState = gp.puzzleState;
+            // Nếu còn dialog chưa đọc hết thì hiện dialog trước
+            if (dialogs != null && dialogs.length > 0
+                    && !(dialogs.length == 1 && dialogs[0].isEmpty())
+                    && dialogIndex < dialogs.length) {
+                gp.ui.setDialog(name, dialogs[dialogIndex]);
+                gp.gameState = gp.dialogState;
+                dialogIndex++;
+            } else {
+                // Đọc xong dialog (hoặc không có) thì mở puzzle
+                dialogIndex = 0;
+                gp.currentObject = this;
+                gp.gameState = gp.puzzleState;
+            }
         } else {
             if (dialogIndex < dialogs.length) {
                 gp.ui.setDialog(name, dialogs[dialogIndex]);

@@ -571,6 +571,12 @@ public class UI {
                 g2.drawString(choices[i], boxX + 40, boxY + 80 + (i * 40));
             }
         }
+        //Đóng tab chọn thuốc
+        String escHint = "[ENTER] Đóng";
+        g2.setFont(baseFont.deriveFont(Font.PLAIN, 16F));
+        g2.setColor(new Color(160, 160, 160));
+        int hintW = (int) g2.getFontMetrics().getStringBounds(escHint, g2).getWidth();
+        g2.drawString(escHint, boxX + boxW - hintW - 14, boxY + boxH - 10);
     }
 
     public int getXforCenteredText(String text) {

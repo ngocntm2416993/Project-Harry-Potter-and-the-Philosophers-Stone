@@ -111,17 +111,21 @@ public class AssetSetter {
                 break;
             case 22:
                 obj = new OBJ_Bookshelf("/deco/bookshelf.png",
-                        "Một là độc dược, dù giấu kỹ càng\n" +
-                                "Dễ dàng tìm được, bên trái rượu tầm ma (1);\n" +
-                                "Hai là hai chai đứng ở hai đầu\n" +
-                                "Khác nhau và không giúp mi tiến tới (2);", ts);
+                        new String[]{
+                                "Một là độc dược, dù giấu kỹ càng\n" +
+                                        "Dễ dàng tìm được, bên trái rượu tầm ma (1);\n",
+                                        "Hai là hai chai đứng ở hai đầu\n" +
+                                        "Khác nhau và không giúp mi tiến tới (2);"
+                        }, ts);
                 break;
             case 23:
                 obj = new OBJ_Bookshelf("/deco/bookshelf2.png",
-                        "Ba, như mi thấy, kích thước khác nhau\n" +
-                                "Tí hon, khổng lồ, không chứa cái chết (3)\n" +
-                                "Bốn là hai chai thứ hai mỗi đầu\n" +
-                                "Nếm thì giống nhau, nhìn thì thấy khác (4).", ts);
+                        new String[]{
+                                "Ba, như mi thấy, kích thước khác nhau\n" +
+                                        "Tí hon, khổng lồ, không chứa cái chết (3)\n",
+                                        "Bốn là hai chai thứ hai mỗi đầu\n" +
+                                        "Nếm thì giống nhau, nhìn thì thấy khác (4)."
+                        }, ts);
                 break;
             case 24:
                 obj = new OBJ_Bookshelf("/deco/bookshelf3.png",
@@ -148,8 +152,16 @@ public class AssetSetter {
                 break;
             case 56:
                 OBJ_BookTable bookTable = new OBJ_BookTable("/deco/banchinh.png",true ,4, 4,
-                        new String[]{""}, ts);
-                bookTable.dialogs = new String[]{""};
+                        new String[]{"Trước mặt nguy hiểm, sau lưng an toàn,\n" +
+                                "Mi sẽ tìm được, hai chai hữu ích",
+                                "Một chai uống vào, giúp mi tiến tới\n" +
+                                "Một chai uống vào, mi sẽ quay lui",
+                                "Hai trong số bảy, là rượu tầm ma\n" +
+                                "Trà trộn trong đó, ba chai độc dược.",
+                                "Hãy chọn một chai, uống vào giải nguy,\n" +
+                                "Trừ khi mi muốn kẹt hoài ở đây.",
+                                "Để giúp mi chọn, có bốn gợi ý:"
+                        }, ts);
                 obj = bookTable;
                 break;
             case 70:

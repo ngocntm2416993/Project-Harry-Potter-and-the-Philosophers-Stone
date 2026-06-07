@@ -2,12 +2,19 @@ package object;
 
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import main.GamePanel;
+import entity.Player;
 
 public class OBJ_Bookshelf extends SuperObject {
 
     public OBJ_Bookshelf(String imagePath, String dialog, int tileSize) {
+        this(imagePath, new String[]{ dialog }, tileSize);
+    }
+
+    /** Constructor mới – nhiều trang dialog */
+    public OBJ_Bookshelf(String imagePath, String[] dialogs, int tileSize) {
         this.name       = "Kệ Sách";
-        this.dialogText = dialog;
+        this.dialogs    = dialogs;
         this.hintText   = "[F] Đọc sách";
         this.collision  = true;
         this.drawSizeW  = 2;
@@ -22,5 +29,22 @@ public class OBJ_Bookshelf extends SuperObject {
         try {
             image = ImageIO.read(getClass().getResourceAsStream(imagePath));
         } catch (IOException e) { e.printStackTrace(); }
+    }
+
+    @Override
+    public void onInteract(GamePanel gp, Player player) {
+        if (dialogs == null || dialogs.length == 0) {
+            gp.gameState = gp.playState;
+            return;
+        }
+        if (dialogIndex < dialogs.length) {
+            gp.ui.setDialog(name, dialogs[dialogIndex]);
+            gp.gameState = gp.dialogState;
+            dialogIndex++;
+        } else {
+            dialogIndex = 0;          // reset để lần sau đọc lại từ đầu
+            gp.gameState = gp.playState;
+            gp.ui.setDialog("", "");
+        }
     }
 }

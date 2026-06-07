@@ -67,6 +67,10 @@ public class KeyHandler implements KeyListener{
                 gp.gameState = gp.playState;
                 gp.ui.puzzleSelection = 0;
             }
+            if (code == KeyEvent.VK_ENTER) {
+                gp.gameState = gp.playState;
+                gp.ui.puzzleSelection = 0;
+            }
         }
 
         // Trong keyPressed:
