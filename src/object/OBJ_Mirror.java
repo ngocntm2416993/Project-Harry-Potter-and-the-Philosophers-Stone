@@ -28,6 +28,12 @@ public class OBJ_Mirror extends SuperObject {
     }
     @Override
     public void onInteract(GamePanel gp, Player player){
+        // Nếu đang hiện dialog của gương → tắt đi
+        if (gp.gameState == gp.dialogState) {
+            gp.gameState = gp.playState;
+            gp.ui.setDialog("", "");
+            return;
+        }
         boolean boss4Alive = false;
         for (entity.Entity m : gp.monster) {
             if (m != null && m instanceof entity.Mon_Boss_4) {
