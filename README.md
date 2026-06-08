@@ -12,17 +12,17 @@ Dynamic Levels: Experience unique stages inspired by the story, each optimized f
 OOP Architecture: Built from the ground up using core OOP principles such as Inheritance, Polymorphism, Encapsulation, and Abstraction to manage game entities.
 ## 🛠️ Development Tools & Technologies
 
-Java & JDK 26: main programming language
+`Java & JDK 26`: main programming language
 
-Java Swing & JavaFX: Java libraries
+`Java Swing & JavaFX`: Java libraries
 
-Piskel & Ibis: creating pixel art assets, character sprites
+`Piskel & Ibis`: creating pixel art assets, character sprites
 ## 🚀 Installation & Setup
 ### Step 1: Download the Game
 * [Download Game via Google Drive](https://drive.google.com/drive/folders/1Wg7aA1SWRLFbZaAh5ZXlGLQQ3V4vqERk?usp=drive_link)
 
 ### Step 2: Open Command Prompt (cmd)
-* Press the `Win + R` keys, type `cmd`, and hit **Enter** to open the Command Prompt.
+* Press the `Win + R` keys, type `cmd`, and hit **Enter** to open the Command Prompt (or you can type `cmd` on Search bar)
 
 ### Step 3: Navigate to the Game Folder
 Use the Windows **"Copy as path"** feature to jump into the game directory instantly:
