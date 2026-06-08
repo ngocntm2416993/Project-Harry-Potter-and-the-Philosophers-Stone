@@ -31,6 +31,7 @@ Use the Windows **"Copy as path"** feature to jump into the game directory insta
 3. In your `cmd` window, type `cd /d ` and paste your path (press `Ctrl + V` or Right-Click to paste). 
 
 ```cd/d path/to/your/extracted-folder```
+4. type `run.bat` and enjoy the game!
 
 ## 📌 Note to Players & Evaluators
 ⚠️ Project Limitations:
