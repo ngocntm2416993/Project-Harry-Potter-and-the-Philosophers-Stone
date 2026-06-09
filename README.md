@@ -32,7 +32,7 @@ Use the Windows **"Copy as path"** feature to jump into the game directory insta
 
 ```cd/d path/to/your/extracted-folder```
 
-4. type `run.bat` and enjoy the game!
+4. Type `run.bat` and enjoy the game!
 
 ## 📌 Note to Players & Evaluators
 ⚠️ Project Limitations:
